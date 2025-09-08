@@ -387,32 +387,214 @@ Tests:
 
 #### 文件系统工具 ⭐⭐
 **实现优先级：最高**
-1. `tools/FileReadTool/FileReadTool.tsx`
-2. `tools/FileWriteTool/FileWriteTool.tsx`
-3. `tools/FileEditTool/FileEditTool.tsx`
-4. `tools/MultiEditTool/MultiEditTool.tsx`
 
-**核心功能：**
+### Step 1: `tools/FileReadTool/FileReadTool.tsx`
+
+**🔧 实现内容**
 ```typescript
-// FileReadTool
-- 文件内容读取
+// 核心功能：
+- 文件内容读取 (文本、二进制)
 - 图片/PDF/Jupyter支持
 - 行号限制和偏移
+- 错误处理和验证
+```
 
-// FileWriteTool
+**📋 开发步骤**
+
+**1. 实现基础文件读取**
+```typescript
+class FileReadTool implements Tool {
+  async call(input: FileReadInput, context: ToolUseContext) {
+    // 实现文件读取逻辑
+  }
+}
+```
+
+**2. 🔧 构建测试**
+```bash
+bun run build
+```
+**验证**: 确保工具编译通过，导出正确
+
+**3. 🔵 类型测试**
+```bash
+bun run typecheck
+```
+**验证**: Tool接口实现正确，输入输出类型匹配
+
+**4. 🟡 功能测试**
+```bash
+# 创建测试环境
+mkdir -p test-files
+echo "Hello World" > test-files/test.txt
+echo '{"test": true}' > test-files/test.json
+
+# 运行工具测试
+bun run dev
+# 在REPL中测试:
+# > 请读取 test-files/test.txt 文件
+```
+**验证目标**:
+- ✅ 能够读取文本文件
+- ✅ 能够处理不存在的文件
+- ✅ 行号显示正确
+- ✅ 支持偏移和限制参数
+
+**5. 🟠 集成测试**
+```bash
+# 测试与权限系统集成
+bun run dev --safe
+# 验证权限请求正常弹出
+```
+
+**6. 🚀 提交代码**
+```bash
+git add src/tools/FileReadTool/
+git commit -m "feat(tools): implement FileReadTool with multi-format support
+
+- Add FileReadTool class with file reading capabilities
+- Support text, image, PDF, and Jupyter notebook formats
+- Include line offset and limit functionality
+- Add proper error handling and path validation
+- Integrate with permission system
+
+Tests passed:
+- ✅ Build and type checking
+- ✅ Text file reading
+- ✅ Error handling for missing files
+- ✅ Permission integration"
+```
+
+### Step 2: `tools/FileWriteTool/FileWriteTool.tsx`
+
+**🔧 实现内容**
+```typescript
+// 核心功能：
 - 文件创建和覆写
-- 权限检查
-- 备份机制
+- 权限检查和确认
+- 备份机制 (可选)
+- 目录自动创建
+```
 
-// FileEditTool
+**📋 开发步骤**
+
+**1-3. 基础实现 + 构建&类型测试** (同上)
+
+**4. 🟡 功能测试**
+```bash
+# 测试文件写入
+bun run dev
+# 在REPL中测试:
+# > 创建文件 test-files/new-file.txt 内容为 "测试内容"
+# > 覆写文件 test-files/test.txt 内容为 "新内容"
+
+# 验证文件内容
+cat test-files/new-file.txt
+cat test-files/test.txt
+```
+**验证目标**:
+- ✅ 能够创建新文件
+- ✅ 能够覆写现有文件  
+- ✅ 目录不存在时自动创建
+- ✅ 权限检查正常工作
+- ✅ 错误处理正确
+
+**5. 🚀 提交代码**
+```bash
+git commit -m "feat(tools): implement FileWriteTool with permission integration"
+```
+
+### Step 3: `tools/FileEditTool/FileEditTool.tsx`
+
+**🔧 实现内容**
+```typescript
+// 核心功能：
 - 精确字符串替换
-- 上下文保持
-- 冲突检测
+- 上下文保持 (保持缩进格式)
+- 替换冲突检测
+- 替换预览功能
+```
 
-// MultiEditTool
+**📋 开发步骤**
+
+**4. 🟡 功能测试**
+```bash
+# 准备测试文件
+echo -e "function test() {\n  console.log('hello');\n}" > test-files/code.js
+
+# 测试编辑功能
+bun run dev
+# 在REPL中测试:
+# > 将 test-files/code.js 中的 'hello' 替换为 'world'
+```
+**验证目标**:
+- ✅ 精确字符串匹配和替换
+- ✅ 保持原有缩进和格式
+- ✅ 处理替换冲突 (字符串不唯一)
+- ✅ 显示替换预览
+
+**5. 🚀 提交代码**
+```bash
+git commit -m "feat(tools): implement FileEditTool with precise string replacement"
+```
+
+### Step 4: `tools/MultiEditTool/MultiEditTool.tsx`
+
+**🔧 实现内容**
+```typescript
+// 核心功能：
 - 批量编辑操作
-- 原子性保证
-- 回滚支持
+- 原子性保证 (全成功或全失败)
+- 编辑冲突检测
+- 操作回滚支持
+```
+
+**📋 开发步骤**
+
+**4. 🟡 功能测试**
+```bash
+# 准备多个测试文件
+mkdir -p test-files/multi
+echo "const version = '1.0.0'" > test-files/multi/file1.js  
+echo "const version = '1.0.0'" > test-files/multi/file2.js
+
+# 测试批量编辑
+bun run dev
+# 在REPL中测试:
+# > 在多个文件中将 '1.0.0' 替换为 '1.1.0'
+```
+**验证目标**:
+- ✅ 能够同时编辑多个文件
+- ✅ 所有编辑操作的原子性
+- ✅ 编辑冲突时正确回滚
+- ✅ 操作成功时显示汇总
+
+**6. 📊 完整集成测试**
+```bash
+# 测试所有文件工具的协作
+bun run dev
+# 测试序列:
+# 1. 读取文件 -> 2. 编辑文件 -> 3. 写入新文件 -> 4. 批量编辑
+```
+
+**7. 🚀 最终提交**
+```bash
+git add .
+git commit -m "feat(tools): complete file system tools implementation
+
+Implemented comprehensive file operation tools:
+- FileReadTool: multi-format file reading
+- FileWriteTool: safe file creation and writing  
+- FileEditTool: precise string-based editing
+- MultiEditTool: atomic batch editing operations
+
+All tools include:
+- Complete error handling
+- Permission system integration
+- Comprehensive test coverage
+- User-friendly error messages
+
+Integration tests passed for all file operations."
 ```
 
 #### 搜索和导航工具 ⭐⭐
