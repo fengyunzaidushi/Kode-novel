@@ -153,6 +153,8 @@ Closes #123
 
 #### `src/Tool.ts` - 工具系统接口 ⭐
 **实现优先级：最高**
+
+**🔧 实现内容**
 ```typescript
 // 核心接口：
 interface Tool<TInput, TOutput> {
@@ -163,6 +165,38 @@ interface Tool<TInput, TOutput> {
   // ... 其他方法
 }
 ```
+
+**📋 开发步骤**
+1. **实现接口定义**
+   - 定义 `Tool` 泛型接口
+   - 定义 `ToolUseContext` 和相关类型
+   - 添加 `ValidationResult` 和 `ExtendedToolUseContext`
+
+2. **🔧 构建测试**
+   ```bash
+   bun run build
+   ```
+   - 验证TypeScript编译通过
+   - 确认接口导出正确
+
+3. **🔵 类型测试**
+   ```bash
+   bun run typecheck
+   ```
+   - 验证接口定义无类型错误
+   - 确认泛型约束正确
+
+4. **🚀 提交代码**
+   ```bash
+   git add src/Tool.ts
+   git commit -m "feat(core): implement Tool interface with generic support
+
+   - Add Tool<TInput, TOutput> generic interface
+   - Define ToolUseContext for execution context
+   - Add ValidationResult and ExtendedToolUseContext types
+   - Support for async tool descriptions and validation"
+   ```
+
 **依赖：** `zod`, `react`
 **被依赖：** 所有工具实现
 
