@@ -203,6 +203,7 @@ interface Tool<TInput, TOutput> {
 #### `src/constants/` 目录 - 系统常量 ⭐
 **实现优先级：最高**
 
+**🔧 实现顺序**
 1. `constants/product.ts` - 产品信息
 2. `constants/models.ts` - 模型定义
 3. `constants/modelCapabilities.ts` - 模型能力映射
@@ -210,7 +211,52 @@ interface Tool<TInput, TOutput> {
 5. `constants/figures.ts` - 图标字符
 6. `constants/macros.ts` - 宏定义
 
-**依赖：** 无
+**📋 开发步骤**
+
+**第1步: `constants/product.ts`**
+```typescript
+// 实现内容
+export const PRODUCT_NAME = 'Kode';
+export const PRODUCT_COMMAND = 'kode';
+```
+
+**🔧 构建&测试**
+```bash
+bun run build && bun run typecheck
+```
+**验证**: 确认常量导出正确，无类型错误
+
+**🚀 提交**
+```bash
+git commit -m "feat(constants): add product information constants"
+```
+
+**第2步: `constants/models.ts`**
+```typescript
+// 实现内容
+export const DEFAULT_MODELS = {
+  CLAUDE_OPUS: 'claude-3-opus-20240229',
+  CLAUDE_SONNET: 'claude-3-5-sonnet-20241022',
+  // ... 其他模型定义
+}
+```
+
+**🔧 构建&测试**
+```bash
+bun run build && bun run typecheck
+```
+**验证**: 模型常量定义正确，类型推导正确
+
+**🚀 提交**
+```bash
+git commit -m "feat(constants): add model definitions and defaults"
+```
+
+**第3-6步: 其他常量文件**
+- 按相同流程依次实现剩余常量文件
+- 每个文件独立提交，确保原子性
+
+**依赖：** 无  
 **被依赖：** 整个系统
 
 #### `src/utils/config.ts` - 配置管理系统 ⭐
