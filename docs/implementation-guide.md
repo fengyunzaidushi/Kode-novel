@@ -261,15 +261,100 @@ git commit -m "feat(constants): add model definitions and defaults"
 
 #### `src/utils/config.ts` - 配置管理系统 ⭐
 **实现优先级：最高**
+
+**🔧 实现内容**
 ```typescript
 // 核心功能：
 - getGlobalConfig() / saveGlobalConfig()
-- getCurrentProjectConfig() / saveCurrentProjectConfig()
+- getCurrentProjectConfig() / saveCurrentProjectConfig()  
 - 分层配置合并机制
 - API密钥管理
 - 模型配置验证
 ```
-**依赖：** `constants/models.ts`, `constants/product.ts`
+
+**📋 开发步骤**
+
+**1. 实现基础配置接口**
+```typescript
+interface GlobalConfig {
+  theme?: 'light' | 'dark';
+  hasCompletedOnboarding?: boolean;
+  models?: ModelConfig[];
+  // ... 其他配置
+}
+```
+
+**2. 实现配置文件操作**
+- `getGlobalConfig()` - 读取全局配置
+- `saveGlobalConfig()` - 保存全局配置  
+- `getCurrentProjectConfig()` - 读取项目配置
+- `saveCurrentProjectConfig()` - 保存项目配置
+
+**3. 🔧 构建测试**
+```bash
+bun run build
+```
+**验证目标**:
+- ✅ 配置接口编译通过
+- ✅ 导出函数签名正确
+- ✅ 依赖关系解析正确
+
+**4. 🔵 类型测试**
+```bash
+bun run typecheck
+```
+**验证目标**:
+- ✅ 配置接口类型正确
+- ✅ 函数返回类型匹配
+- ✅ 可选属性处理正确
+
+**5. 🟡 功能测试**
+```bash
+# 创建简单测试脚本
+node -e "
+const { getGlobalConfig, saveGlobalConfig } = require('./dist/utils/config.js');
+console.log('测试配置系统...');
+const config = getGlobalConfig();
+console.log('✅ 读取配置成功');
+saveGlobalConfig({ ...config, test: true });
+console.log('✅ 保存配置成功');
+"
+```
+**验证目标**:
+- ✅ 配置文件读取成功
+- ✅ 配置文件写入成功
+- ✅ 默认值处理正确
+- ✅ 错误情况处理正常
+
+**6. 🟠 集成测试**
+```bash
+# 测试配置系统与其他模块的集成
+bun run dev --help
+```
+**验证目标**:
+- ✅ CLI可以成功启动
+- ✅ 配置系统被正确调用
+- ✅ 默认配置生效
+
+**7. 🚀 提交代码**
+```bash
+git add src/utils/config.ts
+git commit -m "feat(config): implement hierarchical configuration system
+
+- Add GlobalConfig and ProjectConfig interfaces
+- Implement getGlobalConfig/saveGlobalConfig functions
+- Add getCurrentProjectConfig/saveCurrentProjectConfig
+- Support for configuration merging and validation
+- Include API key management utilities
+
+Tests:
+- ✅ Build test passed
+- ✅ Type checking passed  
+- ✅ Functional tests passed
+- ✅ Integration tests passed"
+```
+
+**依赖：** `constants/models.ts`, `constants/product.ts`  
 **被依赖：** 几乎所有模块
 
 ### 1.2 基础工具类
