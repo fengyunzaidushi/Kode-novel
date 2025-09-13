@@ -8,7 +8,7 @@ import { z } from 'zod'
 import { FileEditToolUpdatedMessage } from '../../components/FileEditToolUpdatedMessage'
 import { HighlightedCode } from '../../components/HighlightedCode'
 import { StructuredDiff } from '../../components/StructuredDiff'
-import { logEvent } from '../../services/statsig'
+import { FallbackToolUseRejectedMessage } from '../../components/FallbackToolUseRejectedMessage'
 import type { Tool } from '../../Tool'
 import { intersperse } from '../../utils/array'
 import {
@@ -67,8 +67,11 @@ export const FileWriteTool = {
   renderToolUseMessage(input, { verbose }) {
     return `file_path: ${verbose ? input.file_path : relative(getCwd(), input.file_path)}`
   },
-  renderToolUseRejectedMessage({ file_path, content }, { columns, verbose }) {
+  renderToolUseRejectedMessage({ file_path, content }: any = {}, { columns, verbose }: any = {}) {
     try {
+      if (!file_path) {
+        return <FallbackToolUseRejectedMessage />
+      }
       const fullFilePath = isAbsolute(file_path)
         ? file_path
         : resolve(getCwd(), file_path)
@@ -120,9 +123,9 @@ export const FileWriteTool = {
     }
   },
   renderToolResultMessage(
-    { filePath, content, structuredPatch, type },
-    { verbose },
+    { filePath, content, structuredPatch, type }
   ) {
+    const verbose = false // Default to false since verbose is no longer passed
     switch (type) {
       case 'create': {
         const contentWithFallback = content || '(No content)'
@@ -222,7 +225,6 @@ export const FileWriteTool = {
 
     // Log when writing to CLAUDE.md
     if (fullFilePath.endsWith(`${sep}${PROJECT_FILE}`)) {
-      logEvent('tengu_write_claudemd', {})
     }
 
     // Emit file edited event for system reminders

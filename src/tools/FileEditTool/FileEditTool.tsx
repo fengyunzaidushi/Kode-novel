@@ -6,7 +6,7 @@ import * as React from 'react'
 import { z } from 'zod'
 import { FileEditToolUpdatedMessage } from '../../components/FileEditToolUpdatedMessage'
 import { StructuredDiff } from '../../components/StructuredDiff'
-import { logEvent } from '../../services/statsig'
+import { FallbackToolUseRejectedMessage } from '../../components/FallbackToolUseRejectedMessage'
 import { Tool, ValidationResult } from '../../Tool'
 import { intersperse } from '../../utils/array'
 import {
@@ -76,10 +76,13 @@ export const FileEditTool = {
     )
   },
   renderToolUseRejectedMessage(
-    { file_path, old_string, new_string },
-    { columns, verbose },
+    { file_path, old_string, new_string }: any = {},
+    { columns, verbose }: any = {},
   ) {
     try {
+      if (!file_path) {
+        return <FallbackToolUseRejectedMessage />
+      }
       const { patch } = applyEdit(file_path, old_string, new_string)
       return (
         <Box flexDirection="column">
@@ -247,7 +250,6 @@ export const FileEditTool = {
 
     // Log when editing CLAUDE.md
     if (fullFilePath.endsWith(`${sep}${PROJECT_FILE}`)) {
-      logEvent('tengu_write_claudemd', {})
     }
 
     // Emit file edited event for system reminders

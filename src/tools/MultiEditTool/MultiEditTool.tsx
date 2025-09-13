@@ -5,7 +5,6 @@ import * as React from 'react'
 import { z } from 'zod'
 import { FileEditToolUpdatedMessage } from '../../components/FileEditToolUpdatedMessage'
 import { StructuredDiff } from '../../components/StructuredDiff'
-import { logEvent } from '../../services/statsig'
 import { Tool, ValidationResult } from '../../Tool'
 import { intersperse } from '../../utils/array'
 import {
@@ -19,12 +18,34 @@ import { logError } from '../../utils/log'
 import { getCwd } from '../../utils/state'
 import { getTheme } from '../../utils/theme'
 import { NotebookEditTool } from '../NotebookEditTool/NotebookEditTool'
-import { applyEdit } from '../FileEditTool/utils'
+// Local content-based edit function for MultiEditTool
+function applyContentEdit(
+  content: string,
+  oldString: string,
+  newString: string,
+  replaceAll: boolean = false
+): { newContent: string; occurrences: number } {
+  if (replaceAll) {
+    const regex = new RegExp(oldString.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')
+    const matches = content.match(regex)
+    const occurrences = matches ? matches.length : 0
+    const newContent = content.replace(regex, newString)
+    return { newContent, occurrences }
+  } else {
+    if (content.includes(oldString)) {
+      const newContent = content.replace(oldString, newString)
+      return { newContent, occurrences: 1 }
+    } else {
+      throw new Error(`String not found: ${oldString.substring(0, 50)}...`)
+    }
+  }
+}
 import { hasWritePermission } from '../../utils/permissions/filesystem'
 import { PROJECT_FILE } from '../../constants/product'
 import { DESCRIPTION, PROMPT } from './prompt'
 import { emitReminderEvent } from '../../services/systemReminder'
 import { recordFileEdit } from '../../services/fileFreshness'
+import { getPatch } from '../../utils/diff'
 
 const EditSchema = z.object({
   old_string: z.string().describe('The text to replace'),
@@ -115,7 +136,13 @@ export const MultiEditTool = {
       )
     }
 
-    return <FileEditToolUpdatedMessage {...output} />
+    return (
+      <FileEditToolUpdatedMessage
+        filePath={output.filePath}
+        structuredPatch={output.structuredPatch}
+        verbose={false}
+      />
+    )
   },
   async validateInput(
     { file_path, edits }: z.infer<typeof inputSchema>,
@@ -274,7 +301,7 @@ export const MultiEditTool = {
         const { old_string, new_string, replace_all } = edit
 
         try {
-          const result = applyEdit(
+          const result = applyContentEdit(
             modifiedContent,
             old_string,
             new_string,
@@ -302,8 +329,9 @@ export const MultiEditTool = {
       }
 
       // Write the modified content
-      const lineEndings = fileExists ? detectLineEndings(currentContent) : '\n'
-      writeTextContent(filePath, modifiedContent, lineEndings)
+      const lineEndings = fileExists ? detectLineEndings(currentContent) : 'LF'
+      const encoding = fileExists ? detectFileEncoding(filePath) : 'utf8'
+      writeTextContent(filePath, modifiedContent, encoding, lineEndings)
 
       // Record Agent edit operation for file freshness tracking
       recordFileEdit(filePath, modifiedContent)
@@ -328,21 +356,24 @@ export const MultiEditTool = {
       const relativePath = relative(workingDir, filePath)
       const summary = `Successfully applied ${edits.length} edits to ${relativePath}`
 
+      const structuredPatch = getPatch({
+        filePath: file_path,
+        fileContents: currentContent,
+        oldStr: currentContent,
+        newStr: modifiedContent,
+      })
+
       const resultData = {
-        filePath: relativePath,
+        filePath: file_path,
         wasNewFile: !fileExists,
         editsApplied: appliedEdits,
         totalEdits: edits.length,
         summary,
+        structuredPatch,
       }
 
       // Log the operation
-      logEvent('multi_edit_tool_used', {
-        file_path: relativePath,
-        edits_count: String(edits.length),
-        was_new_file: String(!fileExists),
-        duration_ms: String(Date.now() - startTime),
-      })
+      
 
       yield {
         type: 'result',

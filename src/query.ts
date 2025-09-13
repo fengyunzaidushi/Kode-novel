@@ -3,7 +3,7 @@ import {
   MessageParam,
   ToolUseBlock,
 } from '@anthropic-ai/sdk/resources/index.mjs'
-import { UUID } from 'crypto'
+import type { UUID } from './types/common'
 import type { Tool, ToolUseContext } from './Tool'
 import {
   messagePairValidForBinaryFeedback,
@@ -16,7 +16,6 @@ import {
   queryModel,
 } from './services/claude.js'
 import { emitReminderEvent } from './services/systemReminder'
-import { logEvent } from './services/statsig'
 import { all } from './utils/generators'
 import { logError } from './utils/log'
 import {
@@ -70,6 +69,9 @@ export type UserMessage = {
   options?: {
     isKodingRequest?: boolean
     kodingContext?: string
+    isCustomCommand?: boolean
+    commandName?: string
+    commandArgs?: string
   }
 }
 
@@ -196,8 +198,9 @@ export async function* query(
   if (reminders && messages.length > 0) {
     // Find the last user message
     for (let i = messages.length - 1; i >= 0; i--) {
-      if (messages[i]?.type === 'user') {
-        const lastUserMessage = messages[i]
+      const msg = messages[i]
+      if (msg?.type === 'user') {
+        const lastUserMessage = msg as UserMessage
         messages[i] = {
           ...lastUserMessage,
           message: {
@@ -411,10 +414,7 @@ export async function* runToolUse(
   )
 
 
-  logEvent('tengu_tool_use_start', {
-    toolName: toolUse.name,
-    toolUseID: toolUse.id,
-  })
+  
 
   const toolName = toolUse.name
   const tool = toolUseContext.options.tools.find(t => t.name === toolName)
@@ -428,12 +428,7 @@ export async function* runToolUse(
       requestId: currentRequest?.id,
     })
 
-    logEvent('tengu_tool_use_error', {
-      error: `No such tool available: ${toolName}`,
-      messageID: assistantMessage.message.id,
-      toolName,
-      toolUseID: toolUse.id,
-    })
+    
 
     yield createUserMessage([
       {
@@ -465,10 +460,7 @@ export async function* runToolUse(
         requestId: currentRequest?.id,
       })
 
-      logEvent('tengu_tool_use_cancelled', {
-        toolName: tool.name,
-        toolUseID: toolUse.id,
-      })
+      
 
       const message = createUserMessage([
         createToolResultStopMessage(toolUse.id),
@@ -575,12 +567,7 @@ async function* checkPermissionsAndCallTool(
       errorMessage = `Error: The View tool requires a 'file_path' parameter to specify which file to read. Please provide the absolute path to the file you want to view. For example: {"file_path": "/path/to/file.txt"}`
     }
     
-    logEvent('tengu_tool_use_error', {
-      error: errorMessage,
-      messageID: assistantMessage.message.id,
-      toolName: tool.name,
-      toolInput: JSON.stringify(input).slice(0, 200),
-    })
+    
     yield createUserMessage([
       {
         type: 'tool_result',
@@ -600,13 +587,6 @@ async function* checkPermissionsAndCallTool(
     context,
   )
   if (isValidCall?.result === false) {
-    logEvent('tengu_tool_use_error', {
-      error: isValidCall?.message.slice(0, 2000),
-      messageID: assistantMessage.message.id,
-      toolName: tool.name,
-      toolInput: JSON.stringify(input).slice(0, 200),
-      ...(isValidCall?.meta ?? {}),
-    })
     yield createUserMessage([
       {
         type: 'tool_result',
@@ -637,51 +617,41 @@ async function* checkPermissionsAndCallTool(
 
   // Call the tool
   try {
-    const generator = tool.call(normalizedInput as never, context, canUseTool)
+    const generator = tool.call(normalizedInput as never, context)
     for await (const result of generator) {
       switch (result.type) {
         case 'result':
-          logEvent('tengu_tool_use_success', {
-            messageID: assistantMessage.message.id,
-            toolName: tool.name,
-          })
+          
           yield createUserMessage(
             [
               {
                 type: 'tool_result',
-                content: result.resultForAssistant,
+                content: result.resultForAssistant || String(result.data),
                 tool_use_id: toolUseID,
               },
             ],
             {
               data: result.data,
-              resultForAssistant: result.resultForAssistant,
+              resultForAssistant: result.resultForAssistant || String(result.data),
             },
           )
           return
         case 'progress':
-          logEvent('tengu_tool_use_progress', {
-            messageID: assistantMessage.message.id,
-            toolName: tool.name,
-          })
+          
           yield createProgressMessage(
             toolUseID,
             siblingToolUseIDs,
             result.content,
-            result.normalizedMessages,
-            result.tools,
+            result.normalizedMessages || [],
+            result.tools || [],
           )
+          break
       }
     }
   } catch (error) {
     const content = formatError(error)
     logError(error)
-    logEvent('tengu_tool_use_error', {
-      error: content.slice(0, 2000),
-      messageID: assistantMessage.message.id,
-      toolName: tool.name,
-      toolInput: JSON.stringify(input).slice(0, 1000),
-    })
+    
     yield createUserMessage([
       {
         type: 'tool_result',

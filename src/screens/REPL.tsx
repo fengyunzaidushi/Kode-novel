@@ -42,9 +42,9 @@ import {
 } from '../query.js'
 import type { WrappedClient } from '../services/mcpClient'
 import type { Tool } from '../Tool'
-import { AutoUpdaterResult } from '../utils/autoUpdater'
+// Auto-updater removed; only show a new version banner passed from CLI
 import { getGlobalConfig, saveGlobalConfig } from '../utils/config'
-import { logEvent } from '../services/statsig'
+import { MACRO } from '../constants/macros'
 import { getNextAvailableLogForkNumber } from '../utils/log'
 import {
   getErroredToolUseMessages,
@@ -87,6 +87,9 @@ type Props = {
   mcpClients?: WrappedClient[]
   // Flag to indicate if current model is default
   isDefaultModel?: boolean
+  // Update banner info passed from CLI before first render
+  initialUpdateVersion?: string | null
+  initialUpdateCommands?: string[] | null
 }
 
 export type BinaryFeedbackContext = {
@@ -108,9 +111,12 @@ export function REPL({
   initialMessages,
   mcpClients = [],
   isDefaultModel = true,
+  initialUpdateVersion,
+  initialUpdateCommands,
 }: Props): React.ReactNode {
-  // TODO: probably shouldn't re-read config from file synchronously on every keystroke
-  const verbose = verboseFromCLI ?? getGlobalConfig().verbose
+  // Cache verbose config to avoid synchronous file reads on every render
+  const [verboseConfig] = useState(() => verboseFromCLI ?? getGlobalConfig().verbose)
+  const verbose = verboseConfig
 
   // Used to force the logo to re-render and conversation log to use a new file
   const [forkNumber, setForkNumber] = useState(
@@ -125,8 +131,7 @@ export function REPL({
   // 🔧 Simplified AbortController management - inspired by reference system
   const [abortController, setAbortController] = useState<AbortController | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [autoUpdaterResult, setAutoUpdaterResult] =
-    useState<AutoUpdaterResult | null>(null)
+  // No auto-updater state
   const [toolJSX, setToolJSX] = useState<{
     jsx: React.ReactNode | null
     shouldHidePromptInput: boolean
@@ -149,6 +154,10 @@ export function REPL({
 
   const [binaryFeedbackContext, setBinaryFeedbackContext] =
     useState<BinaryFeedbackContext | null>(null)
+  // New version banner: passed in from CLI to guarantee top placement
+  const updateAvailableVersion = initialUpdateVersion ?? null
+  const updateCommands = initialUpdateCommands ?? null
+  // No separate Static for banner; it renders inside Logo
 
   const getBinaryFeedbackResponse = useCallback(
     (
@@ -204,10 +213,12 @@ export function REPL({
   useEffect(() => {
     const totalCost = getTotalCost()
     if (totalCost >= 5 /* $5 */ && !showCostDialog && !haveShownCostDialog) {
-      logEvent('tengu_cost_threshold_reached', {})
+      
       setShowCostDialog(true)
     }
   }, [messages, showCostDialog, haveShownCostDialog])
+
+  // Update banner is provided by CLI at startup; no async check here.
 
   const canUseTool = useCanUseTool(setToolUseConfirm)
 
@@ -478,7 +489,12 @@ export function REPL({
         type: 'static',
         jsx: (
           <Box flexDirection="column" key={`logo${forkNumber}`}>
-            <Logo mcpClients={mcpClients} isDefaultModel={isDefaultModel} />
+            <Logo
+              mcpClients={mcpClients}
+              isDefaultModel={isDefaultModel}
+              updateBannerVersion={updateAvailableVersion}
+              updateBannerCommands={updateCommands}
+            />
             <ProjectOnboarding workspaceDir={getOriginalCwd()} />
           </Box>
         ),
@@ -488,9 +504,8 @@ export function REPL({
         const message =
           _.type === 'progress' ? (
             _.content.message.content[0]?.type === 'text' &&
-            // Hack: TaskTool interrupts use Progress messages, so don't
-            // need an extra ⎿ because <Message /> already adds one.
-            // TODO: Find a cleaner way to do this.
+            // TaskTool interrupts use Progress messages without extra ⎿ 
+            // since <Message /> component already adds the margin
             _.content.message.content[0].text === INTERRUPT_MESSAGE ? (
               <Message
                 message={_.content}
@@ -506,7 +521,7 @@ export function REPL({
                 shouldShowDot={false}
               />
             ) : (
-              <MessageResponse>
+              <MessageResponse children={
                 <Message
                   message={_.content}
                   messages={_.normalizedMessages}
@@ -524,7 +539,7 @@ export function REPL({
                   shouldAnimate={false}
                   shouldShowDot={false}
                 />
-              </MessageResponse>
+              } />
             )
           ) : (
             <Message
@@ -601,14 +616,17 @@ export function REPL({
   const showingCostDialog = !isLoading && showCostDialog
 
   return (
-    <PermissionProvider isBypassPermissionsModeAvailable={!safeMode}>
-      <ModeIndicator />
+    <PermissionProvider 
+      isBypassPermissionsModeAvailable={!safeMode}
+      children={
+        <React.Fragment>
+        {/* Update banner now renders inside Logo for stable placement */}
+        <ModeIndicator />
       <React.Fragment key={`static-messages-${forkNumber}`}>
         <Static
           items={messagesJSX.filter(_ => _.type === 'static')}
-        >
-          {_ => _.jsx}
-        </Static>
+          children={(item: any) => item.jsx}
+        />
       </React.Fragment>
       {messagesJSX.filter(_ => _.type === 'transient').map(_ => _.jsx)}
       <Box
@@ -662,7 +680,7 @@ export function REPL({
                   ...projectConfig,
                   hasAcknowledgedCostThreshold: true,
                 })
-                logEvent('tengu_cost_threshold_acknowledged', {})
+                
               }}
             />
           )}
@@ -686,8 +704,6 @@ export function REPL({
                 verbose={verbose}
                 messages={messages}
                 setToolJSX={setToolJSX}
-                onAutoUpdaterResult={setAutoUpdaterResult}
-                autoUpdaterResult={autoUpdaterResult}
                 input={inputValue}
                 onInputChange={setInputValue}
                 mode={inputMode}
@@ -749,7 +765,9 @@ export function REPL({
       )}
       {/** Fix occasional rendering artifact */}
       <Newline />
-    </PermissionProvider>
+        </React.Fragment>
+      }
+    />
   )
 }
 

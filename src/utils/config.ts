@@ -6,8 +6,6 @@ import { GLOBAL_CLAUDE_FILE } from './env'
 import { getCwd } from './state'
 import { randomBytes } from 'crypto'
 import { safeParseJSON } from './json'
-import { checkGate, logEvent } from '../services/statsig'
-import { GATE_USE_EXTERNAL_UPDATER } from '../constants/betas'
 import { ConfigParseError } from './errors'
 import type { ThemeNames } from './theme'
 import { debug as debugLogger } from './debugLogger'
@@ -173,6 +171,8 @@ export type GlobalConfig = {
   modelProfiles?: ModelProfile[] // Model configuration list
   modelPointers?: ModelPointers // Model pointer system
   defaultModelName?: string // Default model
+  // Update notifications
+  lastDismissedUpdateVersion?: string
 }
 
 export const DEFAULT_GLOBAL_CONFIG: GlobalConfig = {
@@ -196,6 +196,7 @@ export const DEFAULT_GLOBAL_CONFIG: GlobalConfig = {
     reasoning: '',
     quick: '',
   },
+  lastDismissedUpdateVersion: undefined,
 }
 
 export const GLOBAL_CONFIG_KEYS = [
@@ -471,10 +472,7 @@ export function saveCurrentProjectConfig(projectConfig: ProjectConfig): void {
 }
 
 export async function isAutoUpdaterDisabled(): Promise<boolean> {
-  const useExternalUpdater = await checkGate(GATE_USE_EXTERNAL_UPDATER)
-  return (
-    useExternalUpdater || getGlobalConfig().autoUpdaterStatus === 'disabled'
-  )
+  return getGlobalConfig().autoUpdaterStatus === 'disabled'
 }
 
 export const TEST_MCPRC_CONFIG_FOR_TESTING: Record<string, McpServerConfig> = {}
@@ -520,9 +518,7 @@ export const getMcprcConfig = memoize(
       const mcprcContent = readFileSync(mcprcPath, 'utf-8')
       const config = safeParseJSON(mcprcContent)
       if (config && typeof config === 'object') {
-        logEvent('tengu_mcprc_found', {
-          numServers: Object.keys(config).length.toString(),
-        })
+        // Logging removed
         return config as Record<string, McpServerConfig>
       }
     } catch {
@@ -558,10 +554,7 @@ export function getOrCreateUserID(): string {
 }
 
 export function getConfigForCLI(key: string, global: boolean): unknown {
-  logEvent('tengu_config_get', {
-    key,
-    global: global?.toString() ?? 'false',
-  })
+  
   if (global) {
     if (!isGlobalConfigKey(key)) {
       console.error(
@@ -586,10 +579,7 @@ export function setConfigForCLI(
   value: unknown,
   global: boolean,
 ): void {
-  logEvent('tengu_config_set', {
-    key,
-    global: global?.toString() ?? 'false',
-  })
+  
   if (global) {
     if (!isGlobalConfigKey(key)) {
       console.error(
@@ -631,10 +621,7 @@ export function setConfigForCLI(
 }
 
 export function deleteConfigForCLI(key: string, global: boolean): void {
-  logEvent('tengu_config_delete', {
-    key,
-    global: global?.toString() ?? 'false',
-  })
+  
   if (global) {
     if (!isGlobalConfigKey(key)) {
       console.error(
@@ -661,9 +648,7 @@ export function deleteConfigForCLI(key: string, global: boolean): void {
 export function listConfigForCLI(global: true): GlobalConfig
 export function listConfigForCLI(global: false): ProjectConfig
 export function listConfigForCLI(global: boolean): object {
-  logEvent('tengu_config_list', {
-    global: global?.toString() ?? 'false',
-  })
+  
   if (global) {
     const currentConfig = pick(getGlobalConfig(), GLOBAL_CONFIG_KEYS)
     return currentConfig

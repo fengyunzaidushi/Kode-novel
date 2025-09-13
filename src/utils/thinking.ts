@@ -1,32 +1,18 @@
 import { last } from 'lodash-es'
 import type { Message } from '../query'
-import { logEvent } from '../services/statsig'
 import { getLastAssistantMessageId } from './messages'
 import { ThinkTool } from '../tools/ThinkTool/ThinkTool'
 import { USE_BEDROCK, USE_VERTEX, getModelManager } from './model'
-import { getGlobalConfig } from './config'
 
 export async function getMaxThinkingTokens(
   messages: Message[],
 ): Promise<number> {
   if (process.env.MAX_THINKING_TOKENS) {
     const tokens = parseInt(process.env.MAX_THINKING_TOKENS, 10)
-    logEvent('tengu_thinking', {
-      method: 'scratchpad',
-      tokenCount: tokens.toString(),
-      messageId: getLastAssistantMessageId(messages),
-      provider: USE_BEDROCK ? 'bedrock' : USE_VERTEX ? 'vertex' : '1p',
-    })
     return tokens
   }
 
   if (await ThinkTool.isEnabled()) {
-    logEvent('tengu_thinking', {
-      method: 'scratchpad',
-      tokenCount: '0',
-      messageId: getLastAssistantMessageId(messages),
-      provider: USE_BEDROCK ? 'bedrock' : USE_VERTEX ? 'vertex' : '1p',
-    })
     return 0
   }
 
@@ -35,12 +21,6 @@ export async function getMaxThinkingTokens(
     lastMessage?.type !== 'user' ||
     typeof lastMessage.message.content !== 'string'
   ) {
-    logEvent('tengu_thinking', {
-      method: 'scratchpad',
-      tokenCount: '0',
-      messageId: getLastAssistantMessageId(messages),
-      provider: USE_BEDROCK ? 'bedrock' : USE_VERTEX ? 'vertex' : '1p',
-    })
     return 0
   }
 
@@ -54,12 +34,6 @@ export async function getMaxThinkingTokens(
     content.includes('think very hard') ||
     content.includes('ultrathink')
   ) {
-    logEvent('tengu_thinking', {
-      method: 'scratchpad',
-      tokenCount: '31999',
-      messageId: getLastAssistantMessageId(messages),
-      provider: USE_BEDROCK ? 'bedrock' : USE_VERTEX ? 'vertex' : '1p',
-    })
     return 32_000 - 1
   }
 
@@ -70,31 +44,13 @@ export async function getMaxThinkingTokens(
     content.includes('think more') ||
     content.includes('megathink')
   ) {
-    logEvent('tengu_thinking', {
-      method: 'scratchpad',
-      tokenCount: '10000',
-      messageId: getLastAssistantMessageId(messages),
-      provider: USE_BEDROCK ? 'bedrock' : USE_VERTEX ? 'vertex' : '1p',
-    })
     return 10_000
   }
 
   if (content.includes('think')) {
-    logEvent('tengu_thinking', {
-      method: 'scratchpad',
-      tokenCount: '4000',
-      messageId: getLastAssistantMessageId(messages),
-      provider: USE_BEDROCK ? 'bedrock' : USE_VERTEX ? 'vertex' : '1p',
-    })
     return 4_000
   }
 
-  logEvent('tengu_thinking', {
-    method: 'scratchpad',
-    tokenCount: '0',
-    messageId: getLastAssistantMessageId(messages),
-    provider: USE_BEDROCK ? 'bedrock' : USE_VERTEX ? 'vertex' : '1p',
-  })
   return 0
 }
 
@@ -112,7 +68,7 @@ export async function getReasoningEffort(
     // 🔧 Fix: Use ModelManager fallback instead of legacy config
     const modelManager = getModelManager()
     const fallbackProfile = modelManager.getModel('main')
-    reasoningEffort = fallbackProfile?.reasoningEffort || 'medium'
+    reasoningEffort = (fallbackProfile?.reasoningEffort === 'minimal' ? 'low' : fallbackProfile?.reasoningEffort) || 'medium'
   }
 
   const maxEffort =
