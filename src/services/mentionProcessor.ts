@@ -1,7 +1,11 @@
 /**
- * Mention Processor Service
- * Handles @agent and @file mentions through the system reminder infrastructure
- * Designed to integrate naturally with the existing event-driven architecture
+ * @提及处理服务
+ * 通过系统提醒基础架构处理@代理和@文件的提及
+ * 设计与现有的事件驱动架构自然集成，支持多种@提及格式：
+ * - @run-agent-xxx：运行特定代理
+ * - @agent-xxx：传统代理格式
+ * - @ask-model：咨询特定模型
+ * - @filename：文件路径引用
  */
 
 import { emitReminderEvent } from './systemReminder'
@@ -10,37 +14,47 @@ import { existsSync } from 'fs'
 import { resolve } from 'path'
 import { getCwd } from '../utils/state'
 
+// @提及上下文接口 - 存储单个@提及的详细信息
 export interface MentionContext {
-  type: 'agent' | 'file'
-  mention: string
-  resolved: string
-  exists: boolean
-  metadata?: any
+  type: 'agent' | 'file'  // 提及类型：代理或文件
+  mention: string         // 原始提及字符串
+  resolved: string        // 解析后的值（代理类型或文件路径）
+  exists: boolean         // 是否存在（代理可用或文件存在）
+  metadata?: any          // 附加元数据（如模型类型）
 }
 
+// 处理后的@提及结果接口 - 所有@提及的综合结果
 export interface ProcessedMentions {
-  agents: MentionContext[]
-  files: MentionContext[]
-  hasAgentMentions: boolean
-  hasFileMentions: boolean
+  agents: MentionContext[]     // 所有代理相关的@提及
+  files: MentionContext[]      // 所有文件相关的@提及
+  hasAgentMentions: boolean    // 是否包含代理@提及
+  hasFileMentions: boolean     // 是否包含文件@提及
 }
 
+/**
+ * @提及处理服务类
+ * 主要负责解析和处理用户输入中的各种@提及格式
+ * 使用缓存优化性能，并通过事件系统发送提醒
+ */
 class MentionProcessorService {
-  // Centralized mention patterns - single source of truth
+  // 集中化的@提及模式 - 单一真实数据源
   private static readonly MENTION_PATTERNS = {
-    runAgent: /@(run-agent-[\w\-]+)/g,
-    agent: /@(agent-[\w\-]+)/g,  // Legacy support
-    askModel: /@(ask-[\w\-]+)/g,
-    file: /@([a-zA-Z0-9/._-]+(?:\.[a-zA-Z0-9]+)?)/g
+    runAgent: /@(run-agent-[\w\-]+)/g,                    // @run-agent-xxx格式
+    agent: /@(agent-[\w\-]+)/g,                           // @agent-xxx格式（传统支持）
+    askModel: /@(ask-[\w\-]+)/g,                          // @ask-xxx格式
+    file: /@([a-zA-Z0-9/._-]+(?:\.[a-zA-Z0-9]+)?)/g      // @文件路径格式
   } as const
 
+  // 代理缓存：避免频繁查询代理加载器
   private agentCache: Map<string, boolean> = new Map()
-  private lastAgentCheck: number = 0
-  private CACHE_TTL = 60000 // 1 minute cache
+  private lastAgentCheck: number = 0        // 上次检查时间
+  private CACHE_TTL = 60000                 // 1分钟缓存失效时间
 
   /**
-   * Process mentions in user input and emit appropriate events
-   * This follows the event-driven philosophy of system reminders
+   * 处理用户输入中的@提及并发出相应事件
+   * 遵循系统提醒的事件驱动哲学，确保系统稳定性
+   * @param input 要处理的用户输入文本
+   * @returns 处理后的@提及结果
    */
   public async processMentions(input: string): Promise<ProcessedMentions> {
     const result: ProcessedMentions = {
@@ -128,16 +142,18 @@ class MentionProcessorService {
   // Removed identifyMention method as it's no longer needed with separate processing
 
   /**
-   * Resolve file path relative to current working directory
+   * 解析相对于当前工作目录的文件路径
+   * @param mention 提及的文件名或路径
+   * @returns 绝对文件路径
    */
   private resolveFilePath(mention: string): string {
-    // Simple consistent logic: mention is always relative to current directory
+    // 简单一致的逻辑：@提及总是相对于当前目录
     return resolve(getCwd(), mention)
   }
 
   /**
-   * Refresh the agent cache periodically
-   * This avoids hitting the agent loader on every mention
+   * 定期刷新代理缓存
+   * 避免在每次@提及时都查询代理加载器，提高性能
    */
   private async refreshAgentCache(): Promise<void> {
     const now = Date.now()
@@ -176,8 +192,10 @@ class MentionProcessorService {
   }
 
   /**
-   * Extract agent mentions with unified pattern matching
-   * Consolidates run-agent, agent, and ask-model detection logic
+   * 使用统一模式匹配提取代理@提及
+   * 集成run-agent、agent和ask-model的检测逻辑，消除代码重复
+   * @param input 要处理的文本
+   * @returns 代理@提及的数组
    */
   private extractAgentMentions(input: string): Array<{ mention: string; agentType: string; isAskModel: boolean }> {
     const mentions: Array<{ mention: string; agentType: string; isAskModel: boolean }> = []
@@ -209,8 +227,11 @@ class MentionProcessorService {
   }
   
   /**
-   * Emit agent mention event with proper typing
-   * Centralized event emission to ensure consistency
+   * 发出代理@提及事件，带有正确的类型信息
+   * 中心化事件发送以确保一致性
+   * @param mention 原始@提及字符串
+   * @param agentType 代理类型
+   * @param isAskModel 是否为模型咨询
    */
   private emitAgentMentionEvent(mention: string, agentType: string, isAskModel: boolean): void {
     try {
@@ -248,7 +269,8 @@ class MentionProcessorService {
   }
 
   /**
-   * Clear caches - useful for testing or reset
+   * 清除缓存 - 用于测试或重置
+   * 清空代理缓存并重置检查时间
    */
   public clearCache(): void {
     this.agentCache.clear()
@@ -256,18 +278,21 @@ class MentionProcessorService {
   }
 }
 
-// Export singleton instance
+// 导出单例实例 - 全局统一的@提及处理器
 export const mentionProcessor = new MentionProcessorService()
 
 /**
- * Process mentions in user input
- * This is the main API for the mention processor
+ * 处理用户输入中的@提及
+ * 这是@提及处理器的主要API
+ * @param input 要处理的用户输入文本
+ * @returns 处理后的@提及结果
  */
-export const processMentions = (input: string) => 
+export const processMentions = (input: string) =>
   mentionProcessor.processMentions(input)
 
 /**
- * Clear mention processor caches
+ * 清除@提及处理器缓存
+ * 用于刷新代理列表或重置系统状态
  */
 export const clearMentionCache = () =>
   mentionProcessor.clearCache()

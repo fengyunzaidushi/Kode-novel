@@ -1,14 +1,26 @@
+// 导入命令接口定义
 import { Command } from '../commands'
+// 导入操作系统相关工具：换行符、平台检测、用户主目录
 import { EOL, platform, homedir } from 'os'
+// 导入安全执行文件函数，不抛出异常
 import { execFileNoThrow } from '../utils/execFileNoThrow'
+// 导入chalk库，用于终端文本着色
 import chalk from 'chalk'
+// 导入主题获取函数
 import { getTheme } from '../utils/theme'
+// 导入环境变量工具
 import { env } from '../utils/env'
+// 导入全局配置获取和保存函数
 import { getGlobalConfig, saveGlobalConfig } from '../utils/config'
+// 导入项目引导完成标记函数
 import { markProjectOnboardingComplete } from '../ProjectOnboarding'
+// 导入文件系统操作函数
 import { readFileSync, writeFileSync } from 'fs'
+// 导入路径操作工具
 import { join } from 'path'
+// 导入安全JSON解析函数
 import { safeParseJSON } from '../utils/json'
+// 导入日志错误函数
 import { logError } from '../utils/log'
 
 const terminalSetup: Command = {

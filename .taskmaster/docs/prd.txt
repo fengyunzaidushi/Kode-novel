@@ -1,0 +1,189 @@
+# Kode AI-Powered Coding Assistant - Product Requirements Document
+
+# Overview
+Kode is an advanced AI-powered terminal-based coding assistant that revolutionizes software development through multi-model collaboration, intelligent agent systems, and comprehensive tool integration. It provides developers with a unified interface to interact with multiple AI models, delegate tasks to specialized agents, and automate complex development workflows directly from their terminal.
+
+The product solves the critical problem of fragmented AI tooling in development workflows by providing a single, powerful interface that can understand codebases, edit files, run commands, and orchestrate complex development tasks across multiple AI models and specialized agents.
+
+# Core Features
+
+## Multi-Model AI Collaboration System
+- **Unlimited Model Support**: Integration with 20+ AI models including Claude, GPT, Gemini, Qwen Coder, and more
+- **Intelligent Model Switching**: Runtime model switching with Tab key for optimal task-specific performance
+- **Model Pointers**: Configurable default models for different purposes (main, task, reasoning, quick)
+- **Expert Consultation**: @ask-model-name system for specialized model consultation
+- **Cost Optimization**: Automatic selection of appropriate models based on task complexity
+
+## Intelligent Agent Orchestration
+- **5-Tier Agent Loading**: Hierarchical agent configuration from built-in to project-specific
+- **Dynamic Task Delegation**: @run-agent-name system for specialized task execution
+- **Agent Markdown Configuration**: Simple YAML frontmatter configuration for agent creation
+- **Parallel Agent Execution**: Multiple agents working simultaneously on different subtasks
+- **Tool Permission System**: Granular security controls for agent capabilities
+
+## Advanced Development Tools
+- **Smart File Editing**: Context-aware code modification with preservation of existing patterns
+- **Codebase Understanding**: Deep project structure analysis and relationship mapping
+- **Command Execution**: Secure shell command execution with real-time output
+- **Workflow Automation**: Complex multi-step development task orchestration
+- **Context Management**: Intelligent conversation continuity across model switches
+
+## Intelligent Completion System
+- **Hyphen-Aware Fuzzy Matching**: Advanced completion algorithms for commands, files, and agents
+- **Unix Command Database**: 500+ curated commands with system intersection
+- **Auto-Prefix Detection**: Seamless @ mention completion for agents and models
+- **Real-time Discovery**: Dynamic command and file discovery from system PATH
+
+## AGENTS.md Standard Compatibility
+- **OpenAI Standard Support**: Full compatibility with AGENTS.md protocol
+- **Claude.md Backward Compatibility**: Seamless migration from existing Claude Code workflows
+- **Documentation Generation**: Automatic project documentation creation and maintenance
+- **Cross-platform Standardization**: Universal agent configuration format
+
+# User Experience
+
+## Target User Personas
+- **Senior Developers**: Seeking productivity enhancement and code quality improvement
+- **Development Teams**: Requiring consistent coding standards and automated workflows
+- **DevOps Engineers**: Needing infrastructure automation and deployment orchestration
+- **Technical Leaders**: Managing complex codebases and architectural decisions
+
+## Core User Flows
+1. **Interactive Development Session**: Start with `kode`, receive task requirements, delegate to appropriate agents/models
+2. **Quick Task Execution**: Non-interactive mode with `-p` flag for immediate responses
+3. **Expert Consultation**: Use @ask-expert-model for specialized analysis and recommendations
+4. **Agent Task Delegation**: Use @run-agent-name for complex, specialized task execution
+5. **Documentation Generation**: Use # prefix for automatic AGENTS.md documentation creation
+
+## UI/UX Considerations
+- **Terminal-Native Interface**: Beautiful CLI with syntax highlighting and interactive components
+- **Permission-Aware Security**: YOLO mode for trusted environments, --safe mode for production
+- **Real-time Feedback**: Live command output and progress indicators
+- **Context Visualization**: Clear display of active models, agents, and conversation state
+
+# Technical Architecture
+
+## System Components
+- **REPL Interface** (src/screens/REPL.tsx): Interactive terminal UI using Ink framework
+- **Model Manager** (src/utils/model.ts): Unified multi-model configuration and switching
+- **Agent Loader** (src/utils/agentLoader.ts): Dynamic agent discovery and loading system
+- **Tool System** (src/tools/): Extensible architecture with specialized capabilities
+- **Permission Manager** (src/permissions.ts): Security-first tool access control
+- **Context Manager** (src/utils/messageContextManager.ts): Intelligent conversation state management
+
+## Data Models
+- **Model Profiles**: API endpoints, authentication, capabilities, cost parameters
+- **Agent Configurations**: Markdown files with YAML frontmatter for agent definitions
+- **Tool Schemas**: Zod-validated interfaces for consistent tool interaction
+- **Permission Policies**: Granular access control for file and command operations
+- **Context Windows**: Dynamic sizing based on model capabilities and conversation history
+
+## APIs and Integrations
+- **Claude API**: Primary integration for Claude family models
+- **OpenAI API**: GPT model family support
+- **Model Context Protocol (MCP)**: Extensible tool integration framework
+- **Shell Interface**: Secure command execution with permission controls
+- **File System API**: Context-aware file operations and project understanding
+
+## Infrastructure Requirements
+- **Node.js/Bun Runtime**: Primary execution environment with Bun optimization
+- **Cross-platform Support**: Windows, macOS, Linux compatibility
+- **Terminal Compatibility**: Git Bash, Unix subsystems, native terminals
+- **Memory Management**: Efficient context window and conversation state handling
+
+# Development Roadmap
+
+## Phase 1: Core Platform Stabilization
+- **Performance Optimization**: Memory usage reduction and response time improvement
+- **Windows Compatibility**: Enhanced Windows support with better path handling
+- **Error Handling**: Comprehensive error recovery and user guidance
+- **Documentation**: Complete API documentation and usage examples
+- **Testing Suite**: Unit tests, integration tests, and end-to-end testing
+
+## Phase 2: Enhanced Multi-Model Features
+- **Model Performance Analytics**: Detailed metrics and usage optimization recommendations
+- **Advanced Model Routing**: Intelligent automatic model selection based on task characteristics
+- **Custom Model Integration**: Plugin system for proprietary and local model integration
+- **Model Fine-tuning**: Integration with model training and customization workflows
+- **Collaborative Model Sessions**: Multiple developers sharing model contexts
+
+## Phase 3: Advanced Agent Capabilities
+- **Visual Agent Builder**: GUI for creating and configuring agents without markdown
+- **Agent Marketplace**: Community sharing and discovery of specialized agents
+- **Agent Collaboration**: Multi-agent workflows with dependency management
+- **Learning Agents**: Agents that adapt and improve based on usage patterns
+- **Enterprise Agent Management**: Centralized agent governance and deployment
+
+## Phase 4: Enterprise and Scale Features
+- **Team Collaboration**: Shared contexts and collaborative development sessions
+- **Enterprise Security**: Advanced authentication, audit logging, and compliance
+- **CI/CD Integration**: Native integration with popular development pipelines
+- **Analytics Dashboard**: Usage metrics, cost optimization, and performance insights
+- **API Gateway**: RESTful API for integration with existing development tools
+
+# Logical Dependency Chain
+
+## Foundation Layer (Must Build First)
+1. **Core Runtime Stability**: Reliable Bun/Node.js execution environment
+2. **Model Manager Refactoring**: Unified interface for all AI model interactions
+3. **Permission System Hardening**: Security framework for all tool operations
+4. **Error Handling Framework**: Comprehensive error recovery and user guidance
+
+## Interface Layer (User-Facing Features)
+1. **REPL Enhancement**: Improved terminal interface with better responsiveness
+2. **Completion System Optimization**: Faster, more accurate command and file completion
+3. **Agent Configuration UX**: Streamlined agent creation and management interface
+4. **Model Switching UX**: Seamless model transitions with context preservation
+
+## Intelligence Layer (AI Capabilities)
+1. **Context Understanding**: Enhanced codebase analysis and relationship mapping
+2. **Task Orchestration**: Improved multi-step workflow automation
+3. **Agent Collaboration**: Multi-agent coordination and dependency management
+4. **Predictive Assistance**: Proactive suggestions based on development patterns
+
+## Integration Layer (External Systems)
+1. **Development Tool Integration**: IDE plugins, Git hooks, CI/CD connectors
+2. **Model Provider Expansion**: Support for additional AI model providers
+3. **Enterprise Features**: Team collaboration, centralized management, analytics
+4. **API Ecosystem**: RESTful interfaces for third-party tool integration
+
+# Risks and Mitigations
+
+## Technical Challenges
+- **Model API Rate Limits**: Implement intelligent request queuing and fallback strategies
+- **Context Window Management**: Dynamic context optimization and conversation summarization
+- **Cross-platform Compatibility**: Extensive testing across operating systems and terminal types
+- **Performance at Scale**: Memory optimization and efficient state management
+
+## MVP Definition and Build Strategy
+- **Core MVP**: Stable multi-model interface with basic agent support and file editing
+- **Incremental Enhancement**: Add advanced features without breaking existing functionality
+- **User Feedback Integration**: Continuous improvement based on developer community input
+- **Backward Compatibility**: Maintain compatibility with existing CLAUDE.md configurations
+
+## Resource and Operational Constraints
+- **API Cost Management**: Intelligent model selection to optimize usage costs
+- **Security Considerations**: Comprehensive permission system without hindering productivity
+- **Community Support**: Documentation and examples to reduce support overhead
+- **Development Velocity**: Balance feature development with stability and testing
+
+# Appendix
+
+## Current Technical Specifications
+- **Runtime**: Bun (primary), Node.js (fallback) with tsx loader
+- **UI Framework**: Ink (React for CLI) with custom components
+- **Configuration**: Hierarchical JSON configuration with environment variable support
+- **Security**: YOLO mode (default) and --safe mode for permission-aware operation
+- **Distribution**: npm package with cross-platform CLI wrapper
+
+## Development Environment
+- **Build System**: Bun-based build with npm distribution
+- **Testing**: Bun test runner with comprehensive test suite
+- **Code Quality**: TypeScript with strict mode, Zod schema validation
+- **Documentation**: Markdown-based with automatic generation capabilities
+
+## Research and Innovation Areas
+- **Agentic Workflow Optimization**: Research into optimal agent coordination patterns
+- **Model Performance Profiling**: Analysis of model strengths for different development tasks
+- **Context Compression**: Advanced techniques for managing large conversation contexts
+- **Predictive Development**: Machine learning for proactive development assistance

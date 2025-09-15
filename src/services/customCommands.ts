@@ -1,13 +1,23 @@
+// 导入文件系统操作函数
 import { existsSync, readFileSync } from 'fs'
+// 导入路径操作函数
 import { join } from 'path'
+// 导入操作系统工具函数，用于获取用户主目录
 import { homedir } from 'os'
+// 导入lodash的记忆化函数，用于缓存结果
 import { memoize } from 'lodash-es'
+// 导入Anthropic SDK的消息参数类型
 import type { MessageParam } from '@anthropic-ai/sdk/resources/index.mjs'
+// 导入命令接口类型
 import type { Command } from '../commands'
+// 导入状态管理函数，用于获取当前工作目录
 import { getCwd } from '../utils/state'
+// 导入子进程执行函数
 import { execFile } from 'child_process'
+// 导入promisify工具，用于将回调函数转换为Promise
 import { promisify } from 'util'
 
+// 将execFile函数转换为Promise版本，便于使用async/await
 const execFileAsync = promisify(execFile)
 
 /**

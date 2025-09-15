@@ -70,26 +70,26 @@ import { getOriginalCwd } from '../utils/state'
 import { handleHashCommand } from '../commands/terminalSetup'
 import { debug as debugLogger } from '../utils/debugLogger'
 
+/**
+ * REPL组件的属性接口
+ * 定义了交互式编程环境的所有配置参数
+ */
 type Props = {
-  commands: Command[]
-  safeMode?: boolean
-  debug?: boolean
-  initialForkNumber?: number | undefined
-  initialPrompt: string | undefined
-  // A unique name for the message log file, used to identify the fork
-  messageLogName: string
-  shouldShowPromptInput: boolean
-  tools: Tool[]
-  verbose: boolean | undefined
-  // Initial messages to populate the REPL with
-  initialMessages?: MessageType[]
-  // MCP clients
-  mcpClients?: WrappedClient[]
-  // Flag to indicate if current model is default
-  isDefaultModel?: boolean
-  // Update banner info passed from CLI before first render
-  initialUpdateVersion?: string | null
-  initialUpdateCommands?: string[] | null
+  commands: Command[]                    // 可用的斜杠命令列表
+  safeMode?: boolean                     // 是否启用安全模式（严格权限检查）
+  debug?: boolean                        // 是否启用调试模式（显示组件边框等）
+  initialForkNumber?: number | undefined // 初始分叉编号（用于对话分支）
+  initialPrompt: string | undefined     // 启动时的初始提示词
+  messageLogName: string                // 消息日志文件的唯一名称，用于识别对话分支
+  shouldShowPromptInput: boolean        // 是否显示提示输入框
+  tools: Tool[]                         // 可用的工具列表
+  verbose: boolean | undefined          // 是否启用详细输出模式
+  initialMessages?: MessageType[]       // 用于恢复对话的初始消息列表
+  mcpClients?: WrappedClient[]          // MCP（模型上下文协议）客户端列表
+  isDefaultModel?: boolean              // 当前使用的是否为默认模型
+  // 从CLI传入的更新横幅信息，确保在首次渲染时显示在顶部
+  initialUpdateVersion?: string | null   // 可用更新的版本号
+  initialUpdateCommands?: string[] | null // 更新命令建议
 }
 
 export type BinaryFeedbackContext = {
@@ -98,6 +98,27 @@ export type BinaryFeedbackContext = {
   resolve: (result: BinaryFeedbackResult) => void
 }
 
+/**
+ * REPL - 读取-求值-输出-循环交互式界面
+ * 这是Kode/Claude Code的核心用户界面组件，提供：
+ *
+ * 🏗️ 架构特点：
+ * - 基于React Hooks的状态管理
+ * - 支持对话分支和恢复
+ * - 实时工具执行和权限管理
+ * - 流式AI响应处理
+ * - MCP协议集成
+ *
+ * 🔄 主要功能流程：
+ * 1. 用户输入 → 命令解析 → 工具调用请求
+ * 2. 权限检查 → 工具执行 → 结果展示
+ * 3. AI模型调用 → 流式响应 → 界面更新
+ *
+ * 🎨 UI组件层次：
+ * - Static: Logo, 项目引导, 历史消息
+ * - Dynamic: 当前对话, 工具执行状态
+ * - Interactive: 输入框, 权限对话框, 选择器
+ */
 export function REPL({
   commands,
   safeMode,

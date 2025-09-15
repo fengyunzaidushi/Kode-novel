@@ -1,107 +1,130 @@
+// 从Anthropic SDK导入消息相关类型
 import {
-  Message as APIAssistantMessage,
-  MessageParam,
-  ToolUseBlock,
+  Message as APIAssistantMessage,    // API助手消息类型
+  MessageParam,                      // 消息参数类型
+  ToolUseBlock,                      // 工具使用块类型
 } from '@anthropic-ai/sdk/resources/index.mjs'
+// 导入通用UUID类型
 import type { UUID } from './types/common'
+// 导入工具接口和上下文类型
 import type { Tool, ToolUseContext } from './Tool'
+// 导入二元反馈相关工具函数
 import {
-  messagePairValidForBinaryFeedback,
-  shouldUseBinaryFeedback,
+  messagePairValidForBinaryFeedback, // 检查消息对是否适用于二元反馈
+  shouldUseBinaryFeedback,           // 检查是否应该使用二元反馈
 } from './components/binary-feedback/utils.js'
+// 导入工具使用权限检查函数类型
 import { CanUseToolFn } from './hooks/useCanUseTool'
+// 导入Claude服务相关函数
 import {
-  formatSystemPromptWithContext,
-  queryLLM,
-  queryModel,
+  formatSystemPromptWithContext,    // 格式化系统提示词
+  queryLLM,                         // 查询LLM
+  queryModel,                       // 查询模型
 } from './services/claude.js'
+// 导入系统提醒事件发射器
 import { emitReminderEvent } from './services/systemReminder'
+// 导入生成器工具函数
 import { all } from './utils/generators'
+// 导入错误日志函数
 import { logError } from './utils/log'
+// 导入调试和日志相关函数
 import {
-  debug as debugLogger,
-  markPhase,
-  getCurrentRequest,
-  logUserFriendly,
+  debug as debugLogger,            // 调试日志记录器
+  markPhase,                       // 标记执行阶段
+  getCurrentRequest,               // 获取当前请求
+  logUserFriendly,                 // 用户友好日志
 } from './utils/debugLogger'
+// 导入模型管理器
 import { getModelManager } from './utils/model.js'
+// 导入消息创建和处理工具函数
 import {
-  createAssistantMessage,
-  createProgressMessage,
-  createToolResultStopMessage,
-  createUserMessage,
-  FullToolUseResult,
-  INTERRUPT_MESSAGE,
-  INTERRUPT_MESSAGE_FOR_TOOL_USE,
-  NormalizedMessage,
-  normalizeMessagesForAPI,
+  createAssistantMessage,          // 创建助手消息
+  createProgressMessage,           // 创建进度消息
+  createToolResultStopMessage,     // 创建工具结果停止消息
+  createUserMessage,               // 创建用户消息
+  FullToolUseResult,               // 完整工具使用结果类型
+  INTERRUPT_MESSAGE,               // 中断消息常量
+  INTERRUPT_MESSAGE_FOR_TOOL_USE,  // 工具使用中断消息常量
+  NormalizedMessage,               // 标准化消息类型
+  normalizeMessagesForAPI,         // 为API标准化消息
 } from './utils/messages.js'
+// 导入工具执行控制器创建函数
 import { createToolExecutionController } from './utils/toolExecutionController'
+// 导入Bash工具
 import { BashTool } from './tools/BashTool/BashTool'
+// 导入状态管理函数
 import { getCwd } from './utils/state'
+// 导入自动压缩核心函数
 import { checkAutoCompact } from './utils/autoCompactCore'
 
-// Extended ToolUseContext for query functions
+// 查询函数的扩展工具使用上下文 - 添加了查询特定的属性
 interface ExtendedToolUseContext extends ToolUseContext {
-  abortController: AbortController
-  options: {
-    commands: any[]
-    forkNumber: number
-    messageLogName: string
-    tools: Tool[]
-    verbose: boolean
-    safeMode: boolean
-    maxThinkingTokens: number
-    isKodingRequest?: boolean
-    model?: string | import('./utils/config').ModelPointerType
+  abortController: AbortController  // 用于取消操作的控制器
+  options: {                        // 扩展的选项配置
+    commands: any[]                 // 可用命令列表
+    forkNumber: number              // 分叉编号
+    messageLogName: string          // 消息日志名称
+    tools: Tool[]                   // 可用工具列表
+    verbose: boolean                // 详细输出模式标志
+    safeMode: boolean               // 安全模式标志
+    maxThinkingTokens: number       // 最大思考token数
+    isKodingRequest?: boolean       // 是否为Koding请求
+    model?: string | import('./utils/config').ModelPointerType  // 模型配置
   }
-  readFileTimestamps: { [filename: string]: number }
-  setToolJSX: (jsx: any) => void
-  requestId?: string
+  readFileTimestamps: { [filename: string]: number }  // 文件读取时间戳映射
+  setToolJSX: (jsx: any) => void    // 设置工具JSX显示的函数
+  requestId?: string                // 可选的请求ID
 }
 
+// 导出响应类型 - 包含成本和响应内容
 export type Response = { costUSD: number; response: string }
+
+// 导出用户消息类型 - 表示来自用户的消息
 export type UserMessage = {
-  message: MessageParam
-  type: 'user'
-  uuid: UUID
-  toolUseResult?: FullToolUseResult
-  options?: {
-    isKodingRequest?: boolean
-    kodingContext?: string
-    isCustomCommand?: boolean
-    commandName?: string
-    commandArgs?: string
+  message: MessageParam             // 消息参数
+  type: 'user'                      // 消息类型标识符
+  uuid: UUID                        // 消息唯一标识符
+  toolUseResult?: FullToolUseResult // 可选的工具使用结果
+  options?: {                       // 可选的消息选项
+    isKodingRequest?: boolean       // 是否为Koding请求
+    kodingContext?: string          // Koding上下文
+    isCustomCommand?: boolean       // 是否为自定义命令
+    commandName?: string            // 命令名称
+    commandArgs?: string            // 命令参数
   }
 }
 
+// 导出助手消息类型 - 表示来自AI助手的消息
 export type AssistantMessage = {
-  costUSD: number
-  durationMs: number
-  message: APIAssistantMessage
-  type: 'assistant'
-  uuid: UUID
-  isApiErrorMessage?: boolean
-  responseId?: string // For GPT-5 Responses API state management
+  costUSD: number                   // 消息成本（美元）
+  durationMs: number                // 处理持续时间（毫秒）
+  message: APIAssistantMessage      // API助手消息
+  type: 'assistant'                 // 消息类型标识符
+  uuid: UUID                        // 消息唯一标识符
+  isApiErrorMessage?: boolean       // 是否为API错误消息
+  responseId?: string               // 用于GPT-5响应API状态管理的响应ID
 }
 
+// 导出二元反馈结果类型 - 用于二元反馈系统的结果
 export type BinaryFeedbackResult =
-  | { message: AssistantMessage | null; shouldSkipPermissionCheck: false }
-  | { message: AssistantMessage; shouldSkipPermissionCheck: true }
+  | { message: AssistantMessage | null; shouldSkipPermissionCheck: false }  // 正常结果，需要权限检查
+  | { message: AssistantMessage; shouldSkipPermissionCheck: true }          // 跳过权限检查的结果
 
+// 导出进度消息类型 - 表示工具执行过程中的进度更新
 export type ProgressMessage = {
-  content: AssistantMessage
-  normalizedMessages: NormalizedMessage[]
-  siblingToolUseIDs: Set<string>
-  tools: Tool[]
-  toolUseID: string
-  type: 'progress'
-  uuid: UUID
+  content: AssistantMessage         // 进度内容
+  normalizedMessages: NormalizedMessage[]  // 标准化消息列表
+  siblingToolUseIDs: Set<string>    // 兄弟工具使用ID集合
+  tools: Tool[]                     // 工具列表
+  toolUseID: string                 // 工具使用ID
+  type: 'progress'                  // 消息类型标识符
+  uuid: UUID                        // 消息唯一标识符
 }
 
-// Each array item is either a single message or a message-and-response pair
+// 导出消息联合类型 - 数组中的每个项目要么是单个消息，要么是消息-响应对
 export type Message = UserMessage | AssistantMessage | ProgressMessage
 
+// 最大工具使用并发数常量 - 限制同时执行的工具数量
 const MAX_TOOL_USE_CONCURRENCY = 10
 
 // Returns a message if we got one, or `null` if the user cancelled

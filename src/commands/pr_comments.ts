@@ -1,22 +1,26 @@
+// 导入命令接口定义
 import { Command } from '../commands'
 
+// 导出pr-comments命令的默认配置对象
 export default {
-  type: 'prompt',
-  name: 'pr-comments',
-  description: 'Get comments from a GitHub pull request',
-  progressMessage: 'fetching PR comments',
-  isEnabled: true,
-  isHidden: false,
-  userFacingName() {
+  type: 'prompt',  // 命令类型为提示类型，会生成AI提示词而不是直接执行代码
+  name: 'pr-comments',  // 命令名称
+  description: 'Get comments from a GitHub pull request',  // 命令描述：从GitHub拉取请求获取评论
+  progressMessage: 'fetching PR comments',  // 执行时显示的进度消息
+  isEnabled: true,  // 命令是否启用
+  isHidden: false,  // 命令是否在帮助中隐藏
+  userFacingName() {  // 返回用户界面显示的命令名称
     return 'pr-comments'
   },
-  async getPromptForCommand(args: string) {
+  async getPromptForCommand(args: string) {  // 异步函数，生成命令的提示词
+    // 返回发送给AI的消息数组
     return [
       {
-        role: 'user',
-        content: [
+        role: 'user',  // 消息角色为用户
+        content: [  // 消息内容数组
           {
-            type: 'text',
+            type: 'text',  // 内容类型为文本
+            // 生成详细的GitHub PR评论获取指令文本
             text: `You are an AI assistant integrated into a git-based version control system. Your task is to fetch and display comments from a GitHub pull request.
 
 Follow these steps:
@@ -37,7 +41,7 @@ Format the comments as:
   [diff_hunk from the API response]
   \`\`\`
   > quoted comment text
-  
+
   [any replies indented]
 
 If there are no comments, return "No comments found."
@@ -50,10 +54,10 @@ Remember:
 5. Use jq to parse the JSON responses from the GitHub API
 
 ${args ? 'Additional user input: ' + args : ''}
-`,
+`,  // 如果有用户额外输入，则添加到指令末尾
           },
         ],
       },
     ]
   },
-} satisfies Command
+} satisfies Command  // 确保对象符合Command接口

@@ -1,3 +1,10 @@
+// 消息处理系统核心模块 - 处理用户输入、AI响应和工具使用的消息流转
+// 这个模块是Kode系统的消息通信枢纽，负责：
+// 1. 消息创建和格式化（用户消息、助手消息、进度消息）
+// 2. 用户输入处理（普通提示、Bash命令、斜杠命令）
+// 3. 消息标准化和API兼容性处理
+// 4. 工具使用状态跟踪和消息重排序
+
 import { randomUUID, UUID } from 'crypto'
 import { Box } from 'ink'
 import {
@@ -32,10 +39,9 @@ import { Spinner } from '../components/Spinner'
 import { BashTool } from '../tools/BashTool/BashTool'
 import { ToolUseBlock } from '@anthropic-ai/sdk/resources/index.mjs'
 
-// NOTE: Dynamic content processing for custom commands has been moved to
-// src/services/customCommands.ts for better organization and reusability.
-// The functions executeBashCommands and resolveFileReferences are no longer
-// duplicated here but are imported when needed for custom command processing.
+// 注意：自定义命令的动态内容处理已迁移到 src/services/customCommands.ts
+// 为了更好的组织结构和代码复用性，executeBashCommands 和 resolveFileReferences
+// 函数不再在此处重复定义，而是在需要时从自定义命令服务导入
 
 export const INTERRUPT_MESSAGE = '[Request interrupted by user]'
 export const INTERRUPT_MESSAGE_FOR_TOOL_USE =
@@ -157,6 +163,16 @@ export function createToolResultStopMessage(
   }
 }
 
+/**
+ * 处理用户输入的主要函数
+ * 根据不同的模式处理用户输入，支持bash命令、斜杠命令和普通提示
+ * @param input 用户输入的文本内容
+ * @param mode 输入模式：'bash'（直接执行bash命令）| 'prompt'（普通提示）| 'koding'（Koding模式）
+ * @param setToolJSX 设置工具JSX显示的函数
+ * @param context 工具使用上下文和额外选项
+ * @param pastedImage 粘贴的图像数据（Base64格式）
+ * @returns 返回处理后的消息数组
+ */
 export async function processUserInput(
   input: string,
   mode: 'bash' | 'prompt' | 'koding',
@@ -172,13 +188,12 @@ export async function processUserInput(
   },
   pastedImage: string | null,
 ): Promise<Message[]> {
-  // Bash commands
+  // Bash命令处理分支 - 直接执行系统命令
   if (mode === 'bash') {
-    
-
+    // 创建包含bash输入标签的用户消息
     const userMessage = createUserMessage(`<bash-input>${input}</bash-input>`)
 
-    // Special case: cd
+    // 特殊情况处理：cd命令 - 需要更新工作目录状态
     if (input.startsWith('cd ')) {
       const oldCwd = getCwd()
       const newCwd = resolve(oldCwd, input.slice(3))
@@ -201,7 +216,8 @@ export async function processUserInput(
       }
     }
 
-    // All other bash commands
+    // 所有其他bash命令 - 通过BashTool执行
+    // 显示执行中的界面（用户输入 + 加载动画）
     setToolJSX({
       jsx: (
         <Box flexDirection="column" marginTop={1}>
@@ -209,10 +225,10 @@ export async function processUserInput(
             addMargin={false}
             param={{ text: `<bash-input>${input}</bash-input>`, type: 'text' }}
           />
-          <Spinner />
+          <Spinner />  {/* 加载动画 */}
         </Box>
       ),
-      shouldHidePromptInput: false,
+      shouldHidePromptInput: false,  // 保持提示输入可见
     })
     try {
       const validationResult = await BashTool.validateInput({
@@ -239,41 +255,40 @@ export async function processUserInput(
       setToolJSX(null)
     }
   }
-  // Koding mode - special wrapper for display
+  // Koding模式 - 用于特殊显示包装的特殊模式
   else if (mode === 'koding') {
-    
-
+    // 创建包含koding标签的用户消息
     const userMessage = createUserMessage(
       `<koding-input>${input}</koding-input>`,
     )
-    // Add the Koding flag to the message
+    // 在消息中添加Koding标记
     userMessage.options = {
       ...userMessage.options,
-      isKodingRequest: true,
+      isKodingRequest: true,  // 标记为Koding请求
     }
 
-    // Rest of koding processing is handled separately to capture assistant response
+    // Koding处理的其余部分在其他地方处理，以便捕获助手响应
     return [userMessage]
   }
 
-  // Slash commands
+  // 斜杠命令处理 - 处理以'/' 开头的特殊命令
   if (input.startsWith('/')) {
     const words = input.slice(1).split(' ')
-    let commandName = words[0]
+    let commandName = words[0]  // 提取命令名
+    // 处理MCP命令的特殊标记
     if (words.length > 1 && words[1] === '(MCP)') {
       commandName = commandName + ' (MCP)'
     }
+    // 检查命令名是否为空
     if (!commandName) {
-      
       return [
-        createAssistantMessage('Commands are in the form `/command [args]`'),
+        createAssistantMessage('Commands are in the form `/command [args]`'),  // 返回命令格式提示
       ]
     }
 
-    // Check if it's a real command before processing
+    // 检查是否为真实的命令
     if (!hasCommand(commandName, context.options.commands)) {
-      // If not a real command, treat it as a regular user input
-      
+      // 如果不是真实命令，将其作为普通用户输入处理
       return [createUserMessage(input)]
     }
 
@@ -314,12 +329,11 @@ export async function processUserInput(
     return newMessages
   }
 
-  // Regular user prompt
-  
+  // 普通用户提示处理分支 - 处理非命令的正常用户输入
 
-  // Check if this is a Koding request that needs special handling
+  // 检查是否为Koding请求，需要特殊处理
   const isKodingRequest = context.options?.isKodingRequest === true
-  const kodingContextInfo = context.options?.kodingContext
+  const kodingContextInfo = context.options?.kodingContext  // 获取Koding上下文信息
 
   // Create base message
   let userMessage: UserMessage
@@ -612,11 +626,19 @@ export type NormalizedMessage =
   | ProgressMessage
 
 // Split messages, so each content block gets its own message
+/**
+ * 消息标准化函数
+ * 将复合消息拆分为单个内容块，以便于UI显示和API处理
+ * @param messages 原始消息数组
+ * @returns 标准化后的消息数组，每个消息只包含一个内容块
+ */
 export function normalizeMessages(messages: Message[]): NormalizedMessage[] {
   return messages.flatMap(message => {
+    // 进度消息不需要拆分，直接返回
     if (message.type === 'progress') {
       return [message] as NormalizedMessage[]
     }
+    // 字符串内容不需要拆分，直接返回
     if (typeof message.message.content === 'string') {
       return [message] as NormalizedMessage[]
     }
@@ -667,11 +689,17 @@ function isToolUseRequestMessage(
 }
 
 // Re-order, to move result messages to be after their tool use messages
+/**
+ * 消息重排序函数
+ * 将工具结果消息移动到对应的工具使用消息之后，保持正确的执行顺序
+ * @param messages 标准化的消息数组
+ * @returns 重排序后的消息数组
+ */
 export function reorderMessages(
   messages: NormalizedMessage[],
 ): NormalizedMessage[] {
-  const ms: NormalizedMessage[] = []
-  const toolUseMessages: ToolUseRequestMessage[] = []
+  const ms: NormalizedMessage[] = []                    // 重排序后的消息数组
+  const toolUseMessages: ToolUseRequestMessage[] = []    // 工具使用请求消息列表
 
   for (const message of messages) {
     // track tool use messages we've seen
@@ -780,11 +808,19 @@ export function getUnresolvedToolUseIDs(
  *
  * TODO: Find a way to harden this logic to make it more explicit
  */
+/**
+ * 获取正在执行中的工具使用ID集合
+ * 工具使用处于执行中状态的条件：
+ * 1. 有对应的进度消息但没有结果消息
+ * 2. 是第一个未解决的工具使用
+ * @param normalizedMessages 标准化消息数组
+ * @returns 正在执行中的工具使用ID集合
+ */
 export function getInProgressToolUseIDs(
   normalizedMessages: NormalizedMessage[],
 ): Set<string> {
-  const unresolvedToolUseIDs = getUnresolvedToolUseIDs(normalizedMessages)
-  const toolUseIDsThatHaveProgressMessages = new Set(
+  const unresolvedToolUseIDs = getUnresolvedToolUseIDs(normalizedMessages)  // 获取所有未解决的工具ID
+  const toolUseIDsThatHaveProgressMessages = new Set(                      // 有进度消息的工具ID
     normalizedMessages.filter(_ => _.type === 'progress').map(_ => _.toolUseID),
   )
   return new Set(
@@ -828,12 +864,18 @@ export function getErroredToolUseMessages(
   ) as AssistantMessage[]
 }
 
+/**
+ * 为API调用标准化消息
+ * 过滤掉进度消息，合并相同类型的连续工具结果消息
+ * @param messages 原始消息数组
+ * @returns 适合API调用的消息数组，不包含进度消息
+ */
 export function normalizeMessagesForAPI(
   messages: Message[],
 ): (UserMessage | AssistantMessage)[] {
   const result: (UserMessage | AssistantMessage)[] = []
   messages
-    .filter(_ => _.type !== 'progress')
+    .filter(_ => _.type !== 'progress')  // 过滤掉进度消息，因为它们不发送给AI模型
     .forEach(message => {
       switch (message.type) {
         case 'user': {

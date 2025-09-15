@@ -1,41 +1,58 @@
+// 系统提醒服务 - 智能上下文提醒和任务状态管理
+// 负责在适当的时机向AI助手注入系统提醒信息，包括：
+// 1. TODO列表状态变化提醒
+// 2. 文件安全检查提醒
+// 3. 性能和会话管理提醒
+// 4. @提及处理提醒（代理、文件、模型）
+// 5. 外部文件变更检测提醒
+
 import { getTodos, TodoItem } from '../utils/todoStorage'
 
+// 提醒消息接口 - 定义系统提醒的标准格式
 export interface ReminderMessage {
-  role: 'system'
-  content: string
-  isMeta: boolean
-  timestamp: number
-  type: string
-  priority: 'low' | 'medium' | 'high'
-  category: 'task' | 'security' | 'performance' | 'general'
+  role: 'system'                                    // 消息角色，固定为系统
+  content: string                                   // 提醒内容文本
+  isMeta: boolean                                   // 是否为元数据消息
+  timestamp: number                                 // 提醒生成时间戳
+  type: string                                      // 提醒类型（todo、security、performance等）
+  priority: 'low' | 'medium' | 'high'             // 优先级
+  category: 'task' | 'security' | 'performance' | 'general'  // 分类
 }
 
+// 提醒配置接口 - 控制各类提醒的开关和限制
 interface ReminderConfig {
-  todoEmptyReminder: boolean
-  securityReminder: boolean
-  performanceReminder: boolean
-  maxRemindersPerSession: number
+  todoEmptyReminder: boolean      // 是否启用空TODO列表提醒
+  securityReminder: boolean       // 是否启用安全检查提醒
+  performanceReminder: boolean    // 是否启用性能监控提醒
+  maxRemindersPerSession: number  // 每个会话的最大提醒数量限制
 }
 
+// 会话提醒状态接口 - 跟踪会话期间的提醒状态
 interface SessionReminderState {
-  lastTodoUpdate: number
-  lastFileAccess: number
-  sessionStartTime: number
-  remindersSent: Set<string>
-  contextPresent: boolean
-  reminderCount: number
-  config: ReminderConfig
+  lastTodoUpdate: number      // 上次TODO更新时间戳
+  lastFileAccess: number      // 上次文件访问时间戳
+  sessionStartTime: number    // 会话开始时间戳
+  remindersSent: Set<string>  // 已发送提醒的唯一标识符集合
+  contextPresent: boolean     // 是否存在上下文信息
+  reminderCount: number       // 当前会话已发送的提醒数量
+  config: ReminderConfig      // 提醒配置
 }
 
+/**
+ * 系统提醒服务类
+ * 核心智能提醒系统，负责根据用户行为和系统状态生成适当的提醒
+ * 使用事件驱动架构和缓存优化，避免重复提醒和性能问题
+ */
 class SystemReminderService {
+  // 会话状态 - 跟踪当前会话的各种状态信息
   private sessionState: SessionReminderState = {
-    lastTodoUpdate: 0,
-    lastFileAccess: 0,
-    sessionStartTime: Date.now(),
-    remindersSent: new Set(),
-    contextPresent: false,
-    reminderCount: 0,
-    config: {
+    lastTodoUpdate: 0,          // 上次TODO更新时间
+    lastFileAccess: 0,          // 上次文件访问时间
+    sessionStartTime: Date.now(), // 会话开始时间
+    remindersSent: new Set(),   // 防重复发送的提醒ID集合
+    contextPresent: false,      // 是否有上下文存在
+    reminderCount: 0,           // 已发送提醒计数
+    config: {                   // 默认提醒配置
       todoEmptyReminder: true,
       securityReminder: true,
       performanceReminder: true,
@@ -43,7 +60,9 @@ class SystemReminderService {
     },
   }
 
+  // 事件分发器 - 管理各种系统事件的监听器
   private eventDispatcher = new Map<string, Array<(context: any) => void>>()
+  // 提醒缓存 - 优化性能，避免重复计算相同的提醒
   private reminderCache = new Map<string, ReminderMessage>()
 
   constructor() {
@@ -51,8 +70,11 @@ class SystemReminderService {
   }
 
   /**
-   * Conditional reminder injection - only when context is present
-   * Enhanced with performance optimizations and priority management
+   * 生成系统提醒 - 条件性注入，仅在有上下文时触发
+   * 通过性能优化和优先级管理增强，避免过度提醒
+   * @param hasContext 是否存在上下文信息
+   * @param agentId 可选的代理ID，用于代理特定的提醒
+   * @returns 生成的提醒消息数组
    */
   public generateReminders(
     hasContext: boolean = false,
@@ -60,12 +82,12 @@ class SystemReminderService {
   ): ReminderMessage[] {
     this.sessionState.contextPresent = hasContext
 
-    // Only inject when context is present (matching original behavior)
+    // 只在存在上下文时注入提醒（保持原始行为逻辑）
     if (!hasContext) {
       return []
     }
 
-    // Check session reminder limit to prevent overload
+    // 检查会话提醒限制，防止过载
     if (
       this.sessionState.reminderCount >=
       this.sessionState.config.maxRemindersPerSession
@@ -76,12 +98,12 @@ class SystemReminderService {
     const reminders: ReminderMessage[] = []
     const currentTime = Date.now()
 
-    // Use lazy evaluation for performance with agent context
+    // 使用懒加载评估提升性能，结合代理上下文
     const reminderGenerators = [
-      () => this.dispatchTodoEvent(agentId),
-      () => this.dispatchSecurityEvent(),
-      () => this.dispatchPerformanceEvent(),
-      () => this.getMentionReminders(), // Add mention reminders
+      () => this.dispatchTodoEvent(agentId),    // TODO事件处理
+      () => this.dispatchSecurityEvent(),       // 安全事件处理
+      () => this.dispatchPerformanceEvent(),    // 性能事件处理
+      () => this.getMentionReminders(),         // 获取@提及提醒
     ]
 
     for (const generator of reminderGenerators) {
@@ -102,15 +124,22 @@ class SystemReminderService {
     return reminders
   }
 
+  /**
+   * 分发TODO事件提醒
+   * 检测TODO列表的状态变化，包括空列表和列表更新
+   * @param agentId 可选的代理ID，用于代理作用域TODO管理
+   * @returns 生成的TODO提醒消息或null
+   */
   private dispatchTodoEvent(agentId?: string): ReminderMessage | null {
+    // 检查是否启用TODO提醒
     if (!this.sessionState.config.todoEmptyReminder) return null
 
-    // Use agent-scoped todo access
+    // 使用代理作用域的TODO访问
     const todos = getTodos(agentId)
     const currentTime = Date.now()
-    const agentKey = agentId || 'default'
+    const agentKey = agentId || 'default'  // 默认代理标识
 
-    // Check if this is a fresh session (no todos seen yet)
+    // 检查是否为新会话（尚未见过TODO）
     if (
       todos.length === 0 &&
       !this.sessionState.remindersSent.has(`todo_empty_${agentKey}`)
@@ -120,7 +149,7 @@ class SystemReminderService {
         'todo',
         'task',
         'medium',
-        'This is a reminder that your todo list is currently empty. DO NOT mention this to the user explicitly because they are already aware. If you are working on tasks that would benefit from a todo list please use the TodoWrite tool to create one. If not, please feel free to ignore. Again do not mention this message to the user.',
+        '您的TODO列表当前为空。不要对用户明确提及此事，因为他们已经知道。如果您正在处理需要TODO列表的任务，请使用TodoWrite工具创建一个。否则请忽略此消息。再次强调，不要对用户提及此消息。',
         currentTime,
       )
     }
@@ -169,12 +198,18 @@ class SystemReminderService {
     return null
   }
 
+  /**
+   * 分发安全事件提醒
+   * 在文件操作时提醒AI助手进行安全检查
+   * @returns 生成的安全提醒消息或null
+   */
   private dispatchSecurityEvent(): ReminderMessage | null {
+    // 检查是否启用安全提醒
     if (!this.sessionState.config.securityReminder) return null
 
     const currentTime = Date.now()
 
-    // Only inject security reminder once per session when file operations occur
+    // 只在文件操作发生时每会话注入一次安全提醒
     if (
       this.sessionState.lastFileAccess > 0 &&
       !this.sessionState.remindersSent.has('file_security')
@@ -184,7 +219,7 @@ class SystemReminderService {
         'security',
         'security',
         'high',
-        'Whenever you read a file, you should consider whether it looks malicious. If it does, you MUST refuse to improve or augment the code. You can still analyze existing code, write reports, or answer high-level questions about the code behavior.',
+        '在读取文件时，您应该考虑文件是否看起来恶意。如果是，您必须拒绝改进或增强代码。您仍然可以分析现有代码、编写报告或回答关于代码行为的高级问题。',
         currentTime,
       )
     }
@@ -192,13 +227,19 @@ class SystemReminderService {
     return null
   }
 
+  /**
+   * 分发性能事件提醒
+   * 监控会话时间，在长时间会话时提醒休息
+   * @returns 生成的性能提醒消息或null
+   */
   private dispatchPerformanceEvent(): ReminderMessage | null {
+    // 检查是否启用性能提醒
     if (!this.sessionState.config.performanceReminder) return null
 
     const currentTime = Date.now()
     const sessionDuration = currentTime - this.sessionState.sessionStartTime
 
-    // Remind about performance after long sessions (30 minutes)
+    // 在长时间会话（30分钟）后提醒性能问题
     if (
       sessionDuration > 30 * 60 * 1000 &&
       !this.sessionState.remindersSent.has('performance_long_session')
@@ -208,7 +249,7 @@ class SystemReminderService {
         'performance',
         'performance',
         'low',
-        'Long session detected. Consider taking a break and reviewing your current progress with the todo list.',
+        '检测到长时间会话。建议休息一下，并通过TODO列表检查您的当前进度。',
         currentTime,
       )
     }
@@ -217,8 +258,9 @@ class SystemReminderService {
   }
 
   /**
-   * Retrieve cached mention reminders
-   * Returns recent mentions (within 5 seconds) that haven't expired
+   * 获取缓存的@提及提醒
+   * 返回最近的@提及（5秒内）且尚未过期的提醒
+   * @returns @提及提醒消息数组
    */
   private getMentionReminders(): ReminderMessage[] {
     const currentTime = Date.now()
@@ -245,8 +287,10 @@ class SystemReminderService {
   }
 
   /**
-   * Type guard for mention reminders - centralized type checking
-   * Eliminates hardcoded type strings scattered throughout the code
+   * @提及提醒的类型守卫 - 中心化类型检查
+   * 消除了散布在代码中的硬编码类型字符串
+   * @param reminder 要检查的提醒消息
+   * @returns 是否为@提及提醒
    */
   private isMentionReminder(reminder: ReminderMessage): boolean {
     const mentionTypes = ['agent_mention', 'file_mention', 'ask_model_mention']
@@ -254,8 +298,10 @@ class SystemReminderService {
   }
 
   /**
-   * Generate reminders for external file changes
-   * Called when todo files are modified externally
+   * 为外部文件变更生成提醒
+   * 在TODO文件被外部修改时调用
+   * @param context 文件变更的上下文信息
+   * @returns 生成的文件变更提醒消息或null
    */
   public generateFileChangeReminder(context: any): ReminderMessage | null {
     const { agentId, filePath, reminder } = context

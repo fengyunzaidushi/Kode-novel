@@ -1,9 +1,13 @@
-import { Hunk } from 'diff'
+// 文件编辑工具 - 精确的文本替换和文件修改工具
+// 支持字符串替换、编码检测、权限验证和差异显示
+// 与 NotebookEditTool 协同工作，为 Jupyter Notebook 文件提供特殊处理
+
+import { Hunk } from 'diff'        // 差异处理库
 import { existsSync, mkdirSync, readFileSync, statSync } from 'fs'
-import { Box, Text } from 'ink'
+import { Box, Text } from 'ink'    // React终端UI组件
 import { dirname, isAbsolute, relative, resolve, sep } from 'path'
 import * as React from 'react'
-import { z } from 'zod'
+import { z } from 'zod'             // 输入验证库
 import { FileEditToolUpdatedMessage } from '../../components/FileEditToolUpdatedMessage'
 import { StructuredDiff } from '../../components/StructuredDiff'
 import { FallbackToolUseRejectedMessage } from '../../components/FallbackToolUseRejectedMessage'
@@ -27,22 +31,29 @@ import { applyEdit } from './utils'
 import { hasWritePermission } from '../../utils/permissions/filesystem'
 import { PROJECT_FILE } from '../../constants/product'
 
+// 输入参数模式定义 - 使用严格的类型验证
 const inputSchema = z.strictObject({
-  file_path: z.string().describe('The absolute path to the file to modify'),
-  old_string: z.string().describe('The text to replace'),
-  new_string: z.string().describe('The text to replace it with'),
+  file_path: z.string().describe('要修改的文件的绝对路径'),  // 目标文件路径
+  old_string: z.string().describe('要替换的文本内容'),     // 原始字符串
+  new_string: z.string().describe('替换后的文本内容'),     // 新的字符串
 })
 
 export type In = typeof inputSchema
 
-// Number of lines of context to include before/after the change in our result message
+// 在结果消息中包含的上下文行数 - 用于显示修改前后的代码片段
 const N_LINES_SNIPPET = 4
 
+/**
+ * FileEditTool - 文件编辑工具
+ * 使用精确的字符串替换来修改文件内容，支持各种文件类型和编码
+ */
 export const FileEditTool = {
   name: 'Edit',
+  // 工具描述 - 返回功能说明
   async description() {
-    return 'A tool for editing files'
+    return '用于编辑文件的工具'
   },
+  // 获取系统提示词 - 包含使用指导和注意事项
   async prompt() {
     return DESCRIPTION
   },

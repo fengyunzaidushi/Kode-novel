@@ -1,18 +1,33 @@
 #!/usr/bin/env -S node --no-warnings=ExperimentalWarning --enable-source-maps
+/**
+ * CLI入口点 - Kode/Claude Code的主要命令行界面
+ * 这是整个应用程序的启动文件，负责：
+ * 1. 初始化系统配置和错误监控
+ * 2. 设置命令行参数解析
+ * 3. 启动交互式REPL或处理单次命令
+ * 4. 管理MCP服务器配置
+ * 5. 处理用户认证和权限设置
+ */
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { existsSync } from 'node:fs'
 import { initSentry } from '../services/sentry'
 import { PRODUCT_COMMAND, PRODUCT_NAME } from '../constants/product'
-initSentry() // Initialize Sentry as early as possible
+// 尽早初始化Sentry错误监控，用于捕获和报告应用程序错误
+initSentry()
 
-// Ensure YOGA_WASM_PATH is set for Ink across run modes (wrapper/dev)
-// Resolve yoga.wasm relative to this file when missing using ESM-friendly APIs
+/**
+ * 配置Yoga WASM路径 - Ink UI框架依赖的布局引擎
+ * 在不同的运行模式（开发模式/分发模式）中确保yoga.wasm文件能被正确找到
+ * 这对于终端UI的渲染至关重要
+ */
 try {
   if (!process.env.YOGA_WASM_PATH) {
     const __filename = fileURLToPath(import.meta.url)
     const __dirname = dirname(__filename)
+    // 开发模式：相对于当前文件的上两级目录
     const devCandidate = join(__dirname, '../../yoga.wasm')
+    // 分发模式：与当前文件同级目录
     const distCandidate = join(__dirname, './yoga.wasm')
     const resolved = existsSync(distCandidate)
       ? distCandidate
@@ -25,9 +40,12 @@ try {
   }
 } catch {}
 
-// XXX: Without this line (and the Object.keys, even though it seems like it does nothing!),
-// there is a bug in Bun only on Win32 that causes this import to be removed, even though
-// its use is solely because of its side-effects.
+/**
+ * 解决Bun在Windows上的特殊bug
+ * 不删除这两行！在Windows的Bun环境下，如果没有显式使用这个导入，
+ * 构建工具会错误地移除它，导致SDK的Node.js适配层失效
+ * Object.keys调用确保导入被"使用"，防止被删除
+ */
 import * as dontcare from '@anthropic-ai/sdk/shims/node'
 Object.keys(dontcare)
 
@@ -103,6 +121,11 @@ import { showInvalidConfigDialog } from '../components/InvalidConfigDialog'
 import { ConfigParseError } from '../utils/errors'
 import { grantReadPermissionForOriginalDir } from '../utils/permissions/filesystem'
 import { MACRO } from '../constants/macros'
+/**
+ * 完成用户首次使用引导流程
+ * 将用户标记为已完成初始化设置，避免重复显示引导界面
+ * 记录当前版本号，用于判断是否需要显示版本更新后的新功能介绍
+ */
 export function completeOnboarding(): void {
   const config = getGlobalConfig()
   saveGlobalConfig({
@@ -284,29 +307,40 @@ async function setup(cwd: string, safeMode?: boolean): Promise<void> {
   // Users can still run the doctor command manually if desired.
 }
 
+/**
+ * 主函数 - 应用程序的核心启动逻辑
+ * 负责配置验证、错误处理、命令行解析和程序流程控制
+ */
 async function main() {
-  // 初始化调试日志系统
+  // 初始化调试日志系统，用于开发者调试和问题排查
   initDebugLogger()
 
-  // Validate configs are valid and enable configuration system
+  /**
+   * 配置系统初始化和验证
+   * 加载用户的全局配置和项目配置，确保配置文件格式正确
+   */
   try {
     enableConfigs()
-    
-    // 🔧 Validate and auto-repair GPT-5 model profiles
+
+    /**
+     * GPT-5模型配置自动修复
+     * 由于GPT-5模型配置可能因为版本更新而过期，
+     * 这里自动检查和修复配置，确保模型能正常工作
+     */
     try {
       const repairResult = validateAndRepairAllGPT5Profiles()
       if (repairResult.repaired > 0) {
         console.log(`🔧 Auto-repaired ${repairResult.repaired} GPT-5 model configurations`)
       }
     } catch (repairError) {
-      // Don't block startup if GPT-5 validation fails
+      // GPT-5验证失败不应该阻止程序启动，仅发出警告
       console.warn('⚠️ GPT-5 configuration validation failed:', repairError)
     }
   } catch (error: unknown) {
     if (error instanceof ConfigParseError) {
-      // Show the invalid config dialog with the error object
+      // 配置文件解析错误 - 显示用户友好的错误对话框
       await showInvalidConfigDialog({ error })
-      return // Exit after handling the config error
+      return // 处理配置错误后退出
     }
   }
 
@@ -338,21 +372,30 @@ async function main() {
   await parseArgs(inputPrompt, renderContext)
 }
 
+/**
+ * 解析命令行参数并设置所有可用的命令
+ * 这个函数是命令行界面的核心，定义了所有用户可以使用的命令和选项
+ *
+ * @param stdinContent - 从标准输入读取的内容（如管道输入）
+ * @param renderContext - 终端渲染上下文配置
+ * @returns Promise<Command> - commander.js的程序对象
+ */
 async function parseArgs(
   stdinContent: string,
   renderContext: RenderOptions | undefined,
 ): Promise<Command> {
   const program = new Command()
 
+  // 设置渲染上下文，允许Ctrl+C退出
   const renderContextWithExitOnCtrlC = {
     ...renderContext,
     exitOnCtrlC: true,
   }
 
-  // Get the initial list of commands filtering based on user type
+  // 获取所有可用命令，根据用户类型过滤（普通用户 vs 内部员工）
   const commands = await getCommands()
 
-  // Format command list for help text (using same filter as in help.ts)
+  // 生成帮助文本中显示的命令列表，过滤掉隐藏命令
   const commandList = commands
     .filter(cmd => !cmd.isHidden)
     .map(cmd => `/${cmd.name} - ${cmd.description}`)

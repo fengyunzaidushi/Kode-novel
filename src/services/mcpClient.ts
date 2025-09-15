@@ -1,3 +1,27 @@
+/**
+ * MCP客户端服务 - 模型上下文协议的核心集成层
+ *
+ * 🌐 MCP (Model Context Protocol) 是一个开放标准协议，用于：
+ * - 让AI模型安全地访问外部数据和工具
+ * - 标准化AI应用与外部服务的集成方式
+ * - 支持工具调用、提示模板、资源访问等功能
+ *
+ * 🏗️ 本服务的职责：
+ * 1. 管理MCP服务器配置（项目级/全局/mcprc文件）
+ * 2. 建立和维护与MCP服务器的连接
+ * 3. 将MCP工具和命令转换为Kode工具系统格式
+ * 4. 处理工具调用和结果传递
+ * 5. 提供权限管理和错误处理
+ *
+ * 📁 支持的配置作用域：
+ * - project: 项目级配置 (.kode.json)
+ * - global: 全局配置 (~/.kode.json)
+ * - mcprc: 项目根目录的 .mcprc 文件
+ *
+ * 🔌 支持的传输协议：
+ * - stdio: 标准输入输出（子进程）
+ * - sse: 服务器发送事件（HTTP）
+ */
 import { zipObject } from 'lodash-es'
 import {
   getCurrentProjectConfig,
@@ -38,14 +62,27 @@ import { logMCPError } from '../utils/log'
 import { Command } from '../commands'
 import { PRODUCT_COMMAND } from '../constants/product.js'
 
+// MCP服务器名称类型别名
 type McpName = string
 
+/**
+ * 解析环境变量参数
+ * 将命令行传入的环境变量字符串数组转换为键值对对象
+ *
+ * @param rawEnvArgs - 原始环境变量字符串数组，格式：["KEY1=value1", "KEY2=value2"]
+ * @returns Record<string, string> - 环境变量键值对对象
+ * @throws Error - 当环境变量格式不正确时
+ *
+ * @example
+ * parseEnvVars(["API_KEY=abc123", "PORT=3000"])
+ * // 返回: { API_KEY: "abc123", PORT: "3000" }
+ */
 export function parseEnvVars(
   rawEnvArgs: string[] | undefined,
 ): Record<string, string> {
   const parsedEnv: Record<string, string> = {}
 
-  // Parse individual env vars
+  // 解析各个环境变量
   if (rawEnvArgs) {
     for (const envStr of rawEnvArgs) {
       const [key, ...valueParts] = envStr.split('=')
@@ -54,19 +91,37 @@ export function parseEnvVars(
           `Invalid environment variable format: ${envStr}, environment variables should be added as: -e KEY1=value1 -e KEY2=value2`,
         )
       }
+      // 重新组合值部分，处理值中包含等号的情况
       parsedEnv[key] = valueParts.join('=')
     }
   }
   return parsedEnv
 }
 
+// 所有有效的配置作用域
 const VALID_SCOPES = ['project', 'global', 'mcprc'] as const
+// 配置作用域类型定义
 type ConfigScope = (typeof VALID_SCOPES)[number]
+// 外部用户可用的作用域（不包括内部mcprc）
 const EXTERNAL_SCOPES = ['project', 'global'] as ConfigScope[]
 
+/**
+ * 确保配置作用域有效性
+ * 根据用户类型验证并返回有效的配置作用域
+ *
+ * @param scope - 要验证的作用域字符串
+ * @returns ConfigScope - 验证后的作用域
+ * @throws Error - 当作用域无效时
+ *
+ * 作用域优先级（高到低）：
+ * 1. project - 项目级配置，仅对当前项目有效
+ * 2. mcprc - 项目根目录的.mcprc文件（需要用户确认）
+ * 3. global - 全局配置，对所有项目有效
+ */
 export function ensureConfigScope(scope?: string): ConfigScope {
   if (!scope) return 'project'
 
+  // 根据用户类型确定可用作用域
   const scopesToCheck =
     process.env.USER_TYPE === 'external' ? EXTERNAL_SCOPES : VALID_SCOPES
 
@@ -221,34 +276,51 @@ export function getMcpServer(name: McpName): ScopedMcpServerConfig | undefined {
   return undefined
 }
 
+/**
+ * 连接到MCP服务器
+ * 根据服务器配置建立适当的传输连接（stdio或sse）
+ *
+ * @param name - MCP服务器名称，用于日志记录
+ * @param serverRef - MCP服务器配置对象
+ * @returns Promise<Client> - 已连接的MCP客户端实例
+ * @throws Error - 连接超时或失败时
+ *
+ * 🔌 支持的传输方式：
+ * - stdio: 通过子进程的标准输入输出通信
+ * - sse: 通过HTTP服务器发送事件通信
+ */
 async function connectToServer(
   name: string,
   serverRef: McpServerConfig,
 ): Promise<Client> {
+  // 根据服务器类型创建相应的传输层
   const transport =
     serverRef.type === 'sse'
-      ? new SSEClientTransport(new URL(serverRef.url))
-      : new StdioClientTransport({
+      ? // SSE传输：用于HTTP-based MCP服务器
+        new SSEClientTransport(new URL(serverRef.url))
+      : // Stdio传输：用于本地命令行MCP服务器
+        new StdioClientTransport({
           command: serverRef.command,
           args: serverRef.args,
           env: {
-            ...process.env,
-            ...serverRef.env,
+            ...process.env, // 继承当前环境变量
+            ...serverRef.env, // 覆盖服务器特定的环境变量
           } as Record<string, string>,
-          stderr: 'pipe', // prevents error output from the MCP server from printing to the UI
+          stderr: 'pipe', // 防止MCP服务器的错误输出直接显示在UI中
         })
 
+  // 创建MCP客户端实例
   const client = new Client(
     {
       name: PRODUCT_COMMAND,
       version: '0.1.0',
     },
     {
-      capabilities: {},
+      capabilities: {}, // 目前不声明特殊能力
     },
   )
 
-  // Add a timeout to connection attempts to prevent tests from hanging indefinitely
+  // 添加连接超时机制，防止测试或启动时无限等待
   const CONNECTION_TIMEOUT_MS = 5000
   const connectPromise = client.connect(transport)
   const timeoutPromise = new Promise<never>((_, reject) => {
@@ -260,15 +332,17 @@ async function connectToServer(
       )
     }, CONNECTION_TIMEOUT_MS)
 
-    // Clean up timeout if connect resolves or rejects
+    // 连接完成时清理超时器
     connectPromise.then(
       () => clearTimeout(timeoutId),
       () => clearTimeout(timeoutId),
     )
   })
 
+  // 竞争连接和超时，先完成的获胜
   await Promise.race([connectPromise, timeoutPromise])
 
+  // 为stdio类型的服务器设置错误输出监听
   if (serverRef.type === 'stdio') {
     ;(transport as StdioClientTransport).stderr?.on('data', (data: Buffer) => {
       const errorText = data.toString().trim()
@@ -392,7 +466,25 @@ async function requestAll<
     )
 }
 
+/**
+ * 获取所有MCP工具并转换为Kode工具格式
+ * 这是MCP工具集成的核心函数，将外部MCP服务器的工具转换为Kode可用的工具
+ *
+ * @returns Promise<Tool[]> - 转换后的工具数组
+ *
+ * 🔄 转换流程：
+ * 1. 向所有连接的MCP服务器请求工具列表
+ * 2. 为每个工具创建统一的Kode工具包装器
+ * 3. 设置工具名称命名空间（mcp__serverName__toolName）
+ * 4. 配置工具的描述、验证和调用逻辑
+ *
+ * 🏷️ 工具命名规范：
+ * - 格式：mcp__[服务器名]__[工具名]
+ * - 例如：mcp__filesystem__read_file
+ * - 避免不同服务器间的工具名冲突
+ */
 export const getMCPTools = memoize(async (): Promise<Tool[]> => {
+  // 向所有支持工具的MCP服务器请求工具列表
   const toolsList = await requestAll<
     ListToolsResult,
     typeof ListToolsResultSchema
@@ -401,34 +493,43 @@ export const getMCPTools = memoize(async (): Promise<Tool[]> => {
       method: 'tools/list',
     },
     ListToolsResultSchema,
-    'tools',
+    'tools', // 要求服务器支持tools能力
   )
 
-  // TODO: Add zod schema validation
+  // TODO: 添加zod模式验证以确保工具定义的安全性
   return toolsList.flatMap(({ client, result: { tools } }) =>
     tools.map(
       (tool): Tool => ({
+        // 继承基础MCP工具的通用属性和行为
         ...MCPTool,
+        // 使用命名空间防止冲突：mcp__服务器名__工具名
         name: 'mcp__' + client.name + '__' + tool.name,
+        // 异步描述生成器
         async description() {
           return tool.description ?? ''
         },
+        // 工具提示词（用于AI模型理解工具功能）
         async prompt() {
           return tool.description ?? ''
         },
+        // 使用MCP工具提供的JSON Schema作为输入验证
         inputJSONSchema: tool.inputSchema as Tool['inputJSONSchema'],
+        // 输入验证：MCP工具通过自己的schema处理验证
         async validateInput(input, context) {
-          // MCP tools handle their own validation through their schemas
-          return { result: true }
+          return { result: true } // 信任MCP服务器的验证逻辑
         },
+        // 工具调用的核心实现：异步生成器模式
         async *call(args: Record<string, unknown>, context) {
+          // 调用实际的MCP工具并获取结果
           const data = await callMCPTool({ client, tool: tool.name, args })
+          // 将结果包装为标准格式并返回给AI助手
           yield {
             type: 'result' as const,
             data,
             resultForAssistant: data,
           }
         },
+        // 用户界面显示的友好名称
         userFacingName() {
           return `${client.name}:${tool.name} (MCP)`
         },

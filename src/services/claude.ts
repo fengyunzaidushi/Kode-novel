@@ -1,3 +1,39 @@
+/**
+ * Claude API集成服务 - Kode/Claude Code的AI模型调用核心
+ *
+ * 🎯 核心职责：
+ * 1. 统一多平台AI模型调用（Anthropic、OpenAI、Bedrock、Vertex等）
+ * 2. 智能API适配和协议转换（支持新旧API架构）
+ * 3. 流式响应处理和上下文管理
+ * 4. 成本计算和使用统计跟踪
+ * 5. 重试机制和错误处理
+ * 6. 提示缓存和上下文压缩优化
+ *
+ * 🏗️ 架构特点：
+ * - 多AI平台统一接口：Anthropic原生SDK + OpenAI兼容适配
+ * - 智能模型适配器工厂：根据模型能力自动选择最优API
+ * - GPT-5响应API支持：推理模型的高级特性集成
+ * - 上下文智能管理：自动缓存和压缩策略
+ * - 实时调试日志：完整的API调用链路追踪
+ *
+ * 🔄 API调用流程：
+ * 1. 模型解析和配置加载（ModelManager）
+ * 2. 系统提示和上下文构建（formatSystemPromptWithContext）
+ * 3. API适配器选择（Anthropic原生/OpenAI兼容）
+ * 4. 流式/非流式调用执行
+ * 5. 响应解析和成本计算
+ * 6. 错误处理和重试机制
+ *
+ * 📊 上游依赖：
+ * - ../utils/model.ts（模型管理）
+ * - ../utils/config.ts（配置系统）
+ * - ./modelAdapterFactory.ts（适配器工厂）
+ *
+ * 📈 下游使用者：
+ * - ../query.ts（查询编排）
+ * - ../tools/（各种工具调用）
+ * - ../components/（UI组件的API调用）
+ */
 import '@anthropic-ai/sdk/shims/node'
 import Anthropic, { APIConnectionError, APIError } from '@anthropic-ai/sdk'
 import { AnthropicBedrock } from '@anthropic-ai/bedrock-sdk'
@@ -833,7 +869,33 @@ let anthropicClient: Anthropic | AnthropicBedrock | AnthropicVertex | null =
   null
 
 /**
- * Get the Anthropic client, creating it if it doesn't exist
+ * 获取Anthropic客户端实例
+ * 根据部署环境和模型配置自动创建和管理API客户端
+ *
+ * @param model - 可选的模型名称，用于特定区域配置
+ * @returns Anthropic客户端实例（原生、Bedrock或Vertex）
+ *
+ * 🎯 客户端类型支持：
+ * - Anthropic原生：直接API调用，支持自定义baseURL
+ * - AWS Bedrock：企业级部署，使用AWS凭证
+ * - Google Vertex：GCP集成，支持多区域配置
+ * - 第三方兼容：BigDream、OpenDev等Anthropic兼容服务
+ *
+ * 🔧 配置优先级：
+ * 1. ModelProfile配置（API密钥、baseURL、提供商）
+ * 2. 环境变量设置（USE_BEDROCK、USE_VERTEX）
+ * 3. 全局配置回退（primaryProvider）
+ * 4. 默认Anthropic配置
+ *
+ * 🌍 多区域支持：
+ * - Vertex AI：支持模型特定区域配置
+ * - 环境变量：VERTEX_REGION_CLAUDE_3_5_SONNET等
+ * - 默认区域：us-east5
+ *
+ * ⚡ 性能优化：
+ * - 客户端单例模式：避免重复创建
+ * - 配置变更检测：提供商切换时自动重建
+ * - 超时和重试控制：可配置的网络参数
  */
 export function getAnthropicClient(
   model?: string,
@@ -1094,6 +1156,38 @@ function splitSysPromptPrefix(systemPrompt: string[]): string[] {
   return [systemPromptFirstBlock, systemPromptRest.join('\n')].filter(Boolean)
 }
 
+/**
+ * 主要的LLM查询函数 - Kode的AI调用统一入口
+ * 这是整个系统与AI模型交互的核心函数，负责协调所有AI相关的操作
+ *
+ * @param messages - 对话历史消息列表
+ * @param systemPrompt - 系统提示词数组
+ * @param maxThinkingTokens - 最大思考token数量（用于推理模型）
+ * @param tools - 可用工具列表
+ * @param signal - 取消信号，用于中断长时间运行的请求
+ * @param options - 查询选项配置
+ * @returns Promise<AssistantMessage> - AI助手的响应消息
+ *
+ * 🎯 核心功能：
+ * - 智能模型解析：支持模型指针（main/task/reasoning/quick）和直接模型名
+ * - 多平台适配：自动选择最优的API调用方式（Anthropic/OpenAI/自定义）
+ * - 上下文管理：处理对话状态、响应ID、会话连续性
+ * - 错误恢复：完整的重试机制和错误诊断系统
+ * - 性能监控：请求耗时、成本计算、调试日志
+ *
+ * 🔄 执行流程：
+ * 1. 模型解析和验证（ModelManager.resolveModelWithInfo）
+ * 2. 响应状态初始化（GPT-5会话连续性支持）
+ * 3. API调用（queryLLMWithPromptCaching）
+ * 4. 结果处理和状态更新
+ * 5. 错误诊断和日志记录
+ *
+ * 🛡️ 错误处理：
+ * - 模型解析失败：抛出详细错误信息
+ * - API调用失败：自动重试和降级策略
+ * - 网络超时：AbortSignal支持的优雅取消
+ * - 诊断日志：完整的错误上下文记录
+ */
 export async function queryLLM(
   messages: (UserMessage | AssistantMessage)[],
   systemPrompt: string[],
@@ -1206,6 +1300,34 @@ export async function queryLLM(
   }
 }
 
+/**
+ * 系统提示词与上下文格式化函数
+ * 将基础系统提示词与项目上下文、动态提醒等组合成完整的AI指导内容
+ *
+ * @param systemPrompt - 基础系统提示词数组
+ * @param context - 项目上下文键值对（文档、配置等）
+ * @param agentId - 代理ID（用于特定代理的定制化提醒）
+ * @param skipContextReminders - 跳过上下文提醒（保持API兼容性）
+ * @returns {systemPrompt: string[], reminders: string} - 增强后的系统提示和动态提醒
+ *
+ * 🎯 核心功能：
+ * - GPT-5持久化支持：为长期编程任务添加上下文连续性指令
+ * - Kode项目文档集成：自动注入项目README、架构文档等
+ * - 动态系统提醒：根据会话状态生成实时提醒信息
+ * - 上下文过滤和优化：避免重复信息和内容冗余
+ *
+ * 🏗️ 系统提示构建层次：
+ * 1. 基础系统提示（核心行为指导）
+ * 2. GPT-5持久化指令（编程任务连续性）
+ * 3. 项目文档上下文（CLAUDE.md、README等）
+ * 4. 动态上下文信息（配置、状态等）
+ * 5. 实时系统提醒（返回给调用方注入消息）
+ *
+ * 💡 设计原则：
+ * - 直接注入vs动态提醒：项目文档直接注入系统提示，状态信息返回动态提醒
+ * - 层次化信息组织：重要信息优先，避免关键指令被覆盖
+ * - 智能去重：避免同一信息在不同层次重复出现
+ */
 export function formatSystemPromptWithContext(
   systemPrompt: string[],
   context: { [k: string]: string },

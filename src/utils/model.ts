@@ -1,5 +1,31 @@
+/**
+ * 模型管理核心系统 - Kode多模型支持的统一管理层
+ *
+ * 🎯 核心职责：
+ * 1. 多AI模型配置和切换管理（OpenAI、Anthropic、国产模型等）
+ * 2. 模型指针系统（main/task/reasoning/quick）的统一分发
+ * 3. 上下文窗口管理和模型兼容性检查
+ * 4. 动态模型切换和配置热更新
+ * 5. 模型配置文件的生命周期管理
+ *
+ * 🏗️ 架构特点：
+ * - ModelManager单例模式避免配置竞争
+ * - 支持Bedrock、Vertex、First-party多种部署方式
+ * - 模型指针抽象：不同任务使用最适合的模型
+ * - 上下文溢出自动处理和模型回退机制
+ * - 配置迁移和向后兼容支持
+ *
+ * 🔄 模型指针系统：
+ * - main: 主对话模型（用户交互）
+ * - task: 任务工具模型（工具调用）
+ * - reasoning: 推理模型（复杂逻辑）
+ * - quick: 快速模型（简单操作）
+ *
+ * 📊 上游依赖：./config.ts（配置管理）
+ * 📈 下游使用者：./query.ts、./claude.ts、所有工具调用
+ */
 import { memoize } from 'lodash-es'
- 
+
 import { logError } from './log'
 import {
   getGlobalConfig,
@@ -8,24 +34,39 @@ import {
   saveGlobalConfig,
 } from './config'
 
-export const USE_BEDROCK = !!process.env.CLAUDE_CODE_USE_BEDROCK
-export const USE_VERTEX = !!process.env.CLAUDE_CODE_USE_VERTEX
+// 环境变量控制的部署方式开关
+export const USE_BEDROCK = !!process.env.CLAUDE_CODE_USE_BEDROCK  // AWS Bedrock部署
+export const USE_VERTEX = !!process.env.CLAUDE_CODE_USE_VERTEX    // Google Vertex AI部署
 
+/**
+ * 模型配置接口 - 定义不同部署平台的默认模型
+ * 支持多平台部署策略，根据环境自动选择最适合的模型版本
+ */
 export interface ModelConfig {
-  bedrock: string
-  vertex: string
-  firstParty: string
-}
-
-const DEFAULT_MODEL_CONFIG: ModelConfig = {
-  bedrock: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
-  vertex: 'claude-3-7-sonnet@20250219',
-  firstParty: 'claude-sonnet-4-20250514',
+  bedrock: string     // AWS Bedrock平台的模型标识符
+  vertex: string      // Google Vertex AI平台的模型标识符
+  firstParty: string  // Anthropic官方API的模型标识符
 }
 
 /**
- * Helper to get the model config from statsig or defaults
- * Relies on the built-in caching from StatsigClient
+ * 默认模型配置 - 各平台的推荐模型版本
+ * 这些是经过测试验证的稳定模型版本，提供一致的用户体验
+ */
+const DEFAULT_MODEL_CONFIG: ModelConfig = {
+  bedrock: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',  // Bedrock特定格式
+  vertex: 'claude-3-7-sonnet@20250219',                      // Vertex特定格式
+  firstParty: 'claude-sonnet-4-20250514',                    // 官方API最新版本
+}
+
+/**
+ * 获取模型配置的助手函数
+ * 从statsig功能开关或默认配置获取模型设置
+ * 依赖于StatsigClient的内置缓存机制来提高性能
+ *
+ * @returns Promise<ModelConfig> - 完整的模型配置对象
+ *
+ * 📝 注意：当前简化为直接返回默认配置
+ * 未来版本可能会从远程配置服务获取动态模型设置
  */
 async function getModelConfig(): Promise<ModelConfig> {
   return DEFAULT_MODEL_CONFIG
@@ -74,8 +115,25 @@ export function getVertexRegionForModel(
 }
 
 /**
- * Comprehensive ModelManager class for centralized model selection and management.
- * Provides a clean interface for model selection across the application.
+ * 综合模型管理器类 - 中央化模型选择和管理的核心
+ * 为整个应用程序提供清晰的模型选择接口
+ *
+ * 🎯 主要功能：
+ * - 统一模型配置管理和生命周期控制
+ * - 智能模型切换和回退机制
+ * - 上下文窗口兼容性检查和优化
+ * - 模型指针系统的动态分发
+ * - 配置热更新和持久化存储
+ *
+ * 🔄 设计模式：
+ * - 单例模式：避免配置文件读写竞争
+ * - 策略模式：支持不同部署平台的模型选择
+ * - 适配器模式：统一不同AI服务商的接口差异
+ *
+ * 💡 创新特点：
+ * - 支持无限数量的AI模型配置
+ * - 动态上下文兼容性分析
+ * - 自动模型降级和恢复机制
  */
 export class ModelManager {
   private config: any // Using any to handle legacy properties
@@ -87,7 +145,20 @@ export class ModelManager {
   }
 
   /**
-   * Get the current terminal model (for interactive CLI sessions)
+   * 获取当前终端模型（用于交互式CLI会话）
+   * 返回用户在终端界面交互时使用的模型
+   *
+   * @returns string | null - 当前激活的终端模型名称
+   *
+   * 🎯 使用场景：
+   * - 终端REPL会话的主要对话模型
+   * - 用户直接输入命令的响应模型
+   * - 实时交互体验的核心模型
+   *
+   * 🔄 选择逻辑：
+   * 1. 优先使用主指针(main)指向的模型
+   * 2. 检查模型配置文件是否存在且激活
+   * 3. 回退到主代理模型作为备选
    */
   getCurrentModel(): string | null {
     // Use main pointer from new ModelProfile system
@@ -104,7 +175,22 @@ export class ModelManager {
   }
 
   /**
-   * Get the main agent default model (for non-terminal mode and MCP calls)
+   * 获取主代理默认模型（用于非终端模式和MCP调用）
+   * 返回用于后台任务和服务间调用的默认模型
+   *
+   * @returns string | null - 主代理模型名称
+   *
+   * 🎯 使用场景：
+   * - 非终端模式下的API调用
+   * - MCP服务器间的通信
+   * - 后台任务的自动化处理
+   * - 系统级的AI推理任务
+   *
+   * 🔄 选择逻辑：
+   * 1. 优先使用主指针(main)配置的模型
+   * 2. 验证模型配置存在且处于激活状态
+   * 3. 回退到第一个激活的模型配置文件
+   * 4. 所有选项都失败时返回null
    */
   getMainAgentModel(): string | null {
     // Use main pointer from new ModelProfile system
@@ -126,7 +212,25 @@ export class ModelManager {
   }
 
   /**
-   * Get the task tool default model (for Task tool sub-agents)
+   * 获取任务工具默认模型（用于Task工具子代理）
+   * 返回专门用于工具调用和任务执行的模型
+   *
+   * @returns string | null - 任务工具模型名称
+   *
+   * 🎯 使用场景：
+   * - Task工具创建的子代理
+   * - 专门的工具执行上下文
+   * - 需要特定能力的任务处理
+   * - 独立于主对话的工具调用链
+   *
+   * 🔄 选择逻辑：
+   * 1. 优先使用任务指针(task)指向的专用模型
+   * 2. 验证任务模型配置的有效性和活跃状态
+   * 3. 回退到主代理模型确保功能连续性
+   *
+   * 💡 设计理念：
+   * - 允许为不同类型的任务配置专门的模型
+   * - 平衡性能和成本的模型选择策略
    */
   getTaskToolModel(): string | null {
     // Use task pointer from new ModelProfile system
@@ -853,11 +957,30 @@ export class ModelManager {
   }
 }
 
-// Global ModelManager instance to avoid config read/write race conditions
+// 全局ModelManager实例 - 避免配置文件读写竞争条件
 let globalModelManager: ModelManager | null = null
 
 /**
- * Get the global ModelManager instance (singleton pattern to fix race conditions)
+ * 获取全局ModelManager实例（单例模式修复竞争条件）
+ * 确保整个应用程序中只有一个ModelManager实例，避免配置冲突
+ *
+ * @returns ModelManager - 全局单例的模型管理器实例
+ *
+ * 🔧 单例设计原因：
+ * - 避免多个组件同时读写配置文件造成的竞争条件
+ * - 确保模型状态在应用程序范围内的一致性
+ * - 提高性能：减少重复的配置文件读取
+ * - 简化调试：集中的模型管理状态
+ *
+ * 🛡️ 错误处理策略：
+ * - 配置读取失败时创建空配置的备用实例
+ * - 记录详细错误信息便于问题诊断
+ * - 保证函数总是返回可用的ModelManager实例
+ *
+ * 💡 使用模式：
+ * - 在任何需要模型操作的地方调用此函数
+ * - 不需要手动传递ModelManager实例
+ * - 配置更改后可通过reloadModelManager()强制刷新
  */
 export const getModelManager = (): ModelManager => {
   try {
@@ -887,8 +1010,22 @@ export const getModelManager = (): ModelManager => {
 }
 
 /**
- * Force reload of the global ModelManager instance
- * Used when configuration changes to ensure fresh data
+ * 强制重载全局ModelManager实例
+ * 配置更改后使用此函数确保获取最新数据
+ *
+ * 🔄 使用时机：
+ * - 用户通过/model命令添加或删除模型后
+ * - 模型配置文件发生更改后
+ * - 模型指针重新分配后
+ * - 需要强制刷新模型状态的任何时候
+ *
+ * ⚡ 工作原理：
+ * 1. 清除现有的全局实例引用
+ * 2. 强制下次调用时重新创建实例
+ * 3. 从最新的配置文件加载模型设置
+ *
+ * 📝 注意：此操作是轻量级的，因为只是重置引用
+ * 实际的配置重新加载在下次getModelManager()调用时发生
  */
 export const reloadModelManager = (): void => {
   globalModelManager = null

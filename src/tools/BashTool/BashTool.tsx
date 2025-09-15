@@ -1,11 +1,15 @@
+// Bash工具 - 系统命令执行工具的核心实现
+// 这是Kode系统中最重要的工具之一，负责执行shell命令和系统操作
+// 具有完整的权限控制、安全检查和持久化shell会话支持
+
 import { statSync } from 'fs'
 import { EOL } from 'os'
 import { isAbsolute, relative, resolve } from 'path'
 import * as React from 'react'
-import { z } from 'zod'
+import { z } from 'zod'  // 输入验证库
 import { FallbackToolUseRejectedMessage } from '../../components/FallbackToolUseRejectedMessage'
 import { PRODUCT_NAME } from '../../constants/product'
-import { queryQuick } from '../../services/claude'
+import { queryQuick } from '../../services/claude'  // AI模型快速查询服务
 import { Tool, ValidationResult } from '../../Tool'
 import { splitCommand } from '../../utils/commands'
 import { isInDirectory } from '../../utils/file'
@@ -18,42 +22,54 @@ import BashToolResultMessage from './BashToolResultMessage'
 import { BANNED_COMMANDS, PROMPT } from './prompt'
 import { formatOutput, getCommandFilePaths } from './utils'
 
+// 输入参数模式定义 - 使用Zod进行严格的类型验证
 export const inputSchema = z.strictObject({
-  command: z.string().describe('The command to execute'),
+  command: z.string().describe('要执行的shell命令'),  // 必需的命令字符串
   timeout: z
     .number()
     .optional()
-    .describe('Optional timeout in milliseconds (max 600000)'),
+    .describe('可选的超时时间，单位毫秒（最大600000）'),  // 可选的超时设置
 })
 
+// 输入类型定义
 type In = typeof inputSchema
+
+// 输出类型定义 - 包含命令执行的完整结果信息
 export type Out = {
-  stdout: string
-  stdoutLines: number // Total number of lines in original stdout, even if `stdout` is now truncated
-  stderr: string
-  stderrLines: number // Total number of lines in original stderr, even if `stderr` is now truncated
-  interrupted: boolean
+  stdout: string         // 标准输出内容
+  stdoutLines: number    // 原始标准输出的总行数（即使内容被截断）
+  stderr: string         // 标准错误输出内容
+  stderrLines: number    // 原始标准错误输出的总行数（即使内容被截断）
+  interrupted: boolean   // 是否被用户中断
 }
 
+/**
+ * BashTool - Shell命令执行工具
+ * 提供安全的命令行界面，支持持久化会话、权限控制和输出格式化
+ */
 export const BashTool = {
   name: 'Bash',
+  // 工具描述 - 返回工具的功能说明
   async description() {
-    return 'Executes shell commands on your computer'
+    return '在您的计算机上执行shell命令'
   },
+  // 生成工具的系统提示词 - 包含安全指导和使用说明
   async prompt() {
     const config = getGlobalConfig()
-    // 🔧 Fix: Use ModelManager to get actual current model
+    // 获取当前配置的AI模型名称
     const modelManager = getModelManager()
     const modelName =
-      modelManager.getModelName('main') || '<No Model Configured>'
-    // Substitute the placeholder in the static PROMPT string
+      modelManager.getModelName('main') || '<未配置模型>'
+    // 将模型名称替换到提示词模板中
     return PROMPT.replace(/{MODEL_NAME}/g, modelName)
   },
+  // 判断是否为只读工具 - Bash可以修改文件系统，所以不是只读的
   isReadOnly() {
     return false
   },
+  // 判断是否支持并发执行 - 由于会修改状态和文件，不支持并发
   isConcurrencySafe() {
-    return false // BashTool modifies state/files, not safe for concurrent execution
+    return false  // BashTool会修改状态和文件，不能并发执行
   },
   inputSchema,
   userFacingName() {
@@ -62,21 +78,22 @@ export const BashTool = {
   async isEnabled() {
     return true
   },
+  // 判断是否需要权限检查 - 总是需要检查项目级权限
   needsPermissions(): boolean {
-    // Always check per-project permissions for BashTool
-    return true
+    return true  // Bash工具总是需要权限检查，确保安全性
   },
+  // 输入验证 - 检查命令是否安全和合法
   async validateInput({ command }): Promise<ValidationResult> {
-    const commands = splitCommand(command)
+    const commands = splitCommand(command)  // 分割复合命令
     for (const cmd of commands) {
       const parts = cmd.split(' ')
-      const baseCmd = parts[0]
+      const baseCmd = parts[0]  // 获取基础命令名
 
-      // Check if command is banned
+      // 检查命令是否在禁用列表中
       if (baseCmd && BANNED_COMMANDS.includes(baseCmd.toLowerCase())) {
         return {
           result: false,
-          message: `Command '${baseCmd}' is not allowed for security reasons`,
+          message: `出于安全考虑，不允许执行命令 '${baseCmd}'`,
         }
       }
 

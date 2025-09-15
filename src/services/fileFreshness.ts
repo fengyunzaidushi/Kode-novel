@@ -1,3 +1,12 @@
+// 文件新鲜度服务 - 文件变更检测和冲突管理系统
+// 负责监控文件的读取、编辑和外部修改状态，确保代码上下文的一致性
+// 主要功能：
+// 1. 跟踪文件读取和修改时间戳
+// 2. 检测外部文件变更和冲突
+// 3. 监控TODO文件的实时变更
+// 4. 为对话压缩提供重要文件信息
+// 5. 生成文件修改提醒和冲突警告
+
 import { statSync, existsSync, watchFile, unwatchFile } from 'fs'
 import {
   emitReminderEvent,
@@ -5,27 +14,35 @@ import {
 } from '../services/systemReminder'
 import { getAgentFilePath } from '../utils/agentStorage'
 
+// 文件时间戳接口 - 存储文件的详细状态信息
 interface FileTimestamp {
-  path: string
-  lastRead: number
-  lastModified: number
-  size: number
-  lastAgentEdit?: number // Track when Agent last edited this file
+  path: string              // 文件路径
+  lastRead: number          // 上次读取时间戳
+  lastModified: number      // 上次修改时间戳（文件系统级别）
+  size: number              // 文件大小（字节）
+  lastAgentEdit?: number    // 上次AI代理编辑时间戳（用于区分内部和外部修改）
 }
 
+// 文件新鲜度状态接口 - 管理所有文件相关的状态信息
 interface FileFreshnessState {
-  readTimestamps: Map<string, FileTimestamp>
-  editConflicts: Set<string>
-  sessionFiles: Set<string>
-  watchedTodoFiles: Map<string, string> // agentId -> filePath
+  readTimestamps: Map<string, FileTimestamp>  // 文件路径 -> 时间戳信息的映射
+  editConflicts: Set<string>                  // 存在编辑冲突的文件路径集合
+  sessionFiles: Set<string>                   // 当前会话中访问过的文件集合
+  watchedTodoFiles: Map<string, string>       // 代理ID -> TODO文件路径的监控映射
 }
 
+/**
+ * 文件新鲜度服务类
+ * 负责管理文件的生命周期和状态监控，确保代码上下文的准确性
+ * 提供文件冲突检测、变更提醒和智能恢复功能
+ */
 class FileFreshnessService {
+  // 服务状态 - 存储所有文件相关的状态信息
   private state: FileFreshnessState = {
-    readTimestamps: new Map(),
-    editConflicts: new Set(),
-    sessionFiles: new Set(),
-    watchedTodoFiles: new Map(),
+    readTimestamps: new Map(),    // 文件时间戳记录
+    editConflicts: new Set(),     // 冲突文件集合
+    sessionFiles: new Set(),      // 会话文件集合
+    watchedTodoFiles: new Map(),  // 监控的TODO文件
   }
 
   constructor() {
@@ -33,7 +50,8 @@ class FileFreshnessService {
   }
 
   /**
-   * Setup event listeners for session management
+   * 设置会话管理的事件监听器
+   * 与系统提醒服务集成，在会话开始时重置状态
    */
   private setupEventListeners(): void {
     // Listen for session startup events through the SystemReminderService
@@ -49,7 +67,9 @@ class FileFreshnessService {
   }
 
   /**
-   * Record file read operation with timestamp tracking
+   * 记录文件读取操作及其时间戳跟踪
+   * 在文件被读取时调用，更新文件状态信息并发出事件
+   * @param filePath 要记录的文件路径
    */
   public recordFileRead(filePath: string): void {
     try {
@@ -81,13 +101,16 @@ class FileFreshnessService {
   }
 
   /**
-   * Check if file has been modified since last read
+   * 检查文件是否在上次读取后被修改
+   * 返回文件的新鲜度状态和冲突信息
+   * @param filePath 要检查的文件路径
+   * @returns 包含新鲜度和冲突状态的对象
    */
   public checkFileFreshness(filePath: string): {
-    isFresh: boolean
-    lastRead?: number
-    currentModified?: number
-    conflict: boolean
+    isFresh: boolean        // 文件是否为最新状态
+    lastRead?: number       // 上次读取时间戳
+    currentModified?: number // 当前修改时间戳
+    conflict: boolean       // 是否存在冲突
   } {
     const recorded = this.state.readTimestamps.get(filePath)
 
@@ -130,7 +153,10 @@ class FileFreshnessService {
   }
 
   /**
-   * Record file edit operation by Agent
+   * 记录AI代理的文件编辑操作
+   * 更新文件状态，清除冲突标记，并发出编辑事件
+   * @param filePath 被编辑的文件路径
+   * @param content 可选的文件内容，用于统计长度
    */
   public recordFileEdit(filePath: string, content?: string): void {
     try {
@@ -174,6 +200,12 @@ class FileFreshnessService {
     }
   }
 
+  /**
+   * 生成文件修改提醒
+   * 检测文件是否被外部修改，并生成相应的提醒文本
+   * @param filePath 要检查的文件路径
+   * @returns 提醒文本或null（如果无需提醒）
+   */
   public generateFileModificationReminder(filePath: string): string | null {
     const recorded = this.state.readTimestamps.get(filePath)
 
@@ -213,14 +245,26 @@ class FileFreshnessService {
     }
   }
 
+  /**
+   * 获取存在编辑冲突的文件列表
+   * @returns 冲突文件路径数组
+   */
   public getConflictedFiles(): string[] {
     return Array.from(this.state.editConflicts)
   }
 
+  /**
+   * 获取当前会话中访问过的所有文件
+   * @returns 会话文件路径数组
+   */
   public getSessionFiles(): string[] {
     return Array.from(this.state.sessionFiles)
   }
 
+  /**
+   * 重置会话状态
+   * 清理所有文件监听器和状态信息，为新会话做准备
+   */
   public resetSession(): void {
     // Clean up existing todo file watchers
     this.state.watchedTodoFiles.forEach(filePath => {
@@ -240,7 +284,9 @@ class FileFreshnessService {
   }
 
   /**
-   * Start watching todo file for an agent
+   * 开始监控代理的TODO文件
+   * 为指定代理启动文件监控，在文件被外部修改时发出提醒
+   * @param agentId 要监控TODO文件的代理ID
    */
   public startWatchingTodoFile(agentId: string): void {
     try {
@@ -283,7 +329,9 @@ class FileFreshnessService {
   }
 
   /**
-   * Stop watching todo file for an agent
+   * 停止监控代理的TODO文件
+   * 清理文件监听器并从监控列表中移除
+   * @param agentId 要停止监控的代理ID
    */
   public stopWatchingTodoFile(agentId: string): void {
     try {
@@ -300,28 +348,38 @@ class FileFreshnessService {
     }
   }
 
+  /**
+   * 获取文件的详细信息
+   * @param filePath 文件路径
+   * @returns 文件时间戳信息或null
+   */
   public getFileInfo(filePath: string): FileTimestamp | null {
     return this.state.readTimestamps.get(filePath) || null
   }
 
+  /**
+   * 检查文件是否被跟踪监控
+   * @param filePath 文件路径
+   * @returns 是否被跟踪
+   */
   public isFileTracked(filePath: string): boolean {
     return this.state.readTimestamps.has(filePath)
   }
 
   /**
-   * Retrieves files prioritized for recovery during conversation compression
-   *
-   * Selects recently accessed files based on:
-   * - File access recency (most recent first)
-   * - File type relevance (excludes dependencies, build artifacts)
-   * - Development workflow importance
-   *
-   * Used to maintain coding context when conversation history is compressed
+   * 获取在对话压缩时优先恢复的重要文件
+   * 基于以下标准选择最近访问的文件：
+   * - 文件访问新近度（最近的优先）
+   * - 文件类型相关性（排除依赖、构建产物）
+   * - 开发工作流重要性
+   * 用于在对话历史被压缩时保持编码上下文
+   * @param maxFiles 最大文件数量，默认5个
+   * @returns 重要文件信息数组
    */
   public getImportantFiles(maxFiles: number = 5): Array<{
-    path: string
-    timestamp: number
-    size: number
+    path: string        // 文件路径
+    timestamp: number   // 访问时间戳
+    size: number        // 文件大小
   }> {
     return Array.from(this.state.readTimestamps.entries())
       .map(([path, info]) => ({
@@ -335,12 +393,13 @@ class FileFreshnessService {
   }
 
   /**
-   * Determines which files are suitable for automatic recovery
-   *
-   * Excludes files that are typically not relevant for development context:
-   * - Build artifacts and generated files
-   * - Dependencies and cached files
-   * - Temporary files and system directories
+   * 确定哪些文件适合自动恢复
+   * 排除通常与开发上下文不相关的文件：
+   * - 构建产物和生成文件
+   * - 依赖包和缓存文件
+   * - 临时文件和系统目录
+   * @param filePath 要检查的文件路径
+   * @returns 是否适合恢复
    */
   private isValidForRecovery(filePath: string): boolean {
     return (

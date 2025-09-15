@@ -1,22 +1,32 @@
+// 导入命令接口类型定义
 import type { Command } from '../commands'
+// 导入工具接口类型定义
 import type { Tool } from '../Tool'
+// 导入命令行表格库，用于创建格式化的表格显示
 import Table from 'cli-table3'
+// 导入系统提示词获取函数
 import { getSystemPrompt } from '../constants/prompts'
+// 导入上下文获取函数，用于获取当前代码库上下文
 import { getContext } from '../context'
+// 导入Zod模式转JSON Schema的工具函数
 import { zodToJsonSchema } from 'zod-to-json-schema'
+// 导入消息获取器，用于获取当前对话消息
 import { getMessagesGetter } from '../messages'
+// 导入项目文件常量
 import { PROJECT_FILE } from '../constants/product'
-// Quick and dirty estimate of bytes per token for rough token counts
+// 快速粗略估算每个token的字节数，用于粗略的token计数
 const BYTES_PER_TOKEN = 4
 
+// 定义章节接口，用于表示系统提示中的不同部分
 interface Section {
-  title: string
-  content: string
+  title: string  // 章节标题
+  content: string  // 章节内容
 }
 
+// 定义工具摘要接口，用于表示工具的基本信息
 interface ToolSummary {
-  name: string
-  description: string
+  name: string  // 工具名称
+  description: string  // 工具描述（包含完整提示和模式）
 }
 
 function getContextSections(text: string): Section[] {
