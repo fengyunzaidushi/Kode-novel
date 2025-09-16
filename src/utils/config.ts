@@ -1,18 +1,32 @@
 /**
- * 配置管理核心系统 - Kode/Claude Code的配置中枢
+ * 🎯 配置管理核心系统 - Kode 应用程序的配置中枢
+ *
+ * 🏗️ 核心功能：
+ * - 实现多层次配置管理架构（全局/项目级）
+ * - 提供统一的模型配置文件系统
+ * - 管理 MCP 服务器配置和集成
+ * - 支持用户偏好和主题定制
+ *
+ * 🔄 依赖关系：
+ * - 上游：被整个应用的配置相关功能使用
+ * - 下游：依赖文件系统、JSON 解析和状态管理
+ *
+ * 📊 使用场景：
+ * - 应用程序启动时的配置初始化
+ * - 用户设置的读取和保存
+ * - 项目特定配置的管理
+ * - AI 模型配置的动态切换
+ *
+ * 🔧 技术实现：
+ * - 基于文件系统的持久化存储
+ * - 类型安全的配置模式验证
+ * - 配置迁移和向后兼容机制
+ * - 测试环境的配置隔离支持
  *
  * 🏗️ 配置架构：
  * - 全局配置：存储在用户主目录 ~/.kode.json
  * - 项目配置：存储在全局配置中的projects字段，按项目路径索引
  * - MCP配置：支持全局、项目和.mcprc文件三种作用域
- *
- * 🎯 主要功能：
- * 1. 多层次配置管理（全局/项目级）
- * 2. 模型配置文件系统（多AI模型支持）
- * 3. MCP服务器配置和管理
- * 4. 用户偏好和主题设置
- * 5. 自动更新和版本管理
- * 6. GPT-5特殊配置支持
  *
  * 🔒 安全特性：
  * - API密钥安全存储和截断
@@ -34,34 +48,48 @@ import { debug as debugLogger } from './debugLogger'
 import { getSessionState, setSessionState } from './sessionState'
 
 /**
- * MCP Stdio服务器配置
- * 通过标准输入输出与子进程通信的MCP服务器配置
+ * MCP Stdio 服务器配置 - 基于标准输入输出的 MCP 服务器配置
+ *
+ * 通过标准输入输出与子进程通信的 MCP 服务器配置，
+ * 适用于本地 MCP 服务器的启动和管理。
  */
 export type McpStdioServerConfig = {
-  type?: 'stdio' // 可选，向后兼容
-  command: string // 要执行的命令
-  args: string[] // 命令参数
-  env?: Record<string, string> // 环境变量
+  /** 服务器类型，可选，默认为 stdio，保持向后兼容性 */
+  type?: 'stdio'
+  /** 要执行的命令或可执行文件路径 */
+  command: string
+  /** 命令参数数组 */
+  args: string[]
+  /** 可选的环境变量设置 */
+  env?: Record<string, string>
 }
 
 /**
- * MCP SSE服务器配置
- * 通过HTTP服务器发送事件通信的MCP服务器配置
+ * MCP SSE 服务器配置 - 基于服务器发送事件的 MCP 服务器配置
+ *
+ * 通过 HTTP 服务器发送事件（Server-Sent Events）通信的
+ * MCP 服务器配置，适用于远程 MCP 服务器的连接。
  */
 export type McpSSEServerConfig = {
+  /** 服务器类型，必须为 sse */
   type: 'sse'
-  url: string // 服务器URL
+  /** 服务器 URL 地址 */
+  url: string
 }
 
 /**
- * MCP服务器配置联合类型
- * 支持stdio和sse两种通信方式
+ * MCP 服务器配置联合类型 - 统一的 MCP 服务器配置接口
+ *
+ * 支持 stdio 和 sse 两种不同的通信方式，提供灵活的
+ * MCP 服务器连接选项以适应不同的部署场景。
  */
 export type McpServerConfig = McpStdioServerConfig | McpSSEServerConfig
 
 /**
- * 项目级配置类型
- * 存储特定项目的所有配置信息，每个项目有独立的配置
+ * 项目级配置类型 - 特定项目的完整配置结构
+ *
+ * 存储特定项目的所有配置信息，每个项目有独立的配置，
+ * 支持项目级的工具权限、上下文管理和用户体验设置。
  */
 export type ProjectConfig = {
   allowedTools: string[] // 项目中允许使用的工具列表
@@ -100,52 +128,86 @@ const DEFAULT_PROJECT_CONFIG: ProjectConfig = {
   hasTrustDialogAccepted: false,
 }
 
+/**
+ * 为指定项目生成默认配置 - 项目配置初始化函数
+ *
+ * 根据项目路径生成合适的默认配置，对于用户主目录
+ * 等特殊路径会应用特定的安全设置。
+ *
+ * @param projectPath - 项目路径
+ * @returns 该项目的默认配置对象
+ */
 function defaultConfigForProject(projectPath: string): ProjectConfig {
   const config = { ...DEFAULT_PROJECT_CONFIG }
+  // 用户主目录默认禁用目录爬取以保护隐私
   if (projectPath === homedir()) {
     config.dontCrawlDirectory = true
   }
   return config
 }
 
+/**
+ * 自动更新器状态类型 - 应用程序自动更新的状态枚举
+ *
+ * 定义自动更新功能的各种可能状态，用于控制
+ * 应用程序的自动更新行为和用户体验。
+ */
 export type AutoUpdaterStatus =
-  | 'disabled'
-  | 'enabled'
-  | 'no_permissions'
-  | 'not_configured'
+  | 'disabled'        // 已禁用自动更新
+  | 'enabled'         // 已启用自动更新
+  | 'no_permissions'  // 缺乏更新权限
+  | 'not_configured'  // 尚未配置
 
+/**
+ * 检查值是否为有效的自动更新器状态 - 类型守卫函数
+ *
+ * @param value - 待检查的字符串值
+ * @returns 是否为有效的自动更新器状态
+ */
 export function isAutoUpdaterStatus(value: string): value is AutoUpdaterStatus {
   return ['disabled', 'enabled', 'no_permissions', 'not_configured'].includes(
     value as AutoUpdaterStatus,
   )
 }
 
+/**
+ * 通知渠道类型 - 系统通知的输出方式
+ *
+ * 定义应用程序可以使用的各种通知渠道，
+ * 适配不同的终端环境和用户偏好。
+ */
 export type NotificationChannel =
-  | 'iterm2'
-  | 'terminal_bell'
-  | 'iterm2_with_bell'
-  | 'notifications_disabled'
+  | 'iterm2'                  // iTerm2 专用通知
+  | 'terminal_bell'           // 终端铃声通知
+  | 'iterm2_with_bell'        // iTerm2 + 铃声组合
+  | 'notifications_disabled'  // 禁用通知
 
+/**
+ * AI 提供商类型 - 支持的 AI 模型提供商
+ *
+ * 定义 Kode 支持的所有 AI 模型提供商，包括
+ * 国际主流提供商、国产 AI 平台和自定义配置。
+ */
 export type ProviderType =
-  | 'anthropic'
-  | 'openai'
-  | 'mistral'
-  | 'deepseek'
-  | 'kimi'
-  | 'qwen'
-  | 'glm'
-  | 'minimax'
-  | 'baidu-qianfan'
-  | 'siliconflow'
-  | 'bigdream'
-  | 'opendev'
-  | 'xai'
-  | 'groq'
-  | 'gemini'
-  | 'ollama'
-  | 'azure'
-  | 'custom'
-  | 'custom-openai'
+  | 'anthropic'       // Anthropic (Claude)
+  | 'openai'          // OpenAI (GPT)
+  | 'mistral'         // Mistral AI
+  | 'deepseek'        // DeepSeek
+  | 'kimi'            // Moonshot AI (Kimi)
+  | 'qwen'            // 阿里云通义千问
+  | 'glm'             // 智谱清言 GLM
+  | 'minimax'         // MiniMax
+  | 'baidu-qianfan'   // 百度千帆
+  | 'siliconflow'     // SiliconFlow
+  | 'bigdream'        // BigDream
+  | 'opendev'         // OpenDev
+  | 'xai'             // xAI (Grok)
+  | 'groq'            // Groq
+  | 'gemini'          // Google Gemini
+  | 'ollama'          // Ollama (本地模型)
+  | 'azure'           // Azure OpenAI
+  | 'custom'          // 自定义提供商
+  | 'custom-openai'   // 自定义 OpenAI 兼容
 
 /**
  * 模型配置文件类型 - 新一代模型管理系统
@@ -405,14 +467,37 @@ export function getGlobalConfig(): GlobalConfig {
   return migrateModelProfilesRemoveId(config)
 }
 
+/**
+ * 获取 Anthropic API 密钥 - 从环境变量读取 Claude API 密钥
+ *
+ * @returns Anthropic API 密钥或 null（如果未设置）
+ */
 export function getAnthropicApiKey(): null | string {
   return process.env.ANTHROPIC_API_KEY || null
 }
 
+/**
+ * 标准化 API 密钥用于配置存储 - 安全截断 API 密钥
+ *
+ * 只保留 API 密钥的最后 20 个字符用于配置存储和识别，
+ * 避免在配置文件中存储完整的敏感信息。
+ *
+ * @param apiKey - 完整的 API 密钥
+ * @returns 截断后的 API 密钥字符串
+ */
 export function normalizeApiKeyForConfig(apiKey: string): string {
   return apiKey?.slice(-20) ?? ''
 }
 
+/**
+ * 获取自定义 API 密钥状态 - 检查 API 密钥的授权状态
+ *
+ * 根据截断的 API 密钥检查用户之前是否已经批准或拒绝使用该密钥，
+ * 用于避免重复的用户授权提示。
+ *
+ * @param truncatedApiKey - 截断后的 API 密钥
+ * @returns API 密钥的授权状态
+ */
 export function getCustomApiKeyStatus(
   truncatedApiKey: string,
 ): 'approved' | 'rejected' | 'new' {
@@ -463,11 +548,17 @@ function saveConfig<A extends object>(
 // Flag to track if config reading is allowed
 let configReadingAllowed = false
 
+/**
+ * 启用配置系统 - 初始化配置读取功能
+ *
+ * 设置配置读取标志并验证全局配置文件的有效性，
+ * 防止在模块初始化期间进行配置读取操作。
+ */
 export function enableConfigs(): void {
-  // Any reads to configuration before this flag is set show an console warning
-  // to prevent us from adding config reading during module initialization
+  // 在设置此标志之前读取配置会显示控制台警告
+  // 防止在模块初始化期间添加配置读取
   configReadingAllowed = true
-  // We only check the global config because currently all the configs share a file
+  // 只检查全局配置，因为目前所有配置共享一个文件
   getConfig(
     GLOBAL_CLAUDE_FILE,
     DEFAULT_GLOBAL_CONFIG,
@@ -677,6 +768,11 @@ export function saveCurrentProjectConfig(projectConfig: ProjectConfig): void {
   )
 }
 
+/**
+ * 检查自动更新器是否被禁用 - 异步检查自动更新状态
+ *
+ * @returns Promise<boolean> - 如果自动更新被禁用则返回 true
+ */
 export async function isAutoUpdaterDisabled(): Promise<boolean> {
   return getGlobalConfig().autoUpdaterStatus === 'disabled'
 }
@@ -748,6 +844,14 @@ export const getMcprcConfig = memoize(
   },
 )
 
+/**
+ * 获取或创建用户 ID - 获取匿名用户标识符
+ *
+ * 如果用户 ID 不存在，则生成一个新的随机 ID 并保存到配置中。
+ * 用于匿名统计和用户会话跟踪。
+ *
+ * @returns 用户 ID 字符串
+ */
 export function getOrCreateUserID(): string {
   const config = getGlobalConfig()
   if (config.userID) {
@@ -863,6 +967,11 @@ export function listConfigForCLI(global: boolean): object {
   }
 }
 
+/**
+ * 获取 OpenAI API 密钥 - 从环境变量读取 GPT API 密钥
+ *
+ * @returns OpenAI API 密钥或 undefined（如果未设置）
+ */
 export function getOpenAIApiKey(): string | undefined {
   return process.env.OPENAI_API_KEY
 }
@@ -963,6 +1072,15 @@ export function setAllPointersToModel(modelName: string): void {
   saveGlobalConfig(updatedConfig)
 }
 
+/**
+ * 设置模型指针 - 为特定用途配置模型
+ *
+ * 设置指定类型的模型指针指向特定模型，并强制重新加载
+ * 模型管理器以应用更改。
+ *
+ * @param pointer - 模型指针类型（main, task, reasoning, quick）
+ * @param modelName - 目标模型名称
+ */
 export function setModelPointer(
   pointer: ModelPointerType,
   modelName: string,
@@ -977,8 +1095,8 @@ export function setModelPointer(
   }
   saveGlobalConfig(updatedConfig)
 
-  // 🔧 Fix: Force ModelManager reload after config change
-  // Import here to avoid circular dependency
+  // 🔧 修复：配置更改后强制重新加载模型管理器
+  // 在此处导入以避免循环依赖
   import('./model').then(({ reloadModelManager }) => {
     reloadModelManager()
   })
@@ -987,7 +1105,13 @@ export function setModelPointer(
 // 🔥 GPT-5 Configuration Validation and Auto-Repair Functions
 
 /**
- * Check if a model name represents a GPT-5 model
+ * 检查模型名称是否为 GPT-5 模型 - GPT-5 模型识别函数
+ *
+ * 通过模型名称判断是否为 GPT-5 系列模型，用于应用
+ * GPT-5 特定的配置和优化。
+ *
+ * @param modelName - 模型名称字符串
+ * @returns 是否为 GPT-5 模型
  */
 export function isGPT5ModelName(modelName: string): boolean {
   if (!modelName || typeof modelName !== 'string') return false
@@ -996,7 +1120,13 @@ export function isGPT5ModelName(modelName: string): boolean {
 }
 
 /**
- * Validate and auto-repair GPT-5 model configuration
+ * 验证并自动修复 GPT-5 模型配置 - GPT-5 配置自动优化
+ *
+ * 对 GPT-5 模型配置进行验证和自动修复，确保配置符合
+ * GPT-5 的最佳实践和参数要求。
+ *
+ * @param profile - 模型配置对象
+ * @returns 修复后的模型配置对象
  */
 export function validateAndRepairGPT5Profile(profile: ModelProfile): ModelProfile {
   const isGPT5 = isGPT5ModelName(profile.modelName)
