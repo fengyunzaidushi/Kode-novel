@@ -1,3 +1,22 @@
+/**
+ * 🎯 模型选择器组件 - AI模型配置和管理的交互式向导界面
+ *
+ * 模型配置架构：
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │                    模型选择器配置流程                            │
+ * ├─────────────────────────────────────────────────────────────────┤
+ * │ 提供商选择 → API配置 → 模型选择 → 参数设置 → 连接测试 → 确认保存 │
+ * └─────────────────────────────────────────────────────────────────┘
+ *
+ * 核心功能：
+ * 1. 🤖 多提供商支持：Anthropic、OpenAI、Azure、Ollama等主流AI服务
+ * 2. 🔧 参数配置：最大token、上下文长度、推理努力等模型参数
+ * 3. 🔍 模型搜索：动态加载和搜索可用模型列表
+ * 4. ✅ 连接测试：验证API密钥和模型配置的有效性
+ * 5. 🎯 指针管理：支持主模型、任务模型、推理模型等不同角色配置
+ * 6. 📋 向导流程：逐步引导用户完成复杂的模型配置
+ */
+
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { Box, Text, useInput } from 'ink'
 import { getTheme } from '../utils/theme'
@@ -5,14 +24,27 @@ import { Select } from './CustomSelect/select'
 import { Newline } from 'ink'
 import { getModelManager } from '../utils/model'
 
-// 共享的屏幕容器组件，避免重复边框
+/**
+ * 🖼️ 屏幕容器组件 - 为配置向导提供统一的界面容器
+ *
+ * 提供一致的界面布局：
+ * - 圆角边框和统一的间距
+ * - 动态标题显示（包含退出状态提示）
+ * - 主题色彩集成
+ *
+ * @param props - 容器组件属性
+ * @returns React节点 - 带边框的容器布局
+ */
 function ScreenContainer({
   title,
   exitState,
   children,
 }: {
+  /** 📝 屏幕标题 */
   title: string
+  /** 🔄 退出状态 - 双击保护状态信息 */
   exitState: { pending: boolean; keyName: string }
+  /** 🎨 子组件内容 */
   children: React.ReactNode
 }) {
   const theme = getTheme()
@@ -50,30 +82,63 @@ import chalk from 'chalk'
 import { fetchAnthropicModels, verifyApiKey } from '../services/claude'
 import { fetchCustomModels, getModelFeatures } from '../services/openai'
 import { testGPT5Connection, validateGPT5Config } from '../services/gpt5ConnectionTest'
+/**
+ * 🎨 模型选择器组件属性接口
+ */
 type Props = {
+  /** ✅ 完成回调 - 配置完成后调用 */
   onDone: () => void
+  /** 🚫 中止控制器 - 用于取消异步操作 */
   abortController?: AbortController
-  targetPointer?: ModelPointerType // NEW: Target pointer for configuration
-  isOnboarding?: boolean // NEW: Whether this is first-time setup
-  onCancel?: () => void // NEW: Cancel callback (different from onDone)
-  skipModelType?: boolean // NEW: Skip model type selection
+  /** 🎯 目标指针 - 指定要配置的模型角色（主模型/任务模型/推理模型） */
+  targetPointer?: ModelPointerType
+  /** 🆕 首次设置 - 是否为初次配置流程 */
+  isOnboarding?: boolean
+  /** ❌ 取消回调 - 取消配置时调用（与onDone不同） */
+  onCancel?: () => void
+  /** ⏭️ 跳过模型类型 - 是否跳过模型类型选择步骤 */
+  skipModelType?: boolean
 }
 
+/**
+ * 🤖 模型信息接口 - 描述AI模型的基本信息
+ */
 type ModelInfo = {
+  /** 🏷️ 模型名称 - 具体的模型标识符 */
   model: string
+  /** 🏢 提供商 - AI服务提供商名称 */
   provider: string
+  /** 🔧 扩展属性 - 其他模型相关的配置信息 */
   [key: string]: any
 }
 
-// Define reasoning effort options
+/**
+ * 🧠 推理努力等级 - Claude模型的推理深度选项
+ *
+ * - low: 快速响应，适合简单任务
+ * - medium: 平衡速度和质量，通用选择
+ * - high: 深度思考，适合复杂问题
+ */
 type ReasoningEffortOption = 'low' | 'medium' | 'high'
 
-// Define context length options (in tokens)
+/**
+ * 📏 上下文长度选项 - 模型可处理的最大token数量配置
+ */
 type ContextLengthOption = {
+  /** 📝 显示标签 - 用户友好的描述文本 */
   label: string
+  /** 🔢 token数值 - 实际的上下文长度限制 */
   value: number
 }
 
+/**
+ * 📏 上下文长度预设选项 - 常用的token限制配置列表
+ *
+ * 从32K到10M token的完整覆盖，适应不同使用场景：
+ * - 32K-128K: 日常对话和代码分析
+ * - 200K-512K: 文档处理和复杂任务
+ * - 1M+: 大型文档分析和批量处理
+ */
 const CONTEXT_LENGTH_OPTIONS: ContextLengthOption[] = [
   { label: '32K tokens', value: 32000 },
   { label: '64K tokens', value: 64000 },
@@ -89,11 +154,16 @@ const CONTEXT_LENGTH_OPTIONS: ContextLengthOption[] = [
   { label: '10000K tokens', value: 10000000 },
 ]
 
+/** 📏 默认上下文长度 - 平衡性能和功能的推荐配置 */
 const DEFAULT_CONTEXT_LENGTH = 128000
 
-// Define max tokens options
+/**
+ * 🔢 最大token选项接口 - 控制AI响应的最大长度
+ */
 type MaxTokensOption = {
+  /** 📝 显示标签 - 用户友好的描述 */
   label: string
+  /** 🔢 token数值 - 实际的最大输出限制 */
   value: number
 }
 
@@ -150,6 +220,26 @@ function printModelConfig() {
   console.log(chalk.gray(`  ⎿  ${profileSummary}`))
 }
 
+/**
+ * 🎯 模型选择器主组件 - AI模型配置向导的核心实现
+ *
+ * 组件特性：
+ * 1. 📋 多步骤向导：通过屏幕栈管理复杂的配置流程
+ * 2. 🔄 状态同步：与全局配置系统实时同步
+ * 3. 🎯 角色配置：支持不同模型角色的独立配置
+ * 4. ✅ 实时验证：配置过程中的连接测试和有效性检查
+ * 5. 🔄 错误恢复：网络错误和配置错误的自动重试机制
+ *
+ * 向导流程：
+ * 1. 提供商选择（Anthropic、OpenAI、Azure等）
+ * 2. API密钥配置和验证
+ * 3. 模型列表获取和选择
+ * 4. 参数配置（最大token、上下文长度等）
+ * 5. 连接测试和最终确认
+ *
+ * @param props - 模型选择器组件属性
+ * @returns React节点 - 渲染的配置向导界面
+ */
 export function ModelSelector({
   onDone: onDoneProp,
   abortController,
@@ -158,41 +248,49 @@ export function ModelSelector({
   onCancel,
   skipModelType = false,
 }: Props): React.ReactNode {
+  // 📊 配置和主题管理
   const config = getGlobalConfig()
   const theme = getTheme()
+
+  // ✅ 完成处理：打印配置信息并调用完成回调
   const onDone = () => {
     printModelConfig()
     onDoneProp()
   }
-  // Initialize the exit hook but don't use it for Escape key
+
+  // 🔄 退出状态管理：双击保护机制
   const exitState = useExitOnCtrlCD(() => process.exit(0))
 
-  // Always start with provider selection in new system
+  // 🎯 屏幕初始化：总是从提供商选择开始配置流程
   const getInitialScreen = (): string => {
     return 'provider'
   }
 
-  // Screen navigation stack
+  // 📋 屏幕导航栈：管理向导步骤的前进和后退
   const [screenStack, setScreenStack] = useState<
     Array<
-      | 'provider'
-      | 'anthropicSubMenu'
-      | 'apiKey'
-      | 'resourceName'
-      | 'baseUrl'
-      | 'model'
-      | 'modelInput'
-      | 'modelParams'
-      | 'contextLength'
-      | 'connectionTest'
-      | 'confirmation'
+      | 'provider'        // 提供商选择
+      | 'anthropicSubMenu' // Anthropic子菜单
+      | 'apiKey'          // API密钥配置
+      | 'resourceName'    // Azure资源名称
+      | 'baseUrl'         // 自定义API端点
+      | 'model'           // 模型选择
+      | 'modelInput'      // 模型手动输入
+      | 'modelParams'     // 模型参数配置
+      | 'contextLength'   // 上下文长度设置
+      | 'connectionTest'  // 连接测试
+      | 'confirmation'    // 最终确认
     >
   >([getInitialScreen()])
 
-  // Current screen is always the last item in the stack
+  // 🎯 当前屏幕：栈顶元素即为当前显示的配置步骤
   const currentScreen = screenStack[screenStack.length - 1]
 
-  // Function to navigate to a new screen
+  /**
+   * 🔄 前进导航：将新屏幕推入导航栈
+   *
+   * @param screen - 要导航到的目标屏幕
+   */
   const navigateTo = (
     screen:
       | 'provider'
@@ -210,30 +308,32 @@ export function ModelSelector({
     setScreenStack(prev => [...prev, screen])
   }
 
-  // Function to go back to the previous screen
+  /**
+   * ⬅️ 后退导航：返回上一个配置步骤或退出向导
+   */
   const goBack = () => {
     if (screenStack.length > 1) {
-      // Remove the current screen from the stack
+      // 🔙 移除当前屏幕，返回上一步
       setScreenStack(prev => prev.slice(0, -1))
     } else {
-      // If we're at the first screen, call onDone to exit
+      // 📤 已在首屏，退出配置向导
       onDone()
     }
   }
 
-  // State for model configuration
+  // 🔧 模型配置状态：核心配置参数管理
   const [selectedProvider, setSelectedProvider] = useState<ProviderType>(
     config.primaryProvider ?? 'anthropic',
   )
 
-  // State for Anthropic provider sub-menu
+  // 🏢 Anthropic提供商子菜单状态：不同API端点选择
   const [anthropicProviderType, setAnthropicProviderType] = useState<
     'official' | 'bigdream' | 'opendev' | 'custom'
   >('official')
   const [selectedModel, setSelectedModel] = useState<string>('')
   const [apiKey, setApiKey] = useState<string>('')
 
-  // New state for model parameters
+  // 📊 模型参数状态：控制AI行为的关键设置
   const [maxTokens, setMaxTokens] = useState<string>(
     config.maxTokens?.toString() || DEFAULT_MAX_TOKENS.toString(),
   )
@@ -247,18 +347,18 @@ export function ModelSelector({
   const [supportsReasoningEffort, setSupportsReasoningEffort] =
     useState<boolean>(false)
 
-  // Context length state (use default instead of legacy config)
+  // 📏 上下文长度状态：使用默认值而非历史配置
   const [contextLength, setContextLength] = useState<number>(
     DEFAULT_CONTEXT_LENGTH,
   )
 
-  // Form focus state
+  // 🎯 表单焦点状态：管理用户输入焦点和光标位置
   const [activeFieldIndex, setActiveFieldIndex] = useState(0)
   const [maxTokensCursorOffset, setMaxTokensCursorOffset] = useState<number>(0)
 
-  // UI state
+  // 🎨 UI状态管理：界面交互和用户体验
 
-  // Search and model loading state
+  // 🔍 搜索和模型加载状态：动态模型列表管理
   const [availableModels, setAvailableModels] = useState<ModelInfo[]>([])
   const [isLoadingModels, setIsLoadingModels] = useState(false)
   const [modelLoadError, setModelLoadError] = useState<string | null>(null)
@@ -268,11 +368,11 @@ export function ModelSelector({
   const [cursorOffset, setCursorOffset] = useState<number>(0)
   const [apiKeyEdited, setApiKeyEdited] = useState<boolean>(false)
 
-  // Retry logic state
+  // 🔄 重试逻辑状态：网络错误恢复机制
   const [fetchRetryCount, setFetchRetryCount] = useState<number>(0)
   const [isRetrying, setIsRetrying] = useState<boolean>(false)
 
-  // Connection test state
+  // ✅ 连接测试状态：API配置验证反馈
   const [isTestingConnection, setIsTestingConnection] = useState<boolean>(false)
   const [connectionTestResult, setConnectionTestResult] = useState<{
     success: boolean
@@ -281,7 +381,7 @@ export function ModelSelector({
     details?: string
   } | null>(null)
 
-  // Validation error state for duplicate model detection
+  // ⚠️ 验证错误状态：重复模型检测和配置冲突提醒
   const [validationError, setValidationError] = useState<string | null>(null)
 
   // State for Azure-specific configuration
