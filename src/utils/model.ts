@@ -1,28 +1,33 @@
 /**
- * 模型管理核心系统 - Kode多模型支持的统一管理层
+ * 🎯 模型管理核心系统 - Kode 多 AI 模型的统一管理层
  *
- * 🎯 核心职责：
- * 1. 多AI模型配置和切换管理（OpenAI、Anthropic、国产模型等）
- * 2. 模型指针系统（main/task/reasoning/quick）的统一分发
- * 3. 上下文窗口管理和模型兼容性检查
- * 4. 动态模型切换和配置热更新
- * 5. 模型配置文件的生命周期管理
+ * 🏗️ 核心功能：
+ * - 实现多 AI 模型配置和动态切换管理
+ * - 提供模型指针系统的统一分发机制
+ * - 管理上下文窗口和模型兼容性检查
+ * - 支持动态模型切换和配置热更新
  *
- * 🏗️ 架构特点：
- * - ModelManager单例模式避免配置竞争
- * - 支持Bedrock、Vertex、First-party多种部署方式
- * - 模型指针抽象：不同任务使用最适合的模型
- * - 上下文溢出自动处理和模型回退机制
- * - 配置迁移和向后兼容支持
+ * 🔄 依赖关系：
+ * - 上游：被查询处理和 AI 服务使用
+ * - 下游：依赖配置管理和日志系统
+ *
+ * 📊 使用场景：
+ * - AI 模型的动态选择和切换
+ * - 不同任务场景的模型优化
+ * - 上下文溢出的自动处理
+ * - 模型配置的生命周期管理
+ *
+ * 🔧 技术实现：
+ * - 单例模式避免配置竞争冲突
+ * - 支持多种部署方式（Bedrock、Vertex、官方 API）
+ * - 模型指针抽象适配不同使用场景
+ * - 上下文溢出自动处理和回退机制
  *
  * 🔄 模型指针系统：
  * - main: 主对话模型（用户交互）
  * - task: 任务工具模型（工具调用）
  * - reasoning: 推理模型（复杂逻辑）
  * - quick: 快速模型（简单操作）
- *
- * 📊 上游依赖：./config.ts（配置管理）
- * 📈 下游使用者：./query.ts、./claude.ts、所有工具调用
  */
 import { memoize } from 'lodash-es'
 
@@ -34,28 +39,43 @@ import {
   saveGlobalConfig,
 } from './config'
 
-// 环境变量控制的部署方式开关
-export const USE_BEDROCK = !!process.env.CLAUDE_CODE_USE_BEDROCK  // AWS Bedrock部署
-export const USE_VERTEX = !!process.env.CLAUDE_CODE_USE_VERTEX    // Google Vertex AI部署
+/**
+ * 环境变量控制的部署方式开关 - 支持多云平台部署
+ *
+ * 通过环境变量控制 AI 模型的部署平台选择，
+ * 支持不同云服务商的模型部署策略。
+ */
+export const USE_BEDROCK = !!process.env.CLAUDE_CODE_USE_BEDROCK  // AWS Bedrock 部署
+export const USE_VERTEX = !!process.env.CLAUDE_CODE_USE_VERTEX    // Google Vertex AI 部署
 
 /**
- * 模型配置接口 - 定义不同部署平台的默认模型
- * 支持多平台部署策略，根据环境自动选择最适合的模型版本
+ * 模型配置接口 - 多平台部署的统一模型定义
+ *
+ * 定义不同部署平台的默认模型标识符，支持多云平台
+ * 部署策略，根据环境自动选择最适合的模型版本。
  */
 export interface ModelConfig {
-  bedrock: string     // AWS Bedrock平台的模型标识符
-  vertex: string      // Google Vertex AI平台的模型标识符
-  firstParty: string  // Anthropic官方API的模型标识符
+  /** AWS Bedrock 平台的模型标识符 */
+  bedrock: string
+  /** Google Vertex AI 平台的模型标识符 */
+  vertex: string
+  /** Anthropic 官方 API 的模型标识符 */
+  firstParty: string
 }
 
 /**
  * 默认模型配置 - 各平台的推荐模型版本
- * 这些是经过测试验证的稳定模型版本，提供一致的用户体验
+ *
+ * 这些是经过测试验证的稳定模型版本，提供一致的
+ * 用户体验和可靠的性能表现。
  */
 const DEFAULT_MODEL_CONFIG: ModelConfig = {
-  bedrock: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',  // Bedrock特定格式
-  vertex: 'claude-3-7-sonnet@20250219',                      // Vertex特定格式
-  firstParty: 'claude-sonnet-4-20250514',                    // 官方API最新版本
+  /** Bedrock 特定格式的模型标识符 */
+  bedrock: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
+  /** Vertex 特定格式的模型标识符 */
+  vertex: 'claude-3-7-sonnet@20250219',
+  /** 官方 API 最新版本的模型标识符 */
+  firstParty: 'claude-sonnet-4-20250514',
 }
 
 /**
@@ -72,10 +92,18 @@ async function getModelConfig(): Promise<ModelConfig> {
   return DEFAULT_MODEL_CONFIG
 }
 
+/**
+ * 获取慢速但功能强大的模型 - 复杂任务的模型选择
+ *
+ * 获取适用于复杂推理和高质量输出的模型，使用缓存
+ * 机制提高性能。优先使用用户配置的主模型。
+ *
+ * @returns Promise<string> - 功能强大的模型名称
+ */
 export const getSlowAndCapableModel = memoize(async (): Promise<string> => {
   const config = await getGlobalConfig()
 
-  // Use ModelManager for proper model resolution
+  // 使用 ModelManager 进行正确的模型解析
   const modelManager = new ModelManager(config)
   const model = modelManager.getMainAgentModel()
 
@@ -83,13 +111,21 @@ export const getSlowAndCapableModel = memoize(async (): Promise<string> => {
     return model
   }
 
-  // Final fallback to default model
+  // 最终回退到默认模型
   const modelConfig = await getModelConfig()
   if (USE_BEDROCK) return modelConfig.bedrock
   if (USE_VERTEX) return modelConfig.vertex
   return modelConfig.firstParty
 })
 
+/**
+ * 检查是否使用默认的慢速强大模型 - 模型配置验证
+ *
+ * 检查当前使用的模型是否为系统默认的慢速但功能强大的模型，
+ * 用于确定是否需要应用特定的模型优化策略。
+ *
+ * @returns Promise<boolean> - 是否使用默认模型
+ */
 export async function isDefaultSlowAndCapableModel(): Promise<boolean> {
   return (
     !process.env.ANTHROPIC_MODEL ||
@@ -98,9 +134,13 @@ export async function isDefaultSlowAndCapableModel(): Promise<boolean> {
 }
 
 /**
- * Get the region for a specific Vertex model
- * Checks for hardcoded model-specific environment variables first,
- * then falls back to CLOUD_ML_REGION env var or default region
+ * 获取特定 Vertex 模型的部署区域 - 区域化部署配置
+ *
+ * 根据模型类型检查对应的环境变量，获取最适合的
+ * 部署区域，优化模型访问延迟和可用性。
+ *
+ * @param model - 模型名称
+ * @returns 部署区域标识符或 undefined
  */
 export function getVertexRegionForModel(
   model: string | undefined,
@@ -247,11 +287,13 @@ export class ModelManager {
   }
 
   /**
-   * Switch to the next available model with simple context overflow handling
-   * If target model can't handle current context, shows warning and reverts after delay
+   * 切换到下一个可用模型并进行上下文检查 - 智能模型切换
    *
-   * @param currentContextTokens - Current conversation token count for validation
-   * @returns Object with model name and context status information
+   * 切换到下一个可用模型，同时检查上下文兼容性。如果目标模型
+   * 无法处理当前上下文，显示警告并提供详细的状态信息。
+   *
+   * @param currentContextTokens - 当前对话的 token 数量，用于验证
+   * @returns 包含模型名称和上下文状态信息的对象
    */
   switchToNextModelWithContextCheck(currentContextTokens: number = 0): {
     success: boolean
@@ -378,9 +420,13 @@ export class ModelManager {
   }
 
   /**
-   * Simple model switching for UI components (compatible interface)
-   * @param currentContextTokens - Current conversation token count for validation
-   * @returns Compatible interface for PromptInput component
+   * 简单模型切换 - 为 UI 组件提供兼容接口
+   *
+   * 为 UI 组件提供简化的模型切换接口，返回兼容的
+   * 状态信息用于用户界面显示。
+   *
+   * @param currentContextTokens - 当前对话的 token 数量，用于验证
+   * @returns 与 PromptInput 组件兼容的接口对象
    */
   switchToNextModel(currentContextTokens: number = 0): {
     success: boolean
@@ -429,7 +475,13 @@ export class ModelManager {
   }
 
   /**
-   * Revert to previous model (used when context overflow requires rollback)
+   * 回退到之前的模型 - 上下文溢出时的回滚机制
+   *
+   * 当上下文溢出需要回滚时，恢复到之前使用的模型，
+   * 确保对话的连续性和一致性。
+   *
+   * @param previousModelName - 之前模型的名称
+   * @returns 是否成功回退
    */
   revertToPreviousModel(previousModelName: string): boolean {
     const previousModel = this.modelProfiles.find(
@@ -445,7 +497,14 @@ export class ModelManager {
   }
 
   /**
-   * Enhanced context validation with different severity levels
+   * 增强的上下文兼容性分析 - 多级别的上下文验证
+   *
+   * 分析模型与当前上下文的兼容性，提供详细的使用情况
+   * 分析和推荐建议。
+   *
+   * @param model - 要分析的模型配置
+   * @param contextTokens - 当前上下文的 token 数量
+   * @returns 详细的兼容性分析结果
    */
   analyzeContextCompatibility(
     model: ModelProfile,
@@ -484,7 +543,13 @@ export class ModelManager {
   }
 
   /**
-   * Switch to next model with enhanced context analysis
+   * 切换到下一个模型并进行增强分析 - 详细上下文分析的模型切换
+   *
+   * 执行模型切换的同时提供详细的上下文兼容性分析，
+   * 包括压缩需求和 token 估算。
+   *
+   * @param currentContextTokens - 当前对话的 token 数量
+   * @returns 包含详细分析信息的切换结果
    */
   switchToNextModelWithAnalysis(currentContextTokens: number = 0): {
     modelName: string | null
@@ -527,7 +592,14 @@ export class ModelManager {
   }
 
   /**
-   * Check if a model can handle the given context size (legacy method)
+   * 检查模型是否能处理给定的上下文大小 - 遗留兼容方法
+   *
+   * 检查指定模型是否有足够的上下文窗口来处理当前对话，
+   * 为向后兼容性保留的简化接口。
+   *
+   * @param model - 要检查的模型配置
+   * @param contextTokens - 上下文 token 数量
+   * @returns 模型是否能处理该上下文
    */
   canModelHandleContext(model: ModelProfile, contextTokens: number): boolean {
     const analysis = this.analyzeContextCompatibility(model, contextTokens)
@@ -535,7 +607,14 @@ export class ModelManager {
   }
 
   /**
-   * Find the first model that can handle the given context size
+   * 查找能处理给定上下文大小的第一个模型 - 上下文兼容模型搜索
+   *
+   * 在给定的模型列表中查找第一个有足够上下文窗口
+   * 处理当前对话的模型。
+   *
+   * @param models - 候选模型列表
+   * @param contextTokens - 需要的上下文 token 数量
+   * @returns 兼容的模型配置或 null
    */
   findModelWithSufficientContext(
     models: ModelProfile[],
@@ -548,7 +627,13 @@ export class ModelManager {
   }
 
   /**
-   * Unified model getter for different contexts
+   * 统一的上下文模型获取器 - 根据使用场景获取最适合的模型
+   *
+   * 根据不同的使用上下文返回最适合的模型，实现
+   * 模型使用的场景化优化。
+   *
+   * @param contextType - 上下文类型（终端、主代理、任务工具）
+   * @returns 对应上下文的模型名称或 null
    */
   getModelForContext(
     contextType: 'terminal' | 'main-agent' | 'task-tool',
@@ -566,14 +651,18 @@ export class ModelManager {
   }
 
   /**
-   * Get all active model profiles
+   * 获取所有活跃的模型配置 - 活跃模型列表
+   *
+   * @returns 所有处于活跃状态的模型配置数组
    */
   getActiveModelProfiles(): ModelProfile[] {
     return this.modelProfiles.filter(p => p.isActive)
   }
 
   /**
-   * Check if any models are configured
+   * 检查是否有已配置的模型 - 模型配置状态检查
+   *
+   * @returns 是否存在至少一个活跃的模型配置
    */
   hasConfiguredModels(): boolean {
     return this.getActiveModelProfiles().length > 0
@@ -582,7 +671,13 @@ export class ModelManager {
   // New model pointer system methods
 
   /**
-   * Get model by pointer type (main, task, reasoning, quick)
+   * 通过指针类型获取模型 - 模型指针解析
+   *
+   * 根据模型指针类型获取对应的模型配置，实现不同
+   * 使用场景的模型分配策略。
+   *
+   * @param pointer - 模型指针类型（main, task, reasoning, quick）
+   * @returns 对应的模型配置或 null
    */
   getModel(pointer: ModelPointerType): ModelProfile | null {
     const pointerId = this.config.modelPointers?.[pointer]
@@ -595,7 +690,10 @@ export class ModelManager {
   }
 
   /**
-   * Get model name by pointer type
+   * 通过指针类型获取模型名称 - 模型名称解析
+   *
+   * @param pointer - 模型指针类型
+   * @returns 对应的模型名称或 null
    */
   getModelName(pointer: ModelPointerType): string | null {
     const profile = this.getModel(pointer)
@@ -603,14 +701,22 @@ export class ModelManager {
   }
 
   /**
-   * Get reasoning model (with fallback)
+   * 获取推理模型 - 支持回退的推理模型获取
+   *
+   * 获取专用的推理模型，如果未配置则回退到主模型。
+   *
+   * @returns 推理模型名称或 null
    */
   getReasoningModel(): string | null {
     return this.getModelName('reasoning') || this.getModelName('main')
   }
 
   /**
-   * Get quick model (with fallback)
+   * 获取快速模型 - 支持多级回退的快速模型获取
+   *
+   * 获取专用的快速模型，依次回退到任务模型和主模型。
+   *
+   * @returns 快速模型名称或 null
    */
   getQuickModel(): string | null {
     return (
@@ -621,7 +727,14 @@ export class ModelManager {
   }
 
   /**
-   * Add a new model profile with duplicate validation
+   * 添加新的模型配置 - 带重复验证的模型添加
+   *
+   * 添加新的模型配置到系统中，包括重复性检查和
+   * 默认指针设置。
+   *
+   * @param config - 模型配置对象（不包含创建时间和活跃状态）
+   * @returns Promise<string> - 新添加的模型名称
+   * @throws Error - 如果模型名称或友好名称已存在
    */
   async addModel(
     config: Omit<ModelProfile, 'createdAt' | 'isActive'>,
@@ -666,7 +779,14 @@ export class ModelManager {
   }
 
   /**
-   * Set model pointer assignment
+   * 设置模型指针分配 - 模型指针配置
+   *
+   * 将指定的模型指针指向特定的模型，实现模型的
+   * 角色分工和使用场景优化。
+   *
+   * @param pointer - 模型指针类型
+   * @param modelName - 目标模型名称
+   * @throws Error - 如果指定的模型不存在
    */
   setPointer(pointer: ModelPointerType, modelName: string): void {
     if (!this.findModelProfile(modelName)) {
@@ -798,7 +918,12 @@ export class ModelManager {
   }
 
   /**
-   * Get a fallback model when no specific model is configured
+   * 获取回退模型 - 无特定模型配置时的默认选择
+   *
+   * 当没有配置特定模型时，根据部署环境返回
+   * 适当的默认模型。
+   *
+   * @returns Promise<string> - 回退模型名称
    */
   async getFallbackModel(): Promise<string> {
     const modelConfig = await getModelConfig()
@@ -1034,7 +1159,12 @@ export const reloadModelManager = (): void => {
 }
 
 /**
- * Get the quick model for fast operations
+ * 获取快速操作模型 - 快速模型的全局访问函数
+ *
+ * 为快速操作获取最适合的模型，如果模型解析失败
+ * 则返回指针名称作为兜底方案。
+ *
+ * @returns 快速模型名称或指针名称
  */
 export const getQuickModel = (): string => {
   const manager = getModelManager()
