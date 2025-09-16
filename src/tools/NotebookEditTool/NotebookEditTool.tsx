@@ -1,3 +1,36 @@
+/**
+ * 🎯 Notebook 编辑工具实现 - Jupyter Notebook 专用编辑工具
+ *
+ * 🏗️ 核心功能：
+ * - 提供 Jupyter Notebook 单元格的精确编辑能力
+ * - 支持代码和 Markdown 单元格的类型管理
+ * - 集成单元格的增删改操作和状态管理
+ * - 实现 Notebook 格式的完整性验证
+ * - 生成详细的编辑操作反馈和预览
+ *
+ * 🔄 依赖关系：
+ * - 上游：被 AI 代理调用进行 Notebook 文件编辑
+ * - 下游：依赖文件系统、JSON 解析、权限管理
+ *
+ * 📊 使用场景：
+ * - 数据科学项目的代码单元格修改
+ * - 文档单元格的内容更新和调整
+ * - Notebook 结构的重组和优化
+ * - 代码执行结果的清理和重置
+ *
+ * 🔧 技术实现：
+ * - 格式验证：确保 Notebook JSON 结构完整性
+ * - 单元格操作：支持替换、插入、删除三种模式
+ * - 类型管理：自动处理代码和文档单元格差异
+ * - 状态重置：清理执行计数和输出结果
+ * - 编码保持：维持原文件的编码和格式
+ *
+ * 💡 设计原则：
+ * - 专业化：专门针对 Jupyter Notebook 格式优化
+ * - 完整性：保持 Notebook 的结构和元数据完整
+ * - 灵活操作：支持多种编辑模式和单元格类型
+ * - 安全可靠：严格的格式验证和错误处理
+ */
 import { existsSync, readFileSync } from 'fs'
 import { Box, Text } from 'ink'
 import { extname, isAbsolute, relative, resolve } from 'path'
