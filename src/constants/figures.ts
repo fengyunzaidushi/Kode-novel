@@ -1,4 +1,43 @@
+/**
+ * 🎯 图形符号常量定义 - 跨平台 Unicode 符号适配
+ *
+ * 🏗️ 核心功能：
+ * - 提供跨平台兼容的 Unicode 图形符号
+ * - 根据操作系统自动选择最佳显示符号
+ * - 确保在不同终端环境下的显示一致性
+ * - 支持特殊字符的平台适配
+ *
+ * 🔄 依赖关系：
+ * - 上游：被 UI 组件和终端显示使用
+ * - 下游：依赖 env 工具获取平台信息
+ *
+ * 📊 使用场景：
+ * - 终端界面的状态指示符
+ * - 列表项目的视觉标记
+ * - 进度显示和状态标识
+ * - 跨平台 UI 的符号统一
+ *
+ * 🔧 技术实现：
+ * - 基于平台检测动态选择符号
+ * - 优先选择视觉效果更好的符号
+ * - 回退到通用支持的替代符号
+ * - 确保在所有平台的可显示性
+ */
+
 import { env } from '../utils/env'
 
-// The former is better vertically aligned, but isn't usually supported on Windows/Linux
+/**
+ * 黑色圆圈符号 - 根据平台自动选择最佳显示效果
+ *
+ * 在 macOS 上使用 ⏺ 符号，具有更好的垂直对齐效果；
+ * 在 Windows/Linux 上使用 ● 符号，确保通用兼容性。
+ *
+ * @example
+ * ```typescript
+ * // 在不同平台显示状态指示符
+ * console.log(`${BLACK_CIRCLE} 正在处理中...`);
+ * // macOS: ⏺ 正在处理中...
+ * // Windows/Linux: ● 正在处理中...
+ * ```
+ */
 export const BLACK_CIRCLE = env.platform === 'macos' ? '⏺' : '●'

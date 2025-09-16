@@ -1,0 +1,213 @@
+{
+	"meta": {
+		"generatedAt": "2025-09-15T13:49:58.438Z",
+		"tasksAnalyzed": 25,
+		"totalTasks": 25,
+		"analysisCount": 25,
+		"thresholdScore": 6,
+		"projectName": "Taskmaster",
+		"usedResearch": false
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 1,
+			"taskTitle": "Establish Annotation Style Guide",
+			"complexityScore": 7,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Break down the annotation style guide creation into: researching existing JSDoc standards and Chinese documentation practices, defining file header templates and conventions, creating function/class annotation standards with Chinese examples, and establishing inline comment guidelines with technical analogy frameworks.",
+			"reasoning": "High complexity due to need to establish project-wide standards, balance Chinese language requirements with technical clarity, and create comprehensive examples. Requires research, standardization, and peer validation."
+		},
+		{
+			"taskId": 2,
+			"taskTitle": "Setup Annotation Progress Tracking",
+			"complexityScore": 6,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Divide into: configuring TaskMaster tool integration with repository hooks, defining annotation status workflow states and transitions, and implementing real-time progress dashboard with file-level tracking.",
+			"reasoning": "Moderate-high complexity involving tool integration, workflow design, and automation setup. Depends on Task 1 completion and requires technical configuration knowledge."
+		},
+		{
+			"taskId": 3,
+			"taskTitle": "Annotate Type Definitions (src/types/)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Split into: auditing all type definition files to catalog current state, creating file headers with purpose and dependency documentation, and adding JSDoc comments to all exported types and interfaces with Chinese descriptions and usage examples.",
+			"reasoning": "Medium complexity as it's systematic documentation work requiring understanding of type relationships and dependencies. Foundation for other annotation tasks."
+		},
+		{
+			"taskId": 7,
+			"taskTitle": "Annotate Model Management (src/utils/model.ts)",
+			"complexityScore": 6,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break into: documenting model switching logic and AI integration patterns, annotating data flow between model management and dependent modules, and creating comprehensive JSDoc for all functions with error handling scenarios.",
+			"reasoning": "Moderate-high complexity due to AI model integration complexity, multiple dependencies, and need to explain sophisticated data flows and module interactions."
+		},
+		{
+			"taskId": 11,
+			"taskTitle": "Annotate MCP Client (src/services/mcpClient.ts)",
+			"complexityScore": 7,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide into: documenting MCP protocol implementation and integration patterns, annotating client connection and session management methods, documenting error recovery and retry mechanisms, and creating protocol flow diagrams with JSDoc examples.",
+			"reasoning": "High complexity due to protocol-level integration, error handling requirements, and need to document complex client-server interactions with recovery scenarios."
+		},
+		{
+			"taskId": 14,
+			"taskTitle": "Annotate Tool Prompts (src/tools/*/prompt.ts)",
+			"complexityScore": 4,
+			"recommendedSubtasks": 2,
+			"expansionPrompt": "Split into: cataloging all prompt template files across tool directories and documenting prompt template structures and helper functions with usage examples and parameter descriptions.",
+			"reasoning": "Medium-low complexity as it involves systematic documentation of prompt templates. Straightforward but requires consistency across multiple tool directories."
+		},
+		{
+			"taskId": 16,
+			"taskTitle": "Annotate Task Tool (src/tools/TaskTool/)",
+			"complexityScore": 8,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Break into: documenting task orchestration architecture and agent coordination patterns, annotating task lifecycle management and state transitions, documenting inter-agent communication protocols, annotating task execution engine and error handling, and creating comprehensive examples of task flow scenarios.",
+			"reasoning": "High complexity due to sophisticated agent system architecture, multiple coordination patterns, complex state management, and need to explain orchestration flows."
+		},
+		{
+			"taskId": 18,
+			"taskTitle": "Annotate Bash Tool (src/tools/BashTool/)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Divide into: documenting command execution architecture and security considerations, annotating error handling and output processing mechanisms, and creating comprehensive JSDoc for all shell interaction methods with safety examples.",
+			"reasoning": "Medium complexity involving shell command execution, security implications, error handling, and need to document potentially dangerous operations clearly."
+		},
+		{
+			"taskId": 20,
+			"taskTitle": "Annotate Message Components (src/components/messages/)",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Split into: cataloging all message component files and their responsibilities, documenting component props and state management patterns, annotating rendering logic and data flow between components, and creating comprehensive examples of message display scenarios.",
+			"reasoning": "Moderate-high complexity due to multiple React components, complex state management, UI interaction patterns, and need to document component relationships."
+		},
+		{
+			"taskId": 22,
+			"taskTitle": "Annotate Config Component (src/components/Config.tsx)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break into: documenting configuration UI architecture and validation logic, annotating state management and form handling mechanisms, and creating comprehensive JSDoc for configuration editing workflows with validation examples.",
+			"reasoning": "Medium complexity involving React component documentation, form validation logic, configuration management integration, and user interaction flows."
+		},
+		{
+			"taskId": 4,
+			"taskTitle": "Annotate Constants (src/constants/)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate constants (src/constants/).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 5,
+			"taskTitle": "Annotate Tool System Interface (src/Tool.ts)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate tool system interface (src/tool.ts).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 6,
+			"taskTitle": "Annotate Config Management (src/utils/config.ts)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate config management (src/utils/config.ts).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 8,
+			"taskTitle": "Annotate Permission System (src/permissions.ts)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate permission system (src/permissions.ts).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 9,
+			"taskTitle": "Annotate Claude AI Service (src/services/claude.ts)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate claude ai service (src/services/claude.ts).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 10,
+			"taskTitle": "Annotate Model Adapter Factory (src/services/modelAdapterFactory.ts)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate model adapter factory (src/services/modeladapterfactory.ts).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 12,
+			"taskTitle": "Annotate Message Context Manager (src/utils/messageContextManager.ts)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate message context manager (src/utils/messagecontextmanager.ts).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 13,
+			"taskTitle": "Annotate Tool Registration System (src/tools.ts)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate tool registration system (src/tools.ts).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 15,
+			"taskTitle": "Annotate Tool Implementations (src/tools/*/*.tsx)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate tool implementations (src/tools/*/*.tsx).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 17,
+			"taskTitle": "Annotate File Edit Tool (src/tools/FileEditTool/)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate file edit tool (src/tools/fileedittool/).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 19,
+			"taskTitle": "Annotate Search Tools (src/tools/GrepTool/, src/tools/GlobTool/)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate search tools (src/tools/greptool/, src/tools/globtool/).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 21,
+			"taskTitle": "Annotate Permission Components (src/components/permissions/)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate permission components (src/components/permissions/).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 23,
+			"taskTitle": "Annotate Model Selector Component (src/components/ModelSelector.tsx)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate model selector component (src/components/modelselector.tsx).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 24,
+			"taskTitle": "Annotate Main Interface (src/screens/REPL.tsx)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate main interface (src/screens/repl.tsx).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		},
+		{
+			"taskId": 25,
+			"taskTitle": "Annotate CLI Entry Point (src/entrypoints/cli.tsx)",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Break down this task with a focus on annotate cli entry point (src/entrypoints/cli.tsx).",
+			"reasoning": "Automatically added due to missing analysis in AI response."
+		}
+	]
+}

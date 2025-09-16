@@ -3,67 +3,153 @@
     "tasks": [
       {
         "id": 1,
-        "title": "Initialize Monorepo with Bun and Node.js Support",
-        "description": "Set up the project repository with Bun as the primary runtime and Node.js as fallback, including tsx loader and cross-platform CLI wrapper.",
-        "details": "Use Bun v1.1+ for optimal performance and Node.js 20+ as fallback. Scaffold the project with a monorepo structure using pnpm workspaces. Add tsx for TypeScript execution. Ensure CLI entry points are cross-platform compatible (Windows, macOS, Linux). Integrate linting (eslint), formatting (prettier), and commit hooks (husky).",
-        "testStrategy": "Verify CLI launches in all supported OS environments. Run sample commands to ensure Bun and Node.js fallback both work. Check linting and formatting on commit.",
+        "title": "Establish Annotation Style Guide",
+        "description": "Define and document a unified Chinese annotation style and JSDoc format for the entire codebase.",
+        "details": "Draft a markdown document outlining annotation conventions, including file headers, function/class JSDoc, inline comments, and dependency notes. Ensure examples use Chinese, avoid excessive technical jargon, and provide analogies where possible.",
+        "testStrategy": "Peer review the style guide with at least two developers to ensure clarity and completeness.",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Research JSDoc Standards and Chinese Documentation Practices",
+            "description": "Investigate existing JSDoc standards, Chinese technical documentation conventions, and best practices for bilingual code documentation to establish foundation knowledge.",
+            "dependencies": [],
+            "details": "Review official JSDoc documentation, analyze popular Chinese open-source projects for annotation patterns, and identify effective approaches for combining technical accuracy with Chinese language clarity. Document findings and recommendations.\n<info added on 2025-09-15T14:06:54.777Z>\n完成了JSDoc标准和中文文档实践的深入研究。JSDoc官方研究发现JSDoc 3是JavaScript的官方API文档生成器，TypeScript对JSDoc有丰富支持，核心标签包括@param、@returns、@throws、@example，支持复杂类型注解如{(string|string[])}、{Promise<number>}等。中文开源项目注释模式分析显示Vue3生态系统主要使用英文注释但中文文档详尽，Element Plus采用轻量商务风格注释简洁实用，Ant Design Vue基于严谨商务风格更注重设计一致性。双语代码文档最佳实践表明一致的注释语言比双语混合更重要，自动化工具可提高多语言文档维护效率。推荐方案：采用中文注释为主技术术语保留英文，使用标准JSDoc格式支持TypeScript类型系统，建立文件头、函数、类、行内注释的统一模板，重点说明架构关系、依赖流向、设计意图。\n</info added on 2025-09-15T14:06:54.777Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Define File Header Templates and Conventions",
+            "description": "Create standardized file header templates that include purpose, dependencies, usage examples, and metadata in Chinese with clear formatting guidelines.",
+            "dependencies": [
+              "1.1"
+            ],
+            "details": "Establish file header structure including author, creation date, purpose description, dependency listing, and usage examples. Create templates for different file types (components, utilities, types) with Chinese descriptions and consistent formatting.\n<info added on 2025-09-15T14:12:01.750Z>\n已完成文件头模板和约定的定义工作。通过分析现有代码库发现核心服务文件采用详细多段式结构，工具接口文件使用简洁文档风格，而组件文件普遍缺少文件头注释。基于现有最佳实践设计了统一的文件头结构，采用emoji视觉标识配合中文描述的层次化格式。\n\n创建了完整的六类文件模板体系：核心服务文件模板包含职责、架构、流程、依赖等完整信息；React组件文件模板专注于组件功能和使用场景；工具文件模板强调工具作用和集成点；类型定义文件模板说明类型内容和使用位置；常量配置文件模板描述配置项作用；Hooks文件模板详细说明参数和返回值。\n\n建立了格式化规范，统一emoji图标使用指南（🎯职责、🏗️架构、🔄流程等），制定标准文本格式和命名约定，提供完整的实际应用示例。所有模板遵循中文注释为主、技术术语保留英文的原则，确保可读性和专业性的平衡。\n</info added on 2025-09-15T14:12:01.750Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Create Function and Class Annotation Standards with Chinese Examples",
+            "description": "Develop comprehensive JSDoc standards for functions and classes with Chinese descriptions, parameter documentation, and practical code examples.",
+            "dependencies": [
+              "1.1"
+            ],
+            "details": "Define JSDoc format for functions including Chinese parameter descriptions, return value documentation, usage examples, and error handling notes. Create class annotation standards with Chinese property descriptions and method documentation. Include real code examples from the project.\n<info added on 2025-09-15T14:19:27.485Z>\n任务已完成。通过对现有代码的深入分析，制定了完整的JSDoc标准体系，具体包括：\n\n分析了项目现状，发现简单函数缺少注释而复杂函数使用详细行内注释的不一致情况。建立了统一的JSDoc函数注释标准，涵盖功能描述、参数说明、返回值、异常处理和使用示例，所有模板均采用中文描述，技术术语保留英文原文。\n\n制定了完整的类和接口注释规范，包括Interface注释模板（用途描述、属性说明、方法文档、使用示例）和Class注释模板（类功能、设计模式、构造函数、方法注释、静态方法），明确了私有/公共属性的不同描述风格。\n\n基于Kode项目创建了Tool.ts注释增强版本作为实际应用示例，展示了OAuth服务类的完整注释、工具接口的详细文档、验证结果接口的标准化描述，为实际应用提供了具体的实施指导。\n\n所有标准都经过实际代码验证，确保了规范的可操作性和实用性，为后续的代码文档化工作奠定了坚实基础。\n</info added on 2025-09-15T14:19:27.485Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Establish Inline Comment Guidelines and Technical Analogy Framework",
+            "description": "Create guidelines for inline comments using Chinese language with technical analogies to explain complex logic and compile complete style guide document.",
+            "dependencies": [
+              "1.2",
+              "1.3"
+            ],
+            "details": "Define when and how to use inline comments, establish analogy framework for explaining technical concepts in accessible Chinese, create guidelines for avoiding excessive jargon. Compile all standards into comprehensive markdown document with examples and review checklist.\n<info added on 2025-09-15T14:49:10.656Z>\nLooking at the user request, this appears to be a completion report in Chinese describing the successful implementation of inline comment guidelines and technical analogy framework. The user is providing a detailed summary of what has been accomplished for this subtask.\n\nBased on the completion report provided, here is the new text content to add:\n\n已完成所有预定目标，成功建立了完整的行内注释指导原则和技术类比框架。主要成果包括：制定了明确的行内注释使用场景和原则，涵盖复杂业务逻辑、技术实现细节、数据转换过程等五个使用场景和三个避免场景；建立了系统性的生活化类比体系，包含网络通信、数据结构、异步并发、状态管理四大类技术概念的生活化类比；制定了完整的中文行内注释指导原则，明确了注释内容原则和格式规范；编制了综合性的注释风格指南文档，整合了文件头注释、函数方法注释、类接口注释、行内注释、技术类比框架、Emoji使用指南、质量检查清单和实施建议等所有标准。所有标准均经过实际验证，为Kode项目提供了完整可操作的代码注释规范体系。\n</info added on 2025-09-15T14:49:10.656Z>",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 2,
-        "title": "Implement REPL Terminal UI with Ink",
-        "description": "Develop an interactive terminal UI using the Ink framework, supporting syntax highlighting and real-time feedback.",
-        "details": "Use Ink v4+ for React-based CLI. Create custom components for input, output, syntax highlighting (recommend 'cli-highlight' or 'chalk'), and progress indicators. Design for responsive updates and accessibility. Integrate with the main CLI entry point.",
-        "testStrategy": "Manual and automated tests for input/output rendering, syntax highlighting, and responsiveness. Snapshot tests for UI components.",
+        "title": "Setup Annotation Progress Tracking",
+        "description": "Implement a comprehensive progress tracking system for annotation tasks with complete file status monitoring and project management framework.",
+        "status": "done",
+        "dependencies": [
+          1
+        ],
+        "priority": "high",
+        "details": "Establish a complete file status tracking mechanism that includes comprehensive scanning of the src directory, analysis of existing annotation states, creation of file dependency relationship mapping, establishment of progress tracking data structures, and setup of status reporting mechanisms. This will provide a complete project management framework for systematic annotation work.",
+        "testStrategy": "Verify that the tracking system accurately identifies all files in src directory, correctly analyzes existing annotation status, properly maps file dependencies, maintains accurate progress data structures, and provides real-time status reporting updates.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Comprehensive src Directory File Scanning",
+            "description": "Implement complete scanning mechanism for all files in the src directory to establish baseline inventory",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Existing Annotation Status Analysis",
+            "description": "Analyze current annotation state of all discovered files to understand existing documentation coverage",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "File Dependency Relationship Mapping",
+            "description": "Create comprehensive mapping of file dependencies to understand annotation priority and sequence requirements",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Progress Tracking Data Structure Implementation",
+            "description": "Establish robust data structures to maintain file status, annotation progress, and dependency information",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Status Reporting Mechanism Setup",
+            "description": "Implement real-time status reporting system to provide visibility into annotation progress and project status",
+            "status": "done",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Annotate Type Definitions (src/types/)",
+        "description": "Add comprehensive file headers and JSDoc comments to all type definition files.",
+        "details": "For each file in src/types/, add a file-level comment describing its purpose, dependencies, and usage. Annotate all exported types and interfaces with JSDoc, using Chinese and providing examples where relevant.",
+        "testStrategy": "Run JSDoc tool to ensure all types are documented; spot-check for clarity and completeness.",
         "priority": "high",
         "dependencies": [
           1
         ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 3,
-        "title": "Develop Unified Model Manager",
-        "description": "Create a unified interface for managing multiple AI model integrations, supporting runtime switching and model pointers.",
-        "details": "Implement a ModelManager class in TypeScript. Integrate OpenAI (v4+), Claude (Anthropic v3+), Gemini (Google v1.5+), and Qwen Coder APIs. Use environment variables for API keys. Support runtime model switching (Tab key), default model pointers, and @ask-model-name syntax. Implement cost optimization logic based on model pricing.",
-        "testStrategy": "Unit tests for model switching, pointer configuration, and API integration. Mock API responses for reliability.",
-        "priority": "high",
-        "dependencies": [
-          1,
-          2
-        ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
         "id": 4,
-        "title": "Build Agent Loader and Orchestration System",
-        "description": "Implement dynamic agent discovery, loading, and orchestration with 5-tier configuration and parallel execution.",
-        "details": "Create agentLoader.ts to scan for agent definitions in built-in, user, and project directories. Parse Markdown files with YAML frontmatter (use 'gray-matter'). Support @run-agent-name syntax and parallel execution via Promise.all. Implement agent permission checks.",
-        "testStrategy": "Unit and integration tests for agent discovery, loading, and parallel execution. Test YAML parsing and permission enforcement.",
+        "title": "Annotate Constants (src/constants/)",
+        "description": "Document all constants and configuration values with clear Chinese comments.",
+        "details": "Add file headers to each file in src/constants/. For each constant, provide a JSDoc comment explaining its meaning, usage, and any dependencies.",
+        "testStrategy": "Check that all constants are annotated and that documentation is generated correctly.",
         "priority": "high",
         "dependencies": [
-          1,
-          2,
           3
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
         "id": 5,
-        "title": "Implement Permission Manager and Security Modes",
-        "description": "Develop a granular permission system for tool and agent operations, supporting YOLO and --safe modes.",
-        "details": "Create permissions.ts with Zod schemas for permission policies. Implement runtime checks for file, command, and tool access. Support YOLO (default, permissive) and --safe (restricted) modes. Log permission violations and provide user feedback.",
-        "testStrategy": "Unit tests for permission enforcement. Simulate restricted and permissive scenarios. Fuzz test for security edge cases.",
+        "title": "Annotate Tool System Interface (src/Tool.ts)",
+        "description": "Provide detailed file and interface/class-level annotations for the core tool interface.",
+        "details": "Add a file header explaining the architectural role of Tool.ts. Use JSDoc to annotate all interfaces, types, and classes, including generics and async functions. Highlight integration with the permission system.",
+        "testStrategy": "Review generated documentation for completeness and clarity; ensure all exported members are annotated.",
         "priority": "high",
         "dependencies": [
-          1,
-          2,
+          3,
           4
         ],
         "status": "pending",
@@ -71,28 +157,27 @@
       },
       {
         "id": 6,
-        "title": "Develop Context Manager for Conversation State",
-        "description": "Create a context manager to handle conversation continuity, context window sizing, and state preservation across model switches.",
-        "details": "Implement messageContextManager.ts to track conversation history, dynamically size context windows based on model limits, and preserve state during model/agent switches. Use efficient in-memory storage and context summarization for large histories.",
-        "testStrategy": "Unit tests for context window sizing, state preservation, and summarization. Integration tests for model switching scenarios.",
+        "title": "Annotate Config Management (src/utils/config.ts)",
+        "description": "Document the configuration management logic and its dependencies.",
+        "details": "Add a file header describing the config system's responsibilities. Annotate all exported functions and configuration schemas with JSDoc, including parameter and return types.",
+        "testStrategy": "Run JSDoc and verify that all config-related APIs are documented and understandable.",
         "priority": "high",
         "dependencies": [
-          1,
-          3,
-          4
+          4,
+          5
         ],
         "status": "pending",
         "subtasks": []
       },
       {
         "id": 7,
-        "title": "Integrate Secure Shell Command Execution",
-        "description": "Enable secure shell command execution with real-time output and permission checks.",
-        "details": "Use Node.js 'child_process' (or Bun equivalent) to run shell commands. Stream output to the REPL UI. Enforce permission checks before execution. Sanitize inputs to prevent injection. Support command interruption and timeouts.",
-        "testStrategy": "Integration tests for command execution, output streaming, and permission enforcement. Security tests for injection and privilege escalation.",
+        "title": "Annotate Model Management (src/utils/model.ts)",
+        "description": "Add annotations to model management logic, focusing on AI model switching and integration.",
+        "details": "Provide a file header and JSDoc for all functions and classes. Explain the data flow and dependencies with other modules.",
+        "testStrategy": "Check that all model management APIs are documented and that the documentation is clear to new developers.",
         "priority": "high",
         "dependencies": [
-          2,
+          4,
           5
         ],
         "status": "pending",
@@ -100,29 +185,27 @@
       },
       {
         "id": 8,
-        "title": "Implement Smart File Editing and Codebase Understanding",
-        "description": "Develop context-aware file editing and deep project structure analysis for codebase understanding.",
-        "details": "Use Node.js/Bun fs APIs for file operations. Parse project structure using 'globby' or 'fast-glob'. Implement code pattern preservation using AST parsing (e.g., 'recast' for JS/TS). Map file relationships and dependencies. Integrate with ModelManager for context-aware edits.",
-        "testStrategy": "Unit and integration tests for file editing, AST parsing, and relationship mapping. Fuzz tests for edge cases.",
+        "title": "Annotate Permission System (src/permissions.ts)",
+        "description": "Document the permission management logic and its integration points.",
+        "details": "Add a file header and JSDoc for all permission-related functions and types. Explain how permissions are checked and enforced.",
+        "testStrategy": "Ensure all permission APIs are documented and that the documentation covers integration scenarios.",
         "priority": "high",
         "dependencies": [
-          2,
-          3,
-          6
+          5
         ],
         "status": "pending",
         "subtasks": []
       },
       {
         "id": 9,
-        "title": "Develop Advanced Completion System",
-        "description": "Create a hyphen-aware fuzzy matching system for commands, files, and agents with real-time discovery.",
-        "details": "Implement fuzzy matching using 'fuse.js' or 'fast-fuzzy'. Support hyphen-aware matching and auto-prefix detection for @ and # mentions. Dynamically discover commands from system PATH and agent/model registries. Integrate with REPL UI for real-time suggestions.",
-        "testStrategy": "Unit tests for fuzzy matching accuracy. Integration tests for real-time discovery and UI integration.",
-        "priority": "medium",
+        "title": "Annotate Claude AI Service (src/services/claude.ts)",
+        "description": "Provide comprehensive annotations for the Claude AI integration service.",
+        "details": "Add a file header describing the service's role, dependencies, and design pattern (adapter). Annotate all functions, especially those handling API calls, streaming, and error handling.",
+        "testStrategy": "Review documentation for clarity on API usage and integration points.",
+        "priority": "high",
         "dependencies": [
-          2,
-          4,
+          6,
+          7,
           8
         ],
         "status": "pending",
@@ -130,81 +213,114 @@
       },
       {
         "id": 10,
-        "title": "Ensure AGENTS.md Standard Compatibility",
-        "description": "Implement full compatibility with AGENTS.md and Claude.md protocols for agent configuration and documentation.",
-        "details": "Parse and generate AGENTS.md files using Markdown and YAML frontmatter. Support OpenAI and Claude standards for agent definitions. Implement migration tools for Claude.md compatibility. Auto-generate documentation from agent configs.",
-        "testStrategy": "Unit tests for parsing/generation. Integration tests for migration and documentation workflows.",
+        "title": "Annotate Model Adapter Factory (src/services/modelAdapterFactory.ts)",
+        "description": "Document the multi-model adapter logic and its extension points.",
+        "details": "Add a file header and JSDoc for all exported functions and classes. Explain how new models can be integrated.",
+        "testStrategy": "Check that documentation covers extension and integration scenarios.",
         "priority": "medium",
         "dependencies": [
-          4,
-          8
+          7,
+          9
         ],
         "status": "pending",
         "subtasks": []
       },
       {
         "id": 11,
-        "title": "Implement Workflow Automation and Task Orchestration",
-        "description": "Enable orchestration of complex, multi-step development workflows across models and agents.",
-        "details": "Design a workflow engine to sequence tasks, delegate to appropriate models/agents, and manage dependencies. Use async/await for step execution. Integrate with ModelManager and AgentLoader for dynamic routing.",
-        "testStrategy": "Integration tests for multi-step workflows, error handling, and dependency management.",
+        "title": "Annotate MCP Client (src/services/mcpClient.ts)",
+        "description": "Add annotations for the MCP protocol integration client.",
+        "details": "Provide a file header and JSDoc for all client methods, focusing on protocol handling and error recovery.",
+        "testStrategy": "Ensure all public APIs are documented and that protocol flows are clear.",
         "priority": "medium",
         "dependencies": [
-          3,
-          4,
-          6,
-          8
+          9
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Document MCP Protocol Implementation and Integration Patterns",
+            "description": "Add comprehensive file header and JSDoc documentation for MCP protocol implementation details, connection patterns, and integration approaches used in the client.",
+            "dependencies": [],
+            "details": "Create detailed file header explaining MCP protocol version, supported features, and overall architecture. Document integration patterns, protocol handshake flows, and message serialization/deserialization methods with JSDoc annotations.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Annotate Client Connection and Session Management Methods",
+            "description": "Add JSDoc annotations for all connection establishment, session lifecycle, and state management methods in the MCP client.",
+            "dependencies": [
+              "11.1"
+            ],
+            "details": "Document connection initialization, authentication flows, session persistence, reconnection logic, and state synchronization methods. Include parameter descriptions, return types, and usage examples for all session management APIs.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Document Error Recovery and Retry Mechanisms",
+            "description": "Add comprehensive JSDoc documentation for error handling, recovery strategies, and retry mechanisms implemented in the MCP client.",
+            "dependencies": [
+              "11.2"
+            ],
+            "details": "Document error classification, recovery procedures, exponential backoff strategies, circuit breaker patterns, and fallback mechanisms. Include JSDoc for all error handling methods with examples of recovery scenarios.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Create Protocol Flow Diagrams with JSDoc Examples",
+            "description": "Generate protocol flow documentation and comprehensive JSDoc examples demonstrating typical client-server interaction patterns.",
+            "dependencies": [
+              "11.1",
+              "11.2",
+              "11.3"
+            ],
+            "details": "Create ASCII diagrams or detailed comments showing message flow patterns, request-response cycles, and error scenarios. Provide complete JSDoc examples for common use cases, including initialization, method calls, and error handling workflows.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 12,
-        "title": "Optimize Performance and Memory Management",
-        "description": "Profile and optimize memory usage, response times, and context window management for large projects.",
-        "details": "Use Node.js/Bun profiling tools to identify bottlenecks. Optimize context storage and retrieval. Implement lazy loading and caching for large codebases. Monitor and limit memory usage per session.",
-        "testStrategy": "Performance benchmarks, stress tests, and memory profiling. Regression tests for large projects.",
+        "title": "Annotate Message Context Manager (src/utils/messageContextManager.ts)",
+        "description": "Document the logic for managing conversation context.",
+        "details": "Add a file header and JSDoc for all context management functions. Explain data flow and state management.",
+        "testStrategy": "Check that all context APIs are documented and understandable.",
         "priority": "medium",
         "dependencies": [
           6,
-          8,
-          11
+          7
         ],
         "status": "pending",
         "subtasks": []
       },
       {
         "id": 13,
-        "title": "Develop Comprehensive Testing Suite",
-        "description": "Set up unit, integration, and end-to-end tests using Bun test runner and modern testing libraries.",
-        "details": "Use Bun's built-in test runner for fast execution. Integrate with 'jest' or 'vitest' for advanced features. Cover all modules: REPL, ModelManager, AgentLoader, permissions, context, file editing, and workflows. Include CI integration (GitHub Actions).",
-        "testStrategy": "Automated test coverage reports. CI pipeline runs on all pushes and PRs. Manual exploratory testing for edge cases.",
+        "title": "Annotate Tool Registration System (src/tools.ts)",
+        "description": "Document the tool registration and export logic.",
+        "details": "Add a file header and JSDoc for all registration functions. Explain how tools are registered, discovered, and exported.",
+        "testStrategy": "Verify that documentation covers registration flows and extension points.",
         "priority": "medium",
         "dependencies": [
-          2,
-          3,
-          4,
           5,
           6,
           7,
-          8,
-          9,
-          10,
-          11,
-          12
+          8
         ],
         "status": "pending",
         "subtasks": []
       },
       {
         "id": 14,
-        "title": "Generate and Maintain API and User Documentation",
-        "description": "Automate API and usage documentation generation, including Markdown-based guides and AGENTS.md updates.",
-        "details": "Use 'typedoc' for API docs and custom scripts for Markdown generation. Auto-update AGENTS.md and usage examples on code changes. Integrate documentation checks into CI.",
-        "testStrategy": "Check for up-to-date docs on each build. Manual review for completeness and clarity.",
+        "title": "Annotate Tool Prompts (src/tools/*/prompt.ts)",
+        "description": "Add annotations to prompt definition files for each tool.",
+        "details": "For each prompt.ts, add a file header and JSDoc for all prompt templates and helper functions.",
+        "testStrategy": "Check that all prompts are documented and that usage examples are provided.",
         "priority": "medium",
         "dependencies": [
-          10,
           13
         ],
         "status": "pending",
@@ -212,24 +328,210 @@
       },
       {
         "id": 15,
-        "title": "Cross-Platform Distribution and Release Automation",
-        "description": "Package and distribute the CLI as an npm package with cross-platform support and automated release pipeline.",
-        "details": "Configure npm package.json for CLI distribution. Use 'pkg' or 'nexe' for binary builds if needed. Test on Windows, macOS, and Linux. Set up GitHub Actions for automated releases and versioning.",
-        "testStrategy": "Install and run CLI on all supported platforms. Verify release pipeline and version bumps.",
+        "title": "Annotate Tool Implementations (src/tools/*/*.tsx)",
+        "description": "Document the implementation of each tool, focusing on business logic and dependencies.",
+        "details": "For each tool implementation file, add a file header, JSDoc for all classes/functions, and inline comments for complex logic.",
+        "testStrategy": "Spot-check documentation for clarity and completeness; ensure all exported members are annotated.",
         "priority": "medium",
         "dependencies": [
-          1,
-          2,
           13,
           14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Annotate Task Tool (src/tools/TaskTool/)",
+        "description": "Add detailed annotations to the agent task system implementation.",
+        "details": "Provide file headers and JSDoc for all classes, functions, and types in TaskTool. Explain task flow and agent coordination.",
+        "testStrategy": "Review documentation for clarity on task orchestration and extension.",
+        "priority": "medium",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Document Task Orchestration Architecture and Agent Coordination Patterns",
+            "description": "Create comprehensive documentation for the task orchestration system architecture, including agent coordination patterns, workflow management structures, and inter-component communication protocols within the TaskTool system.",
+            "dependencies": [],
+            "details": "Add file headers and JSDoc annotations to core orchestration classes, document agent coordination patterns including task delegation and result aggregation, explain workflow management structures, and provide architectural diagrams in comments for complex coordination flows.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Annotate Task Lifecycle Management and State Transitions",
+            "description": "Document the complete task lifecycle from creation to completion, including all state transitions, status management, and persistence mechanisms used throughout the task execution process.",
+            "dependencies": [
+              "16.1"
+            ],
+            "details": "Add JSDoc for task state management classes, document all possible task states and transition conditions, explain persistence mechanisms and data structures, and provide examples of lifecycle flows for different task types.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Document Inter-Agent Communication Protocols",
+            "description": "Create detailed annotations for all communication protocols used between agents, including message formats, response handling, synchronization mechanisms, and error propagation patterns.",
+            "dependencies": [
+              "16.1"
+            ],
+            "details": "Document message passing interfaces with JSDoc, explain synchronization and coordination protocols, annotate error handling and recovery mechanisms, and provide examples of typical communication flows between different agent types.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Annotate Task Execution Engine and Error Handling",
+            "description": "Provide comprehensive documentation for the task execution engine, including execution strategies, resource management, error handling mechanisms, and recovery procedures for failed tasks.",
+            "dependencies": [
+              "16.2",
+              "16.3"
+            ],
+            "details": "Add JSDoc to execution engine classes and methods, document error handling strategies and recovery mechanisms, explain resource allocation and cleanup procedures, and provide examples of error scenarios and their resolution.",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Create Comprehensive Examples of Task Flow Scenarios",
+            "description": "Develop detailed documentation with practical examples showing complete task flow scenarios, from simple single-agent tasks to complex multi-agent coordination workflows, including edge cases and error scenarios.",
+            "dependencies": [
+              "16.4"
+            ],
+            "details": "Create comprehensive JSDoc examples for common task patterns, document complex multi-agent workflows with step-by-step explanations, provide edge case handling examples, and include troubleshooting guides for common issues in task execution flows.",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 17,
+        "title": "Annotate File Edit Tool (src/tools/FileEditTool/)",
+        "description": "Document the file editing tool logic and its integration points.",
+        "details": "Add file headers and JSDoc for all classes and functions. Explain editing flows and permission checks.",
+        "testStrategy": "Ensure all editing APIs are documented and that permission integration is clear.",
+        "priority": "medium",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Annotate Bash Tool (src/tools/BashTool/)",
+        "description": "Add annotations to the shell command execution tool.",
+        "details": "Provide file headers and JSDoc for all classes and functions. Explain command execution flow and error handling.",
+        "testStrategy": "Check that all command APIs are documented and that error scenarios are covered.",
+        "priority": "medium",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Annotate Search Tools (src/tools/GrepTool/, src/tools/GlobTool/)",
+        "description": "Document the code search tools and their usage.",
+        "details": "Add file headers and JSDoc for all classes and functions in GrepTool and GlobTool. Explain search logic and result formatting.",
+        "testStrategy": "Verify that all search APIs are documented and that usage examples are provided.",
+        "priority": "medium",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Annotate Message Components (src/components/messages/)",
+        "description": "Add annotations to all message display components.",
+        "details": "For each component, add a file header and JSDoc for props, state, and key methods. Explain rendering logic and data flow.",
+        "testStrategy": "Check that all message components are documented and that prop types are clear.",
+        "priority": "medium",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Annotate Permission Components (src/components/permissions/)",
+        "description": "Document the UI components for permission requests.",
+        "details": "Add file headers and JSDoc for all components. Explain user interaction flows and integration with the permission system.",
+        "testStrategy": "Ensure all permission components are documented and that user flows are clear.",
+        "priority": "medium",
+        "dependencies": [
+          20
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Annotate Config Component (src/components/Config.tsx)",
+        "description": "Add annotations to the configuration management UI component.",
+        "details": "Provide a file header and JSDoc for all props, state, and methods. Explain configuration editing and validation logic.",
+        "testStrategy": "Check that all config component APIs are documented and that usage is clear.",
+        "priority": "medium",
+        "dependencies": [
+          20
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "Annotate Model Selector Component (src/components/ModelSelector.tsx)",
+        "description": "Document the model switching UI component.",
+        "details": "Add a file header and JSDoc for all props, state, and methods. Explain model selection flow and integration with model management.",
+        "testStrategy": "Ensure all model selector APIs are documented and that integration points are clear.",
+        "priority": "medium",
+        "dependencies": [
+          20
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Annotate Main Interface (src/screens/REPL.tsx)",
+        "description": "Add comprehensive annotations to the main interactive interface.",
+        "details": "Provide a file header and JSDoc for all classes, functions, and hooks. Explain data flow, event handling, and integration with services.",
+        "testStrategy": "Check that all REPL APIs are documented and that user flows are clear.",
+        "priority": "medium",
+        "dependencies": [
+          20,
+          21,
+          22,
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "Annotate CLI Entry Point (src/entrypoints/cli.tsx)",
+        "description": "Document the application entry point and its initialization logic.",
+        "details": "Add a file header and JSDoc for all functions and classes. Explain startup sequence, argument parsing, and main event loop.",
+        "testStrategy": "Ensure all entry point logic is documented and that startup flow is clear.",
+        "priority": "medium",
+        "dependencies": [
+          24
         ],
         "status": "pending",
         "subtasks": []
       }
     ],
     "metadata": {
-      "created": "2025-09-15T13:27:52.639Z",
-      "updated": "2025-09-15T13:27:52.639Z",
+      "created": "2025-09-15T13:48:21.446Z",
+      "updated": "2025-09-16T04:20:16.074Z",
       "description": "Tasks for master context"
     }
   }

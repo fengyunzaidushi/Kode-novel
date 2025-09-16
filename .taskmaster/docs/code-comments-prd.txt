@@ -1,0 +1,183 @@
+# Kode源代码注释项目 - 产品需求文档
+
+# Overview
+本项目旨在为Kode CLI工具的源代码添加全面、通俗易懂的中文注释。Kode是一个基于Claude AI的命令行界面工具，具有复杂的架构和274个TypeScript/TSX源文件。目标是让开发者能够快速理解代码结构、功能和依赖关系，提升代码的可维护性和可读性。
+
+# Core Features
+## 1. 源代码文件注释
+- 为每个TypeScript/TSX文件添加详细的文件头注释，说明文件作用和职责
+- 为关键函数和类添加功能注释，使用JSDoc格式
+- 为复杂的业务逻辑添加行内注释
+- 说明文件间的依赖关系和数据流向
+
+## 2. 架构文档注释
+- 标注核心架构模式和设计思想（三层并行架构）
+- 解释工具系统、代理系统、权限系统的实现细节
+- 说明多模型协作机制
+- 标注MCP集成和扩展机制
+
+## 3. 注释质量保证
+- 注释内容通俗易懂，使用中文描述
+- 避免过于技术化的描述，多使用类比和例子
+- 注释与代码保持同步
+- 统一注释风格和格式规范
+
+# User Experience
+## 目标用户
+- **新加入的开发者**: 需要快速理解Kode项目的整体架构和代码结构
+- **维护开发者**: 需要理解具体模块的实现细节和依赖关系
+- **贡献者**: 希望为项目贡献代码但需要先理解现有实现
+
+## 核心用户流程
+1. **架构理解**: 从入口文件开始，理解整体架构流程
+2. **模块深入**: 深入理解感兴趣的特定模块实现
+3. **依赖追踪**: 通过注释快速找到相关的上下游文件
+4. **功能扩展**: 基于注释理解如何正确扩展功能
+
+# Technical Architecture
+## 注释系统组件
+- **文件级注释**: 每个源文件的作用、位置、依赖关系
+- **函数级注释**: 关键函数的参数、返回值、副作用、使用场景
+- **类级注释**: 类的职责、设计模式、使用示例
+- **依赖关系注释**: import/export关系的详细说明
+
+## 注释格式规范
+```typescript
+/**
+ * 文件名：工具基础接口 - Tool.ts
+ * 作用：定义所有工具的统一接口和基础类型
+ * 架构位置：工具系统的核心接口层
+ * 上游依赖：无（基础类型定义）
+ * 下游使用：所有具体工具实现（BashTool、FileEditTool等）
+ *
+ * 设计思想：
+ * - 使用泛型约束确保工具参数的类型安全
+ * - 异步描述函数支持动态工具描述生成
+ * - 权限系统集成确保工具使用的安全性
+ */
+```
+
+# Development Roadmap
+## 第一阶段：核心架构文件注释
+- **入口文件**: src/entrypoints/cli.tsx - 应用程序启动入口
+- **核心界面**: src/screens/REPL.tsx - 主要交互界面
+- **配置系统**: src/utils/config.ts - 系统配置管理
+- **模型管理**: src/utils/model.ts - AI模型管理和切换
+- **工具接口**: src/Tool.ts - 工具系统基础接口
+
+## 第二阶段：基础服务层注释
+- **AI服务**: src/services/claude.ts - Claude AI集成服务
+- **模型适配**: src/services/modelAdapterFactory.ts - 多模型适配器
+- **权限系统**: src/permissions.ts - 工具权限管理
+- **上下文管理**: src/utils/messageContextManager.ts - 对话上下文管理
+- **MCP客户端**: src/services/mcpClient.ts - MCP协议集成
+
+## 第三阶段：工具系统注释
+- **工具注册**: src/tools.ts - 工具注册和导出
+- **任务工具**: src/tools/TaskTool/ - 代理任务系统
+- **文件工具**: src/tools/FileEditTool/ - 文件编辑功能
+- **命令工具**: src/tools/BashTool/ - Shell命令执行
+- **搜索工具**: src/tools/GrepTool/, src/tools/GlobTool/ - 代码搜索
+
+## 第四阶段：UI组件系统注释
+- **消息组件**: src/components/messages/ - 各类消息显示组件
+- **权限组件**: src/components/permissions/ - 权限请求界面
+- **配置组件**: src/components/Config.tsx - 配置管理界面
+- **模型选择**: src/components/ModelSelector.tsx - 模型切换界面
+
+## 第五阶段：工具类和常量注释
+- **工具函数**: src/utils/ 目录下的各种工具函数
+- **常量定义**: src/constants/ 目录下的配置和常量
+- **类型定义**: src/types/ 目录下的TypeScript类型
+- **钩子函数**: src/hooks/ 目录下的React hooks
+
+# Logical Dependency Chain
+## 依赖分析原则
+1. **类型优先**: 先注释类型定义，再注释使用这些类型的实现
+2. **接口优先**: 先注释接口定义，再注释具体实现
+3. **基础优先**: 先注释被依赖最多的基础模块
+4. **层次递进**: 按照架构层次从底层到上层依次注释
+
+## 具体依赖顺序
+### Tier 1: 基础类型和常量
+- src/types/ - 基础类型定义
+- src/constants/ - 系统常量和配置
+- src/Tool.ts - 工具系统基础接口
+
+### Tier 2: 核心服务和配置
+- src/utils/config.ts - 配置管理
+- src/utils/model.ts - 模型管理
+- src/permissions.ts - 权限系统
+- src/services/claude.ts - 核心AI服务
+
+### Tier 3: 工具系统实现
+- src/tools.ts - 工具注册系统
+- src/tools/*/prompt.ts - 各工具的提示词
+- src/tools/*/*.tsx - 各工具的具体实现
+
+### Tier 4: UI和交互层
+- src/components/ - React组件
+- src/screens/REPL.tsx - 主界面
+- src/entrypoints/cli.tsx - 应用入口
+
+# Risks and Mitigations
+## 技术挑战
+- **代码复杂度高**: 通过分层注释策略，先理解架构再深入细节
+- **文件数量多（274个）**: 按照依赖关系分批处理，建立清晰的进度跟踪
+- **架构理解难度**: 结合CLAUDE.md和现有文档，深入研究核心设计思想
+
+## 注释质量风险
+- **注释过时风险**: 建立注释维护机制，代码变更时同步更新注释
+- **注释不够通俗**: 使用生活化的类比，避免过度技术化的描述
+- **注释冗余**: 重点注释核心逻辑，避免为显而易见的代码添加注释
+
+## MVP定义
+- **核心MVP**: 完成入口文件、核心架构文件、主要工具的注释
+- **优先级排序**: 按照使用频率和重要性确定注释优先级
+- **质量标准**: 每个文件都有清晰的作用说明和依赖关系标注
+
+# Appendix
+## 当前项目状态分析
+- **文件总数**: 274个TypeScript/TSX文件
+- **主要目录**:
+  - src/tools/ (工具实现) - 约60个文件
+  - src/components/ (UI组件) - 约80个文件
+  - src/utils/ (工具函数) - 约50个文件
+  - src/services/ (服务层) - 约20个文件
+- **核心入口**: src/entrypoints/cli.tsx
+- **架构核心**: src/screens/REPL.tsx, src/Tool.ts, src/tools.ts
+
+## 注释示例模板
+```typescript
+/**
+ * 文件：Claude AI服务集成 - claude.ts
+ *
+ * 作用：封装与Claude AI的API交互，提供统一的对话接口
+ *
+ * 架构位置：服务层 - AI模型集成层
+ *
+ * 核心功能：
+ * - 管理Claude API的连接和认证
+ * - 处理流式响应和实时消息显示
+ * - 集成工具调用和权限验证
+ * - 处理API限流和错误恢复
+ *
+ * 上游依赖：
+ * - config.ts: 获取API配置和密钥
+ * - Tool.ts: 工具接口定义
+ * - permissions.ts: 权限验证系统
+ *
+ * 下游使用：
+ * - REPL.tsx: 主界面调用AI对话
+ * - TaskTool.tsx: 代理任务执行
+ * - modelAdapterFactory.ts: 模型适配器工厂
+ *
+ * 设计模式：适配器模式，将Claude API适配为统一的AI服务接口
+ */
+```
+
+## 进度跟踪方式
+- 使用TaskMaster管理注释任务的进度
+- 每完成一个文件的注释，更新任务状态
+- 定期检查注释质量和完整性
+- 建立注释规范检查清单

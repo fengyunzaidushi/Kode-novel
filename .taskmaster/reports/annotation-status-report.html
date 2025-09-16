@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kode项目注释状态报告</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; margin: 40px; background: #fafafa; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.1); }
+        h1, h2, h3 { color: #333; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0; }
+        .stat-card { padding: 20px; background: #f8f9fa; border-radius: 8px; text-align: center; }
+        .stat-number { font-size: 2em; font-weight: bold; color: #0066cc; }
+        .stat-label { color: #666; margin-top: 5px; }
+        .progress-bar { width: 100%; height: 20px; background: #e9ecef; border-radius: 10px; overflow: hidden; margin: 10px 0; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #28a745, #20c997); transition: width 0.3s ease; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6; }
+        th { background: #f8f9fa; font-weight: 600; }
+        .status-pending { color: #6c757d; }
+        .status-in-progress { color: #fd7e14; }
+        .status-complete { color: #28a745; }
+        .priority-critical { color: #dc3545; font-weight: bold; }
+        .priority-high { color: #fd7e14; font-weight: bold; }
+        .priority-medium { color: #0066cc; }
+        .priority-low { color: #6c757d; }
+        .file-path { font-family: 'Monaco', 'Consolas', monospace; font-size: 0.9em; }
+        .section { margin: 40px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Kode项目注释状态报告</h1>
+        <p>生成时间: 2025/9/15 23:03:07</p>
+
+        <div class="section">
+            <h2>📈 总体进度</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 17.6%"></div>
+            </div>
+            <p style="text-align: center; font-weight: bold;">完成率: 17.6%</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">273</div>
+                    <div class="stat-label">总文件数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">48</div>
+                    <div class="stat-label">已完成</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">68</div>
+                    <div class="stat-label">进行中</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">157</div>
+                    <div class="stat-label">待处理</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🚨 优先级文件分布</h2>
+            
+      <h3>🔴 关键优先级 (2个文件, 1个待处理)</h3>
+      <table>
+        <thead>
+          <tr><th>文件路径</th><th>状态</th><th>分类</th><th>注释比例</th></tr>
+        </thead>
+        <tbody>
+          
+            <tr>
+              <td class="file-path">context.ts</td>
+              <td class="status-pending">pending</td>
+              <td>core_interfaces</td>
+              <td>7.2%</td>
+            </tr>
+          
+            <tr>
+              <td class="file-path">Tool.ts</td>
+              <td class="status-complete">complete</td>
+              <td>entry_points</td>
+              <td>12.9%</td>
+            </tr>
+          
+          
+        </tbody>
+      </table>
+    
+      <h3>🔵 中等优先级 (271个文件, 156个待处理)</h3>
+      <table>
+        <thead>
+          <tr><th>文件路径</th><th>状态</th><th>分类</th><th>注释比例</th></tr>
+        </thead>
+        <tbody>
+          
+            <tr>
+              <td class="file-path">commands\agents.tsx</td>
+              <td class="status-in-progress">in-progress</td>
+              <td>utilities</td>
+              <td>4.2%</td>
+            </tr>
+          
+            <tr>
+              <td class="file-path">commands\approvedTools.ts</td>
+              <td class="status-complete">complete</td>
+              <td>utilities</td>
+              <td>30.9%</td>
+            </tr>
+          
+            <tr>
+              <td class="file-path">commands\bug.tsx</td>
+              <td class="status-complete">complete</td>
+              <td>utilities</td>
+              <td>22.2%</td>
+            </tr>
+          
+            <tr>
+              <td class="file-path">commands\clear.ts</td>
+              <td class="status-complete">complete</td>
+              <td>utilities</td>
+              <td>23.2%</td>
+            </tr>
+          
+            <tr>
+              <td class="file-path">commands\compact.ts</td>
+              <td class="status-complete">complete</td>
+              <td>utilities</td>
+              <td>16.7%</td>
+            </tr>
+          
+            <tr>
+              <td class="file-path">commands\config.tsx</td>
+              <td class="status-in-progress">in-progress</td>
+              <td>utilities</td>
+              <td>20.0%</td>
+            </tr>
+          
+            <tr>
+              <td class="file-path">commands\cost.ts</td>
+              <td class="status-in-progress">in-progress</td>
+              <td>utilities</td>
+              <td>17.4%</td>
+            </tr>
+          
+            <tr>
+              <td class="file-path">commands\ctx_viz.ts</td>
+              <td class="status-complete">complete</td>
+              <td>utilities</td>
+              <td>11.4%</td>
+            </tr>
+          
+            <tr>
+              <td class="file-path">commands\doctor.ts</td>
+              <td class="status-complete">complete</td>
+              <td>utilities</td>
+              <td>24.2%</td>
+            </tr>
+          
+            <tr>
+              <td class="file-path">commands\help.tsx</td>
+              <td class="status-complete">complete</td>
+              <td>utilities</td>
+              <td>25.9%</td>
+            </tr>
+          
+          <tr><td colspan="4" style="text-align: center; color: #666;">... 还有 261 个文件</td></tr>
+        </tbody>
+      </table>
+    
+        </div>
+
+        <div class="section">
+            <h2>📂 分类统计</h2>
+            
+    <table>
+      <thead>
+        <tr><th>分类</th><th>总文件数</th><th>已完成</th><th>完成率</th></tr>
+      </thead>
+      <tbody>
+        
+            <tr>
+              <td>utilities</td>
+              <td>271</td>
+              <td>47</td>
+              <td>17.3%</td>
+            </tr>
+          
+            <tr>
+              <td>core_interfaces</td>
+              <td>1</td>
+              <td>0</td>
+              <td>0.0%</td>
+            </tr>
+          
+            <tr>
+              <td>entry_points</td>
+              <td>1</td>
+              <td>1</td>
+              <td>100.0%</td>
+            </tr>
+          
+      </tbody>
+    </table>
+  
+        </div>
+
+        <div class="section">
+            <h2>📋 状态分布</h2>
+            
+    <table>
+      <thead>
+        <tr><th>状态</th><th>文件数量</th><th>占比</th></tr>
+      </thead>
+      <tbody>
+        
+            <tr>
+              <td>🔄 进行中</td>
+              <td>68</td>
+              <td>24.9%</td>
+            </tr>
+          
+            <tr>
+              <td>✅ 已完成</td>
+              <td>48</td>
+              <td>17.6%</td>
+            </tr>
+          
+            <tr>
+              <td>⏳ 待处理</td>
+              <td>157</td>
+              <td>57.5%</td>
+            </tr>
+          
+      </tbody>
+    </table>
+  
+        </div>
+    </div>
+</body>
+</html>

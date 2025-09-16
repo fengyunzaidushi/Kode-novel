@@ -205,3 +205,7 @@ const description = typeof tool.description === 'function'
 2. Place in appropriate directory based on scope
 3. Test with `/agents` command
 4. Verify tool permissions work correctly
+
+## Task Master AI Instructions
+**Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**
+@./.taskmaster/CLAUDE.md
