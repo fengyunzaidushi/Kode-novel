@@ -1,3 +1,35 @@
+/**
+ * 🎯 Bash 工具提示配置 - 命令行执行工具的 AI 指令模板
+ *
+ * 🏗️ 核心功能：
+ * - 定义 Bash 命令执行的安全规范和最佳实践
+ * - 提供详细的命令执行流程和错误处理指导
+ * - 集成 Git 工作流的专业化操作指令
+ * - 配置安全限制和禁用命令列表
+ * - 支持 PR 创建和代码提交的标准化流程
+ *
+ * 🔄 依赖关系：
+ * - 上游：被 BashTool 使用作为 AI 行为指导
+ * - 下游：依赖产品常量和其他工具的名称定义
+ *
+ * 📊 使用场景：
+ * - AI 代理的命令行操作指导
+ * - 安全的系统命令执行控制
+ * - Git 工作流的自动化处理
+ * - 开发环境的标准化操作
+ *
+ * 🔧 技术实现：
+ * - 安全控制：禁用危险和网络相关命令
+ * - 工作流集成：Git 提交和 PR 创建的标准流程
+ * - 工具协调：与文件操作工具的协同使用
+ * - 错误处理：完善的错误检查和恢复机制
+ *
+ * 💡 设计原则：
+ * - 安全第一：严格的命令白名单和黑名单
+ * - 工作流标准化：统一的 Git 操作流程
+ * - 工具协同：避免功能重复的工具选择
+ * - 用户体验：清晰的执行步骤和错误提示
+ */
 import { PRODUCT_NAME, PRODUCT_URL } from '../../constants/product'
 import { TOOL_NAME as TASK_TOOL_NAME } from '../TaskTool/constants'
 import { FileReadTool } from '../FileReadTool/FileReadTool'
@@ -5,8 +37,21 @@ import { TOOL_NAME_FOR_PROMPT as GLOB_TOOL_NAME } from '../GlobTool/prompt'
 import { TOOL_NAME_FOR_PROMPT as GREP_TOOL_NAME } from '../GrepTool/prompt'
 import { LSTool } from '../lsTool/lsTool'
 
+/** 最大输出长度限制 - 防止过长输出影响性能 */
 export const MAX_OUTPUT_LENGTH = 30000
+
+/** 最大渲染行数 - 用于输出显示的行数限制 */
 export const MAX_RENDERED_LINES = 5
+
+/**
+ * 禁用命令列表 - 出于安全考虑被禁止执行的命令
+ *
+ * 这些命令被禁用的原因：
+ * - 网络访问：curl, wget 等可能泄露信息或下载恶意内容
+ * - 浏览器：可能被用于访问外部网站或执行不安全操作
+ * - 别名：可能被用于绕过安全限制
+ * - 网络工具：nc, telnet 等可能被用于网络攻击
+ */
 export const BANNED_COMMANDS = [
   'alias',
   'curl',
@@ -27,6 +72,24 @@ export const BANNED_COMMANDS = [
   'safari',
 ]
 
+/**
+ * Bash 工具的主要 AI 提示模板 - 完整的命令执行指导文档
+ *
+ * 这个提示模板定义了 AI 在使用 Bash 工具时应该遵循的完整流程，
+ * 包括安全检查、命令执行、输出处理和 Git 工作流集成。
+ *
+ * 🎯 主要内容：
+ * - 命令执行前的安全和目录验证
+ * - 标准化的 Git 提交和 PR 创建流程
+ * - 工具协同使用的最佳实践
+ * - 错误处理和恢复机制
+ *
+ * 💡 设计理念：
+ * - 安全优先：严格的安全检查流程
+ * - 用户体验：清晰的步骤说明和示例
+ * - 工作流标准化：统一的 Git 操作规范
+ * - 工具生态集成：与其他 Kode 工具的协同
+ */
 export const PROMPT = `Executes a given bash command in a persistent shell session with optional timeout, ensuring proper handling and security measures.
 
 Before executing the command, please follow these steps:

@@ -1,6 +1,35 @@
+/**
+ * 🎯 Todo 写入工具提示配置 - 任务跟踪和进度管理的 AI 指令
+ *
+ * 🏗️ 核心功能：
+ * - 定义智能任务跟踪和进度管理规范
+ * - 提供任务状态管理和工作流控制
+ * - 支持复杂任务的分解和组织
+ * - 集成主动任务创建和完成验证
+ *
+ * 💡 设计理念：
+ * - 主动管理：智能识别需要跟踪的任务
+ * - 状态控制：严格的任务状态转换规则
+ * - 进度透明：实时的任务状态更新
+ * - 质量保证：完整的任务完成验证
+ */
+
+/** 工具的基础功能描述 */
 export const DESCRIPTION =
   'Creates and manages todo items for task tracking and progress management in the current session.'
 
+/**
+ * Todo 工具的完整使用指导和最佳实践
+ *
+ * 定义了任务跟踪的完整工作流程，包括任务识别、
+ * 状态管理、完成验证和质量控制的详细规范。
+ *
+ * 🎯 核心内容：
+ * - 任务识别：何时使用和何时不使用
+ * - 状态管理：任务状态的转换规则
+ * - 进度跟踪：实时更新和完成验证
+ * - 质量控制：严格的完成标准
+ */
 export const PROMPT = `Use this tool to create and manage todo items for tracking tasks and progress. This tool provides comprehensive todo management:
 
 ## When to Use This Tool
