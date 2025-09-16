@@ -1,17 +1,34 @@
 /**
- * MCP客户端服务 - 模型上下文协议的核心集成层
+ * 🎯 MCP 客户端服务 - 模型上下文协议的核心集成层
  *
- * 🌐 MCP (Model Context Protocol) 是一个开放标准协议，用于：
- * - 让AI模型安全地访问外部数据和工具
- * - 标准化AI应用与外部服务的集成方式
+ * 🏗️ 核心功能：
+ * - 实现 MCP (Model Context Protocol) 协议的客户端集成
+ * - 提供多作用域的 MCP 服务器配置管理
+ * - 建立和维护与 MCP 服务器的连接池
+ * - 将 MCP 工具和提示转换为 Kode 统一格式
+ * - 支持多传输协议和错误恢复机制
+ *
+ * 🔄 依赖关系：
+ * - 上游：被工具系统和命令系统使用
+ * - 下游：依赖配置管理和日志系统
+ *
+ * 📊 使用场景：
+ * - 外部工具的 MCP 协议集成
+ * - 分布式 AI 服务的统一访问
+ * - 跨项目的工具共享和管理
+ * - 安全的外部资源访问控制
+ *
+ * 🔧 技术实现：
+ * - 协议抽象：MCP 协议的完整实现
+ * - 传输层支持：stdio 和 SSE 多传输方式
+ * - 连接池管理：自动重连和故障转移
+ * - 权限控制：基于作用域的访问管理
+ * - 错误恢复：连接超时和重试机制
+ *
+ * 🌐 MCP (Model Context Protocol) 协议特性：
+ * - 让 AI 模型安全地访问外部数据和工具
+ * - 标准化 AI 应用与外部服务的集成方式
  * - 支持工具调用、提示模板、资源访问等功能
- *
- * 🏗️ 本服务的职责：
- * 1. 管理MCP服务器配置（项目级/全局/mcprc文件）
- * 2. 建立和维护与MCP服务器的连接
- * 3. 将MCP工具和命令转换为Kode工具系统格式
- * 4. 处理工具调用和结果传递
- * 5. 提供权限管理和错误处理
  *
  * 📁 支持的配置作用域：
  * - project: 项目级配置 (.kode.json)
@@ -62,7 +79,7 @@ import { logMCPError } from '../utils/log'
 import { Command } from '../commands'
 import { PRODUCT_COMMAND } from '../constants/product.js'
 
-// MCP服务器名称类型别名
+/** MCP 服务器名称类型别名 - 用于标识不同的 MCP 服务器实例 */
 type McpName = string
 
 /**
@@ -98,11 +115,11 @@ export function parseEnvVars(
   return parsedEnv
 }
 
-// 所有有效的配置作用域
+/** 所有有效的配置作用域 - 定义 MCP 服务器配置的存储层级 */
 const VALID_SCOPES = ['project', 'global', 'mcprc'] as const
-// 配置作用域类型定义
+/** 配置作用域类型定义 - 基于有效作用域的类型约束 */
 type ConfigScope = (typeof VALID_SCOPES)[number]
-// 外部用户可用的作用域（不包括内部mcprc）
+/** 外部用户可用的作用域 - 不包括内部 mcprc 管理的作用域 */
 const EXTERNAL_SCOPES = ['project', 'global'] as ConfigScope[]
 
 /**
@@ -134,6 +151,25 @@ export function ensureConfigScope(scope?: string): ConfigScope {
   return scope as ConfigScope
 }
 
+/**
+ * 添加 MCP 服务器配置 - 在指定作用域中注册新的 MCP 服务器
+ *
+ * 根据指定的作用域将 MCP 服务器配置保存到相应的配置文件中，
+ * 支持项目级、全局级和 .mcprc 文件的配置管理。
+ *
+ * @param name - MCP 服务器名称（唯一标识符）
+ * @param server - MCP 服务器配置对象
+ * @param scope - 配置作用域，默认为 'project'
+ * @throws Error - 当 .mcprc 文件写入失败时
+ *
+ * 🎯 作用域行为：
+ * - project: 保存到项目级 .kode.json
+ * - global: 保存到全局 ~/.kode.json
+ * - mcprc: 保存到项目根目录 .mcprc 文件
+ *
+ * 📁 配置优先级：
+ * project > mcprc > global（高优先级覆盖低优先级）
+ */
 export function addMcpServer(
   name: McpName,
   server: McpServerConfig,
@@ -186,6 +222,26 @@ export function addMcpServer(
   }
 }
 
+/**
+ * 移除 MCP 服务器配置 - 从指定作用域中删除 MCP 服务器
+ *
+ * 根据指定的作用域从相应的配置文件中删除 MCP 服务器配置，
+ * 支持项目级、全局级和 .mcprc 文件的配置管理。
+ *
+ * @param name - 要删除的 MCP 服务器名称
+ * @param scope - 配置作用域，默认为 'project'
+ * @throws Error - 当服务器不存在或文件操作失败时
+ *
+ * 🎯 删除行为：
+ * - project: 从项目级 .kode.json 中删除
+ * - global: 从全局 ~/.kode.json 中删除
+ * - mcprc: 从项目根目录 .mcprc 文件中删除
+ *
+ * ⚠️ 注意事项：
+ * - 删除操作会立即生效并保存配置文件
+ * - 如果服务器不存在会抛出错误
+ * - 删除后需要重新连接才能生效
+ */
 export function removeMcpServer(
   name: McpName,
   scope: ConfigScope = 'project',
@@ -240,6 +296,24 @@ export function removeMcpServer(
   }
 }
 
+/**
+ * 列出所有 MCP 服务器配置 - 合并所有作用域的服务器配置
+ *
+ * 按照优先级顺序合并所有作用域的 MCP 服务器配置，
+ * 高优先级的配置会覆盖低优先级的同名配置。
+ *
+ * @returns Record<string, McpServerConfig> - 合并后的服务器配置对象
+ *
+ * 📊 合并优先级（高到低）：
+ * 1. project: 项目级配置（最高优先级）
+ * 2. mcprc: .mcprc 文件配置
+ * 3. global: 全局配置（最低优先级）
+ *
+ * 💡 使用场景：
+ * - 获取当前项目可用的所有 MCP 服务器
+ * - 显示配置管理界面的服务器列表
+ * - 调试配置冲突和覆盖关系
+ */
 export function listMCPServers(): Record<string, McpServerConfig> {
   const globalConfig = getGlobalConfig()
   const mcprcConfig = getMcprcConfig()
@@ -251,10 +325,35 @@ export function listMCPServers(): Record<string, McpServerConfig> {
   }
 }
 
+/**
+ * 带作用域的 MCP 服务器配置类型 - 扩展配置对象包含作用域信息
+ *
+ * 在标准 MCP 服务器配置基础上添加作用域标识，
+ * 用于跟踪配置的来源和优先级。
+ */
 export type ScopedMcpServerConfig = McpServerConfig & {
+  /** 配置来源作用域 */
   scope: ConfigScope
 }
 
+/**
+ * 获取指定名称的 MCP 服务器配置 - 包含作用域信息的配置查询
+ *
+ * 按照优先级顺序查找指定名称的 MCP 服务器配置，
+ * 返回配置对象和其来源作用域信息。
+ *
+ * @param name - MCP 服务器名称
+ * @returns ScopedMcpServerConfig | undefined - 带作用域的配置对象或 undefined
+ *
+ * 🔍 查找顺序（优先级从高到低）：
+ * 1. project: 项目级配置
+ * 2. mcprc: .mcprc 文件配置
+ * 3. global: 全局配置
+ *
+ * 💡 返回值：
+ * - 找到配置：返回配置对象 + scope 标识
+ * - 未找到：返回 undefined
+ */
 export function getMcpServer(name: McpName): ScopedMcpServerConfig | undefined {
   const projectConfig = getCurrentProjectConfig()
   const mcprcConfig = getMcprcConfig()
@@ -365,6 +464,24 @@ type FailedClient = {
 }
 export type WrappedClient = ConnectedClient | FailedClient
 
+/**
+ * 获取 .mcprc 服务器的审批状态 - 检查服务器的安全审批状态
+ *
+ * 检查指定 .mcprc 服务器的用户审批状态，用于安全控制
+ * 外部配置文件中的服务器访问。
+ *
+ * @param serverName - 服务器名称
+ * @returns 'approved' | 'rejected' | 'pending' - 审批状态
+ *
+ * 🔒 安全机制：
+ * - approved: 用户已批准，可以连接使用
+ * - rejected: 用户已拒绝，禁止连接
+ * - pending: 等待用户审批决定
+ *
+ * 💡 设计目的：
+ * .mcprc 文件可能包含第三方提供的配置，需要用户
+ * 明确审批才能执行，避免安全风险。
+ */
 export function getMcprcServerStatus(
   serverName: string,
 ): 'approved' | 'rejected' | 'pending' {
@@ -378,6 +495,27 @@ export function getMcprcServerStatus(
   return 'pending'
 }
 
+/**
+ * 获取所有 MCP 客户端连接 - 连接池管理的核心函数
+ *
+ * 建立与所有配置的 MCP 服务器的连接，返回连接状态包装器。
+ * 使用 memoize 缓存结果以避免重复连接开销。
+ *
+ * @returns Promise<WrappedClient[]> - 包装的客户端连接数组
+ *
+ * 🔗 连接流程：
+ * 1. 收集所有作用域的服务器配置
+ * 2. 过滤已审批的 .mcprc 服务器
+ * 3. 并行建立连接
+ * 4. 返回连接状态包装器
+ *
+ * 🎯 连接优先级：
+ * project > approved mcprc > global
+ *
+ * ⚠️ CI 环境限制：
+ * 为避免 CI 环境中的连接挂起问题，
+ * 在非测试的 CI 环境中返回空数组。
+ */
 export const getClients = memoize(async (): Promise<WrappedClient[]> => {
   // TODO: This is a temporary fix for a hang during npm run verify in CI.
   // We need to investigate why MCP client connections hang in CI verify but not in CI tests.
@@ -538,6 +676,29 @@ export const getMCPTools = memoize(async (): Promise<Tool[]> => {
   )
 })
 
+/**
+ * 调用 MCP 工具 - 执行远程 MCP 工具并处理结果
+ *
+ * 通过 MCP 协议调用远程工具，处理不同的响应格式，
+ * 并将结果转换为 Kode 工具系统的标准格式。
+ *
+ * @param client - 连接的 MCP 客户端
+ * @param tool - 工具名称
+ * @param args - 工具参数
+ * @returns Promise<ToolResultBlockParam['content']> - 标准化的工具结果
+ * @throws Error - 当工具调用失败或响应格式不正确时
+ *
+ * 🔄 处理流程：
+ * 1. 发送工具调用请求到 MCP 服务器
+ * 2. 检查响应中的错误状态
+ * 3. 根据响应类型进行格式转换
+ * 4. 返回标准化结果
+ *
+ * 📊 支持的响应格式：
+ * - toolResult: 简单字符串结果
+ * - content: 内容数组（文本、图片等）
+ * - isError: 错误响应处理
+ */
 async function callMCPTool({
   client: { client, name },
   tool,
@@ -586,6 +747,25 @@ async function callMCPTool({
   throw Error(`Unexpected response format from tool ${tool}`)
 }
 
+/**
+ * 获取所有 MCP 命令 - 将 MCP 提示转换为 Kode 命令格式
+ *
+ * 从所有连接的 MCP 服务器获取提示列表，将其转换为
+ * Kode 命令系统可用的命令对象。
+ *
+ * @returns Promise<Command[]> - 转换后的命令数组
+ *
+ * 🎯 转换特性：
+ * - 命名空间：mcp__[服务器名]__[提示名]
+ * - 参数映射：MCP 提示参数到命令参数
+ * - 异步执行：支持动态提示生成
+ * - 结果转换：MCP 消息到 Kode 消息格式
+ *
+ * 💡 使用场景：
+ * - 集成外部 AI 提示模板
+ * - 动态命令生成和执行
+ * - 跨服务器的提示共享
+ */
 export const getMCPCommands = memoize(async (): Promise<Command[]> => {
   const results = await requestAll<
     ListPromptsResult,
@@ -624,6 +804,29 @@ export const getMCPCommands = memoize(async (): Promise<Command[]> => {
   )
 })
 
+/**
+ * 运行 MCP 命令 - 执行 MCP 提示并转换结果格式
+ *
+ * 通过 MCP 协议执行指定的提示命令，将返回的 MCP 消息
+ * 转换为 Kode 消息系统的标准格式。
+ *
+ * @param name - MCP 提示名称
+ * @param client - 连接的 MCP 客户端
+ * @param args - 提示参数
+ * @returns Promise<MessageParam[]> - 转换后的消息参数数组
+ * @throws Error - 当命令执行失败时
+ *
+ * 🔄 执行流程：
+ * 1. 调用 MCP 服务器的 getPrompt 方法
+ * 2. 处理返回的消息数组
+ * 3. 转换消息格式（文本/图片）
+ * 4. 返回标准化消息参数
+ *
+ * 📝 消息类型支持：
+ * - 文本消息：直接文本内容
+ * - 图片消息：base64 格式图片数据
+ * - 角色消息：支持不同角色的消息
+ */
 export async function runCommand(
   { name, client }: { name: string; client: ConnectedClient },
   args: Record<string, string>,
