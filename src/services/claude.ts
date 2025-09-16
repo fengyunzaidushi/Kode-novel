@@ -1,15 +1,25 @@
 /**
- * Claude API集成服务 - Kode/Claude Code的AI模型调用核心
+ * 🎯 Claude AI 服务集成 - Kode 多 AI 模型调用的统一服务层
  *
- * 🎯 核心职责：
- * 1. 统一多平台AI模型调用（Anthropic、OpenAI、Bedrock、Vertex等）
- * 2. 智能API适配和协议转换（支持新旧API架构）
- * 3. 流式响应处理和上下文管理
- * 4. 成本计算和使用统计跟踪
- * 5. 重试机制和错误处理
- * 6. 提示缓存和上下文压缩优化
+ * 🏗️ 核心功能：
+ * - 实现多平台 AI 模型的统一调用接口（Anthropic、OpenAI、Bedrock、Vertex）
+ * - 提供智能 API 适配和协议转换能力
+ * - 管理流式响应处理和上下文状态
+ * - 支持成本计算和使用统计跟踪
+ * - 集成重试机制和错误恢复策略
+ * - 优化提示缓存和上下文压缩
  *
- * 🏗️ 架构特点：
+ * 🔄 依赖关系：
+ * - 上游：被查询编排系统和工具系统使用
+ * - 下游：依赖模型管理、配置系统和适配器工厂
+ *
+ * 📊 使用场景：
+ * - AI 代理的统一模型调用入口
+ * - 多平台 AI 服务的抽象适配
+ * - 流式对话和工具调用处理
+ * - 成本监控和性能分析
+ *
+ * 🔧 技术实现：
  * - 多AI平台统一接口：Anthropic原生SDK + OpenAI兼容适配
  * - 智能模型适配器工厂：根据模型能力自动选择最优API
  * - GPT-5响应API支持：推理模型的高级特性集成
@@ -97,12 +107,28 @@ import { getCompletionWithProfile, getGPT5CompletionWithProfile } from './openai
 import { getReasoningEffort } from '../utils/thinking'
 import { generateSystemReminders } from './systemReminder'
 
-// Helper function to check if a model is GPT-5
+/**
+ * GPT-5 模型检测函数 - 识别 GPT-5 系列模型
+ *
+ * 通过模型名称前缀判断是否为 GPT-5 系列模型，
+ * 用于应用 GPT-5 特定的配置和 API 参数。
+ *
+ * @param modelName - 模型名称字符串
+ * @returns 是否为 GPT-5 模型
+ */
 function isGPT5Model(modelName: string): boolean {
   return modelName.startsWith('gpt-5')
 }
 
-// Helper function to extract model configuration for debug logging
+/**
+ * 模型配置调试信息提取函数 - 为调试日志准备模型配置摘要
+ *
+ * 从模型管理器和全局配置中提取模型的关键配置信息，
+ * 用于调试日志记录和问题诊断。
+ *
+ * @param model - 模型名称
+ * @returns 包含调试信息的配置对象
+ */
 function getModelConfigForDebug(model: string): {
   modelName: string
   provider: string
@@ -149,7 +175,26 @@ function getModelConfigForDebug(model: string): {
   }
 }
 
-// KodeContext管理器 - 用于项目文档的同步缓存和访问
+/**
+ * Kode 上下文管理器 - 项目文档的智能缓存和访问系统
+ *
+ * 🎯 核心功能：
+ * - 项目文档的异步加载和缓存管理
+ * - 单例模式确保全局唯一实例
+ * - 支持缓存刷新和重新加载
+ * - 线程安全的初始化机制
+ *
+ * 🔄 工作流程：
+ * 1. 单例实例获取
+ * 2. 异步初始化和文档加载
+ * 3. 内存缓存管理
+ * 4. 按需刷新机制
+ *
+ * 💡 设计模式：
+ * - 单例模式：确保全局唯一的上下文管理器
+ * - 懒加载：按需加载项目文档
+ * - 缓存策略：减少重复的文件系统访问
+ */
 class KodeContextManager {
   private static instance: KodeContextManager
   private projectDocsCache: string = ''
@@ -158,6 +203,11 @@ class KodeContextManager {
 
   private constructor() {}
 
+  /**
+   * 获取单例实例 - 线程安全的实例获取方法
+   *
+   * @returns KodeContextManager 单例实例
+   */
   public static getInstance(): KodeContextManager {
     if (!KodeContextManager.instance) {
       KodeContextManager.instance = new KodeContextManager()
@@ -165,6 +215,13 @@ class KodeContextManager {
     return KodeContextManager.instance
   }
 
+  /**
+   * 异步初始化项目文档缓存 - 确保缓存数据的可用性
+   *
+   * 防重复初始化，支持并发调用时的 Promise 复用。
+   *
+   * @returns Promise<void> - 初始化完成的承诺
+   */
   public async initialize(): Promise<void> {
     if (this.cacheInitialized) return
 
@@ -195,6 +252,14 @@ class KodeContextManager {
     }
   }
 
+  /**
+   * 获取 Kode 项目上下文 - 同步获取缓存的项目文档
+   *
+   * 如果缓存未初始化，触发异步初始化但立即返回空字符串，
+   * 确保调用方不会被阻塞。
+   *
+   * @returns 项目文档字符串（可能为空）
+   */
   public getKodeContext(): string {
     if (!this.cacheInitialized) {
       // 如果未初始化，异步初始化但立即返回空字符串
@@ -204,6 +269,14 @@ class KodeContextManager {
     return this.projectDocsCache
   }
 
+  /**
+   * 刷新缓存 - 强制重新加载项目文档
+   *
+   * 清除现有缓存状态并重新初始化，用于项目文档
+   * 发生变更时的缓存更新。
+   *
+   * @returns Promise<void> - 刷新完成的承诺
+   */
   public async refreshCache(): Promise<void> {
     this.cacheInitialized = false
     this.initPromise = null
@@ -217,54 +290,120 @@ const kodeContextManager = KodeContextManager.getInstance()
 // 在模块加载时异步初始化
 kodeContextManager.initialize().catch(console.warn)
 
+/**
+ * 生成 Kode 上下文 - 项目文档的统一获取入口
+ *
+ * 提供向后兼容的函数式接口，内部委托给 KodeContextManager。
+ *
+ * @returns 项目文档字符串
+ */
 export const generateKodeContext = (): string => {
   return kodeContextManager.getKodeContext()
 }
 
+/**
+ * 刷新 Kode 上下文 - 项目文档缓存的更新入口
+ *
+ * 提供向后兼容的函数式接口，内部委托给 KodeContextManager。
+ *
+ * @returns Promise<void> - 刷新完成的承诺
+ */
 export const refreshKodeContext = async (): Promise<void> => {
   await kodeContextManager.refreshCache()
 }
 
+/**
+ * 流式响应接口 - 扩展的 API 消息格式
+ *
+ * 继承标准 API 消息格式，添加首个 token 时间（TTFT）指标
+ * 用于性能监控和用户体验优化。
+ */
 interface StreamResponse extends APIMessage {
+  /** 首个 token 时间（毫秒）- Time To First Token */
   ttftMs?: number
 }
 
+/** API 错误消息前缀 - 统一的错误消息标识 */
 export const API_ERROR_MESSAGE_PREFIX = 'API Error'
+/** 提示过长错误消息 - 上下文窗口溢出错误 */
 export const PROMPT_TOO_LONG_ERROR_MESSAGE = 'Prompt is too long'
+/** 余额不足错误消息 - API 账户余额警告 */
 export const CREDIT_BALANCE_TOO_LOW_ERROR_MESSAGE = 'Credit balance is too low'
+/** 无效 API 密钥错误消息 - 身份验证失败提示 */
 export const INVALID_API_KEY_ERROR_MESSAGE =
   'Invalid API key · Please run /login'
+/** 无内容消息 - 空响应的默认提示 */
 export const NO_CONTENT_MESSAGE = '(no content)'
+/** 提示缓存启用标志 - 基于环境变量的缓存控制 */
 const PROMPT_CACHING_ENABLED = !process.env.DISABLE_PROMPT_CACHING
 
-// @see https://docs.anthropic.com/en/docs/about-claude/models#model-comparison-table
+/**
+ * Claude 模型成本计算常量 - 基于官方定价的 token 成本
+ * @see https://docs.anthropic.com/en/docs/about-claude/models#model-comparison-table
+ */
+
+/** Haiku 模型输入 token 成本（每百万 token 美元）*/
 const HAIKU_COST_PER_MILLION_INPUT_TOKENS = 0.8
+/** Haiku 模型输出 token 成本（每百万 token 美元）*/
 const HAIKU_COST_PER_MILLION_OUTPUT_TOKENS = 4
+/** Haiku 模型提示缓存写入成本（每百万 token 美元）*/
 const HAIKU_COST_PER_MILLION_PROMPT_CACHE_WRITE_TOKENS = 1
+/** Haiku 模型提示缓存读取成本（每百万 token 美元）*/
 const HAIKU_COST_PER_MILLION_PROMPT_CACHE_READ_TOKENS = 0.08
 
+/** Sonnet 模型输入 token 成本（每百万 token 美元）*/
 const SONNET_COST_PER_MILLION_INPUT_TOKENS = 3
+/** Sonnet 模型输出 token 成本（每百万 token 美元）*/
 const SONNET_COST_PER_MILLION_OUTPUT_TOKENS = 15
+/** Sonnet 模型提示缓存写入成本（每百万 token 美元）*/
 const SONNET_COST_PER_MILLION_PROMPT_CACHE_WRITE_TOKENS = 3.75
+/** Sonnet 模型提示缓存读取成本（每百万 token 美元）*/
 const SONNET_COST_PER_MILLION_PROMPT_CACHE_READ_TOKENS = 0.3
 
-export const MAIN_QUERY_TEMPERATURE = 1 // to get more variation for binary feedback
+/** 主查询温度参数 - 设置为 1 以获得二元反馈的更多变化 */
+export const MAIN_QUERY_TEMPERATURE = 1
 
+/**
+ * 获取 API 请求元数据 - 构建用于追踪的请求标识
+ *
+ * 生成包含用户 ID 和会话 ID 的元数据，用于 API 请求的
+ * 追踪和统计分析。
+ *
+ * @returns 包含用户标识的元数据对象
+ */
 function getMetadata() {
   return {
     user_id: `${getOrCreateUserID()}_${SESSION_ID}`,
   }
 }
 
+/** 最大重试次数 - 根据用户类型的动态重试策略 */
 const MAX_RETRIES = process.env.USER_TYPE === 'SWE_BENCH' ? 100 : 10
+/** 基础延迟时间（毫秒）- 指数退避的起始延迟 */
 const BASE_DELAY_MS = 500
 
+/**
+ * 重试选项接口 - 重试机制的配置参数
+ *
+ * 提供灵活的重试配置，支持自定义重试次数和取消信号。
+ */
 interface RetryOptions {
+  /** 最大重试次数（可选，默认使用 MAX_RETRIES）*/
   maxRetries?: number
+  /** 取消信号（用于中途取消重试）*/
   signal?: AbortSignal
 }
 
-// Helper function to create an abortable delay
+/**
+ * 可中断延迟函数 - 支持取消信号的异步延迟
+ *
+ * 创建支持 AbortSignal 中断的延迟 Promise，用于重试机制
+ * 中的等待时间，确保用户可以及时取消长时间的重试过程。
+ *
+ * @param delayMs - 延迟时间（毫秒）
+ * @param signal - 可选的取消信号
+ * @returns Promise<void> - 延迟完成或被中断的承诺
+ */
 function abortableDelay(delayMs: number, signal?: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
     // Check if already aborted
@@ -386,7 +525,24 @@ async function withRetry<T>(
 }
 
 /**
- * Fetch available models from Anthropic API
+ * 获取 Anthropic 可用模型列表 - 从 API 动态获取支持的模型
+ *
+ * 通过 Anthropic API 获取当前账户可用的模型列表，支持
+ * 自定义 baseURL 用于兼容第三方 Anthropic 兼容服务。
+ *
+ * @param baseURL - API 基础 URL（用于自定义端点）
+ * @param apiKey - Anthropic API 密钥
+ * @returns Promise<any[]> - 可用模型列表
+ *
+ * 🔧 错误处理：
+ * - 401: 无效 API 密钥
+ * - 403: API 密钥权限不足
+ * - 429: 请求频率过高
+ * - 5xx: 服务器错误
+ *
+ * 🌐 兼容性：
+ * - 支持官方 Anthropic API
+ * - 支持第三方兼容服务（BigDream、OpenDev 等）
  */
 export async function fetchAnthropicModels(
   baseURL: string,
@@ -451,6 +607,27 @@ export async function fetchAnthropicModels(
   }
 }
 
+/**
+ * API 密钥验证函数 - 多提供商 API 密钥有效性检查
+ *
+ * 通过发送测试请求验证 API 密钥的有效性，支持多种
+ * AI 提供商和自定义端点配置。
+ *
+ * @param apiKey - 待验证的 API 密钥
+ * @param baseURL - 可选的 API 基础 URL
+ * @param provider - 可选的提供商类型（anthropic/openai/custom等）
+ * @returns Promise<boolean> - 密钥是否有效
+ *
+ * 🎯 验证策略：
+ * - Anthropic: 使用原生 SDK 发送测试请求
+ * - OpenAI 兼容: 使用 /models 端点验证
+ * - 自定义提供商: 根据协议自动适配
+ *
+ * 🔧 验证方法：
+ * - 低成本测试请求（最少 token）
+ * - 快速失败机制（减少重试）
+ * - 详细的错误分类和处理
+ */
 export async function verifyApiKey(
   apiKey: string,
   baseURL?: string,
@@ -1157,36 +1334,44 @@ function splitSysPromptPrefix(systemPrompt: string[]): string[] {
 }
 
 /**
- * 主要的LLM查询函数 - Kode的AI调用统一入口
- * 这是整个系统与AI模型交互的核心函数，负责协调所有AI相关的操作
+ * 主要的 LLM 查询函数 - Kode AI 调用的统一入口点
+ *
+ * 这是整个系统与 AI 模型交互的核心函数，负责协调所有 AI 相关的操作，
+ * 提供统一的多模型调用接口和完整的错误处理机制。
  *
  * @param messages - 对话历史消息列表
  * @param systemPrompt - 系统提示词数组
- * @param maxThinkingTokens - 最大思考token数量（用于推理模型）
+ * @param maxThinkingTokens - 最大思考 token 数量（用于推理模型）
  * @param tools - 可用工具列表
  * @param signal - 取消信号，用于中断长时间运行的请求
  * @param options - 查询选项配置
- * @returns Promise<AssistantMessage> - AI助手的响应消息
+ * @returns Promise<AssistantMessage> - AI 助手的响应消息
  *
  * 🎯 核心功能：
  * - 智能模型解析：支持模型指针（main/task/reasoning/quick）和直接模型名
- * - 多平台适配：自动选择最优的API调用方式（Anthropic/OpenAI/自定义）
- * - 上下文管理：处理对话状态、响应ID、会话连续性
+ * - 多平台适配：自动选择最优的 API 调用方式（Anthropic/OpenAI/自定义）
+ * - 上下文管理：处理对话状态、响应 ID、会话连续性
  * - 错误恢复：完整的重试机制和错误诊断系统
  * - 性能监控：请求耗时、成本计算、调试日志
  *
  * 🔄 执行流程：
  * 1. 模型解析和验证（ModelManager.resolveModelWithInfo）
- * 2. 响应状态初始化（GPT-5会话连续性支持）
- * 3. API调用（queryLLMWithPromptCaching）
+ * 2. 响应状态初始化（GPT-5 会话连续性支持）
+ * 3. API 调用（queryLLMWithPromptCaching）
  * 4. 结果处理和状态更新
  * 5. 错误诊断和日志记录
  *
  * 🛡️ 错误处理：
  * - 模型解析失败：抛出详细错误信息
- * - API调用失败：自动重试和降级策略
- * - 网络超时：AbortSignal支持的优雅取消
+ * - API 调用失败：自动重试和降级策略
+ * - 网络超时：AbortSignal 支持的优雅取消
  * - 诊断日志：完整的错误上下文记录
+ *
+ * 💡 设计特点：
+ * - 模型指针系统：支持场景化的模型选择
+ * - 统一响应格式：屏蔽不同 API 的差异
+ * - 成本追踪：实时计算和累积使用成本
+ * - 调试友好：完整的请求响应链路追踪
  */
 export async function queryLLM(
   messages: (UserMessage | AssistantMessage)[],
