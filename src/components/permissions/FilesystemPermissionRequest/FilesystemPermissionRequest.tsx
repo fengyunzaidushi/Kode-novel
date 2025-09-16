@@ -1,3 +1,21 @@
+/**
+ * 🎯 文件系统权限请求组件 - 文件操作工具的统一权限管理界面
+ *
+ * 文件系统权限架构：
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │                文件系统权限管理架构                              │
+ * ├─────────────────────────────────────────────────────────────────┤
+ * │ 工具识别 → 路径提取 → 权限检查 → 用户确认 → 权限授予           │
+ * └─────────────────────────────────────────────────────────────────┘
+ *
+ * 支持的工具类型：
+ * 1. 📝 文件操作：FileEditTool, FileWriteTool, FileReadTool
+ * 2. 🔍 搜索工具：GrepTool, GlobTool, LSTool
+ * 3. 📓 笔记本：NotebookEditTool, NotebookReadTool
+ * 4. 🛡️ 路径安全：绝对路径转换和权限边界检查
+ * 5. 📊 操作追踪：统一的文件系统操作日志记录
+ */
+
 import { Box, Text } from 'ink'
 import React, { useMemo } from 'react'
 import { Select } from '../../CustomSelect/select'
@@ -33,6 +51,18 @@ import {
 } from '../../../utils/permissions/filesystem.js'
 import { getCwd } from '../../../utils/state'
 
+/**
+ * 🔍 工具路径参数名映射器 - 根据工具类型获取对应的路径参数名
+ *
+ * 参数映射策略：
+ * - 文件工具 → file_path：标准文件操作路径
+ * - 搜索工具 → path：搜索目录或文件路径
+ * - 笔记本工具 → notebook_path：Jupyter笔记本路径
+ * - 未知工具 → null：回退到通用权限处理
+ *
+ * @param toolUseConfirm - 工具使用确认信息
+ * @returns 路径参数名或null
+ */
 function pathArgNameForToolUse(toolUseConfirm: ToolUseConfirm): string | null {
   switch (toolUseConfirm.tool) {
     case FileWriteTool:
