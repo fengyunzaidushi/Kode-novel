@@ -83,6 +83,7 @@
     "spawn-rx": "^5.1.2",
     "string-width": "^7.2.0",
     "strip-ansi": "^7.1.0",
+    "ts-morph": "^27.0.0",
     "tsx": "^4.20.3",
     "turndown": "^7.2.0",
     "undici": "^7.11.0",

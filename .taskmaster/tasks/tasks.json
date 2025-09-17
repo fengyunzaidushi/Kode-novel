@@ -554,8 +554,8 @@
             "dependencies": [
               "26.1"
             ],
-            "details": "对每个收集到的 TypeScript 文件，使用 ts-morph 或 @babel/parser 解析 AST，遍历节点，提取所有 import/export 信息，记录依赖来源和目标。",
-            "status": "pending",
+            "details": "对每个收集到的 TypeScript 文件，使用 ts-morph 或 @babel/parser 解析 AST，遍历节点，提取所有 import/export 信息，记录依赖来源和目标。\n<info added on 2025-09-17T07:17:01.254Z>\n已完成AST解析和依赖关系提取功能的实现。采用TypeScript编译器API进行AST解析，成功提取了274个文件的1078个依赖关系，包括静态import、动态import、各种导入导出语法的完整支持。实现了智能路径解析和双向依赖关系构建，验证了依赖图的准确性，为后续入口点识别奠定了基础。\n</info added on 2025-09-17T07:17:01.254Z>",
+            "status": "done",
             "testStrategy": "选取包含多种依赖形式（静态、动态、循环）的文件，验证依赖关系提取的准确性。"
           },
           {
@@ -1071,7 +1071,7 @@
     ],
     "metadata": {
       "created": "2025-09-15T13:48:21.446Z",
-      "updated": "2025-09-17T07:09:18.650Z",
+      "updated": "2025-09-17T07:17:07.953Z",
       "description": "Tasks for master context"
     }
   }
