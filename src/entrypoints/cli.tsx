@@ -1,33 +1,53 @@
 #!/usr/bin/env -S node --no-warnings=ExperimentalWarning --enable-source-maps
 /**
- * CLI入口点 - Kode/Claude Code的主要命令行界面
- * 这是整个应用程序的启动文件，负责：
- * 1. 初始化系统配置和错误监控
- * 2. 设置命令行参数解析
- * 3. 启动交互式REPL或处理单次命令
- * 4. 管理MCP服务器配置
- * 5. 处理用户认证和权限设置
+ * 🚀 Kode CLI入口点 - 交互式AI编程环境的核心启动器
+ *
+ * CLI启动架构：
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │                    Kode CLI 启动流程                            │
+ * ├─────────────────────────────────────────────────────────────────┤
+ * │ 系统初始化 → 配置加载 → 参数解析 → 模式选择 → 界面启动         │
+ * │     ↓          ↓         ↓        ↓         ↓                   │
+ * │ Sentry监控 → 权限检查 → 命令定义 → REPL/Print → 工具加载        │
+ * └─────────────────────────────────────────────────────────────────┘
+ *
+ * 核心功能：
+ * 1. 🔧 系统初始化：错误监控、UI引擎、环境配置
+ * 2. 📋 命令行解析：参数处理、选项验证、模式选择
+ * 3. 🎮 交互模式：启动REPL界面进行持续对话
+ * 4. 📝 打印模式：单次查询和结果输出
+ * 5. ⚙️ 配置管理：全局/项目配置的增删改查
+ * 6. 🔌 MCP集成：模型上下文协议服务器管理
+ * 7. 🛡️ 权限控制：工具使用权限和安全策略
+ * 8. 📚 对话管理：历史记录、恢复、日志查看
  */
+// 🌐 Node.js核心模块导入
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { existsSync } from 'node:fs'
+
+// 🚨 错误监控服务和产品常量
 import { initSentry } from '../services/sentry'
 import { PRODUCT_COMMAND, PRODUCT_NAME } from '../constants/product'
-// 尽早初始化Sentry错误监控，用于捕获和报告应用程序错误
+
+// 🔍 尽早初始化Sentry错误监控，用于捕获和报告应用程序错误
 initSentry()
 
 /**
- * 配置Yoga WASM路径 - Ink UI框架依赖的布局引擎
- * 在不同的运行模式（开发模式/分发模式）中确保yoga.wasm文件能被正确找到
- * 这对于终端UI的渲染至关重要
+ * 🎨 配置Yoga WASM路径 - Ink UI框架依赖的布局引擎
+ *
+ * 布局引擎初始化：
+ * - 开发模式：相对于当前文件的上两级目录查找
+ * - 分发模式：与当前文件同级目录查找
+ * - 这对于终端UI的渲染至关重要
  */
 try {
   if (!process.env.YOGA_WASM_PATH) {
     const __filename = fileURLToPath(import.meta.url)
     const __dirname = dirname(__filename)
-    // 开发模式：相对于当前文件的上两级目录
+    // 📂 开发模式：相对于当前文件的上两级目录
     const devCandidate = join(__dirname, '../../yoga.wasm')
-    // 分发模式：与当前文件同级目录
+    // 📦 分发模式：与当前文件同级目录
     const distCandidate = join(__dirname, './yoga.wasm')
     const resolved = existsSync(distCandidate)
       ? distCandidate
@@ -41,25 +61,31 @@ try {
 } catch {}
 
 /**
- * 解决Bun在Windows上的特殊bug
- * 不删除这两行！在Windows的Bun环境下，如果没有显式使用这个导入，
+ * 🪟 解决Bun在Windows上的特殊bug
+ *
+ * 重要提醒：不删除这两行！
+ * 在Windows的Bun环境下，如果没有显式使用这个导入，
  * 构建工具会错误地移除它，导致SDK的Node.js适配层失效
  * Object.keys调用确保导入被"使用"，防止被删除
  */
 import * as dontcare from '@anthropic-ai/sdk/shims/node'
 Object.keys(dontcare)
 
+// ⚛️ React和UI相关导入
 import React from 'react'
 import { ReadStream } from 'tty'
 import { openSync } from 'fs'
-// ink and REPL are imported lazily to avoid top-level awaits during module init
+// 🎨 ink和REPL延迟导入以避免模块初始化时的顶级await
 import type { RenderOptions } from 'ink'
+
+// 📚 核心应用功能模块
 import { addToHistory } from '../history'
 import { getContext, setContext, removeContext } from '../context'
 import { Command } from '@commander-js/extra-typings'
 import { ask } from '../utils/ask'
 import { hasPermissionsToUseTool } from '../permissions'
 import { getTools } from '../tools'
+// ⚙️ 配置管理和系统设置
 import {
   getGlobalConfig,
   getCurrentProjectConfig,
@@ -75,16 +101,22 @@ import {
   validateAndRepairAllGPT5Profiles,
 } from '../utils/config'
 import { cwd } from 'process'
+
+// 📝 日志和调试系统
 import { dateToFilename, logError, parseLogFilename } from '../utils/log'
 import { initDebugLogger } from '../utils/debugLogger'
+
+// 🎨 UI组件和界面屏幕
 import { Onboarding } from '../components/Onboarding'
 import { Doctor } from '../screens/Doctor'
 import { ApproveApiKey } from '../components/ApproveApiKey'
 import { TrustDialog } from '../components/TrustDialog'
-import { checkHasTrustDialogAccepted, McpServerConfig } from '../utils/config'
-import { isDefaultSlowAndCapableModel } from '../utils/model'
 import { LogList } from '../screens/LogList'
 import { ResumeConversation } from '../screens/ResumeConversation'
+
+// 🔧 系统工具和状态管理
+import { checkHasTrustDialogAccepted, McpServerConfig } from '../utils/config'
+import { isDefaultSlowAndCapableModel } from '../utils/model'
 import { startMCPServer } from './mcp'
 import { env } from '../utils/env'
 import { getCwd, setCwd, setOriginalCwd } from '../utils/state'
@@ -93,10 +125,13 @@ import { getCommands } from '../commands'
 import { getNextAvailableLogForkNumber, loadLogList } from '../utils/log'
 import { loadMessagesFromLog } from '../utils/conversationRecovery'
 import { cleanupOldMessageFilesInBackground } from '../utils/cleanup'
+// 🛡️ 权限和工具管理
 import {
   handleListApprovedTools,
   handleRemoveApprovedTool,
 } from '../commands/approvedTools'
+
+// 🔌 MCP（模型上下文协议）集成
 import {
   addMcpServer,
   getMcpServer,
@@ -107,7 +142,8 @@ import {
   ensureConfigScope,
 } from '../services/mcpClient'
 import { handleMcprcServerApprovals } from '../services/mcpServerApproval'
- 
+
+// 🔄 自动更新和版本管理
 import { getExampleCommands } from '../utils/exampleCommands'
 import { cursorShow } from 'ansi-escapes'
 import { getLatestVersion, assertMinVersion, getUpdateCommandSuggestions } from '../utils/autoUpdater'
@@ -116,15 +152,20 @@ import { CACHE_PATHS } from '../utils/log'
 // import { checkAndNotifyUpdate } from '../utils/autoUpdater'
 import { PersistentShell } from '../utils/PersistentShell'
 // Vendor beta gates removed
+
+// 🎛️ 终端和系统控制
 import { clearTerminal } from '../utils/terminal'
 import { showInvalidConfigDialog } from '../components/InvalidConfigDialog'
 import { ConfigParseError } from '../utils/errors'
 import { grantReadPermissionForOriginalDir } from '../utils/permissions/filesystem'
 import { MACRO } from '../constants/macros'
 /**
- * 完成用户首次使用引导流程
- * 将用户标记为已完成初始化设置，避免重复显示引导界面
- * 记录当前版本号，用于判断是否需要显示版本更新后的新功能介绍
+ * 🎓 完成用户首次使用引导流程
+ *
+ * 引导完成标记：
+ * - 将用户标记为已完成初始化设置
+ * - 避免重复显示引导界面
+ * - 记录当前版本号，用于判断是否需要显示版本更新后的新功能介绍
  */
 export function completeOnboarding(): void {
   const config = getGlobalConfig()
@@ -135,6 +176,18 @@ export function completeOnboarding(): void {
   })
 }
 
+/**
+ * 🎨 显示设置界面流程 - 首次使用引导和安全确认
+ *
+ * 设置界面流程：
+ * 1. 检查是否为测试环境，是则跳过
+ * 2. 显示首次使用引导（如果未完成）
+ * 3. 显示信任确认对话框（安全模式下）
+ * 4. 处理MCP服务器批准流程
+ *
+ * @param safeMode - 是否启用安全模式
+ * @param print - 是否为打印模式（非交互模式）
+ */
 async function showSetupScreens(
   safeMode?: boolean,
   print?: boolean,
@@ -146,7 +199,7 @@ async function showSetupScreens(
   const config = getGlobalConfig()
   if (
     !config.theme ||
-    !config.hasCompletedOnboarding // always show onboarding at least once
+    !config.hasCompletedOnboarding // 🎯 首次使用时总是显示引导界面
   ) {
     await clearTerminal()
     const { render } = await import('ink')
@@ -190,12 +243,12 @@ async function showSetupScreens(
   //   }
   // }
 
-  // In non-interactive mode, only show trust dialog in safe mode
+  // 🛡️ 非交互模式下，仅在安全模式中显示信任对话框
   if (!print && safeMode) {
     if (!checkHasTrustDialogAccepted()) {
       await new Promise<void>(resolve => {
         const onDone = () => {
-          // Grant read permission to the current working directory
+          // 🔓 为当前工作目录授予读取权限
           grantReadPermissionForOriginalDir()
           resolve()
         }
@@ -208,13 +261,16 @@ async function showSetupScreens(
       })
     }
 
-    // After trust dialog, check for any mcprc servers that need approval
+    // 🔌 信任对话框后，检查需要批准的mcprc服务器
     if (process.env.USER_TYPE === 'ant') {
       await handleMcprcServerApprovals()
     }
   }
 }
 
+/**
+ * 📊 记录启动统计 - 增加启动次数计数器
+ */
 function logStartup(): void {
   const config = getGlobalConfig()
   saveGlobalConfig({
@@ -223,18 +279,31 @@ function logStartup(): void {
   })
 }
 
+/**
+ * 🔧 系统设置和初始化 - 核心的系统准备流程
+ *
+ * 设置流程：
+ * 1. 配置工作目录和权限
+ * 2. 启动代理配置文件监控
+ * 3. 安全模式验证
+ * 4. 后台任务初始化
+ * 5. 配置迁移和更新
+ *
+ * @param cwd - 当前工作目录路径
+ * @param safeMode - 是否启用安全模式
+ */
 async function setup(cwd: string, safeMode?: boolean): Promise<void> {
-  // Set both current and original working directory if --cwd was provided
+  // 📂 如果提供了--cwd参数，设置当前和原始工作目录
   if (cwd !== process.cwd()) {
     setOriginalCwd(cwd)
   }
   await setCwd(cwd)
 
-  // Always grant read permissions for original working dir
+  // 🔓 总是为原始工作目录授予读取权限
   grantReadPermissionForOriginalDir()
-  
-  // Start watching agent configuration files for changes
-  // Try ESM-friendly path first (compiled dist), then fall back to extensionless (dev/tsx)
+
+  // 🔄 开始监视代理配置文件的变更
+  // 优先尝试ESM友好的路径（编译后的dist），然后回退到无扩展名（dev/tsx）
   let agentLoader: any
   try {
     agentLoader = await import('../utils/agentLoader.js')
@@ -243,13 +312,13 @@ async function setup(cwd: string, safeMode?: boolean): Promise<void> {
   }
   const { startAgentWatcher, clearAgentCache } = agentLoader
   await startAgentWatcher(() => {
-    // Cache is already cleared in the watcher, just log
+    // 缓存已在监视器中清除，仅记录日志
     console.log('✅ Agent configurations hot-reloaded')
   })
 
-  // If --safe mode is enabled, prevent root/sudo usage for security
+  // 🛡️ 如果启用--safe模式，出于安全原因阻止root/sudo使用
   if (safeMode) {
-    // Check if running as root/sudo on Unix-like systems
+    // 🔍 检查是否在Unix-like系统上以root/sudo身份运行
     if (
       process.platform !== 'win32' &&
       typeof process.getuid === 'function' &&
@@ -266,12 +335,13 @@ async function setup(cwd: string, safeMode?: boolean): Promise<void> {
     return
   }
 
+  // 🧹 后台任务和预加载
   cleanupOldMessageFilesInBackground()
-  // getExampleCommands() // Pre-fetch example commands
-  getContext() // Pre-fetch all context data at once
-  // initializeStatsig() // Kick off statsig initialization
+  // getExampleCommands() // 预获取示例命令
+  getContext() // 一次性预获取所有上下文数据
+  // initializeStatsig() // 启动statsig初始化
 
-  // Migrate old iterm2KeyBindingInstalled config to new shiftEnterKeyBindingInstalled
+  // 🔄 迁移旧的iterm2KeyBindingInstalled配置到新的shiftEnterKeyBindingInstalled
   const globalConfig = getGlobalConfig()
   if (
     globalConfig.iterm2KeyBindingInstalled === true &&
@@ -281,19 +351,19 @@ async function setup(cwd: string, safeMode?: boolean): Promise<void> {
       ...globalConfig,
       shiftEnterKeyBindingInstalled: true,
     }
-    // Remove the old config property
+    // 🗑️ 删除旧的配置属性
     delete updatedConfig.iterm2KeyBindingInstalled
     saveGlobalConfig(updatedConfig)
   }
 
-  // Check for last session's cost and duration
+  // 💰 检查上次会话的成本和持续时间
   const projectConfig = getCurrentProjectConfig()
   if (
     projectConfig.lastCost !== undefined &&
     projectConfig.lastDuration !== undefined
   ) {
-        
-    // Clear the values after logging
+
+    // 🧹 记录后清除值
     // saveCurrentProjectConfig({
     //   ...projectConfig,
     //   lastCost: undefined,
@@ -303,27 +373,38 @@ async function setup(cwd: string, safeMode?: boolean): Promise<void> {
     // })
   }
 
-  // Skip interactive auto-updater permission prompts during startup
-  // Users can still run the doctor command manually if desired.
+  // 🔄 启动期间跳过交互式自动更新器权限提示
+  // 用户仍可以根据需要手动运行doctor命令
 }
 
 /**
- * 主函数 - 应用程序的核心启动逻辑
- * 负责配置验证、错误处理、命令行解析和程序流程控制
+ * 🚀 主函数 - 应用程序的核心启动逻辑
+ *
+ * 启动流程：
+ * 1. 初始化调试日志系统
+ * 2. 验证和修复配置文件
+ * 3. 处理标准输入流
+ * 4. 解析命令行参数
+ * 5. 启动相应的运行模式
+ *
+ * 错误处理：
+ * - 配置解析错误：显示友好的错误对话框
+ * - GPT-5配置问题：自动修复并继续运行
+ * - 系统级错误：记录并优雅退出
  */
 async function main() {
-  // 初始化调试日志系统，用于开发者调试和问题排查
+  // 🔍 初始化调试日志系统，用于开发者调试和问题排查
   initDebugLogger()
 
   /**
-   * 配置系统初始化和验证
+   * ⚙️ 配置系统初始化和验证
    * 加载用户的全局配置和项目配置，确保配置文件格式正确
    */
   try {
     enableConfigs()
 
     /**
-     * GPT-5模型配置自动修复
+     * 🤖 GPT-5模型配置自动修复
      * 由于GPT-5模型配置可能因为版本更新而过期，
      * 这里自动检查和修复配置，确保模型能正常工作
      */
@@ -333,30 +414,31 @@ async function main() {
         console.log(`🔧 Auto-repaired ${repairResult.repaired} GPT-5 model configurations`)
       }
     } catch (repairError) {
-      // GPT-5验证失败不应该阻止程序启动，仅发出警告
+      // ⚠️ GPT-5验证失败不应该阻止程序启动，仅发出警告
       console.warn('⚠️ GPT-5 configuration validation failed:', repairError)
     }
   } catch (error: unknown) {
     if (error instanceof ConfigParseError) {
-      // 配置文件解析错误 - 显示用户友好的错误对话框
+      // 🚨 配置文件解析错误 - 显示用户友好的错误对话框
       await showInvalidConfigDialog({ error })
       return // 处理配置错误后退出
     }
   }
 
-  // Disabled background notifier to avoid mid-screen logs during REPL
+  // 🔕 禁用后台通知器以避免REPL期间的屏幕中日志
 
   let inputPrompt = ''
   let renderContext: RenderOptions | undefined = {
     exitOnCtrlC: false,
-  
+
     onFlicker() {},
   } as any
 
+  // 📥 处理非TTY输入（管道输入）
   if (
     !process.stdin.isTTY &&
     !process.env.CI &&
-    // Input hijacking breaks MCP.
+    // 🔌 输入劫持会破坏MCP功能
     !process.argv.includes('mcp')
   ) {
     inputPrompt = await stdin()
@@ -373,8 +455,19 @@ async function main() {
 }
 
 /**
- * 解析命令行参数并设置所有可用的命令
- * 这个函数是命令行界面的核心，定义了所有用户可以使用的命令和选项
+ * 📋 解析命令行参数并设置所有可用的命令
+ *
+ * 这个函数是命令行界面的核心，定义了所有用户可以使用的命令和选项：
+ *
+ * 主要命令类别：
+ * 1. 🎮 主命令：启动交互式REPL或打印模式
+ * 2. ⚙️ 配置管理：get/set/list/remove配置项
+ * 3. 🛡️ 工具权限：管理approved-tools列表
+ * 4. 🔌 MCP服务器：add/remove/list MCP服务器
+ * 5. 🩺 系统诊断：doctor健康检查
+ * 6. 📚 对话管理：log/resume/error查看
+ * 7. 🔄 更新管理：update版本检查
+ * 8. 📝 上下文管理：context操作（已弃用）
  *
  * @param stdinContent - 从标准输入读取的内容（如管道输入）
  * @param renderContext - 终端渲染上下文配置
@@ -386,16 +479,16 @@ async function parseArgs(
 ): Promise<Command> {
   const program = new Command()
 
-  // 设置渲染上下文，允许Ctrl+C退出
+  // 🎛️ 设置渲染上下文，允许Ctrl+C退出
   const renderContextWithExitOnCtrlC = {
     ...renderContext,
     exitOnCtrlC: true,
   }
 
-  // 获取所有可用命令，根据用户类型过滤（普通用户 vs 内部员工）
+  // 📋 获取所有可用命令，根据用户类型过滤（普通用户 vs 内部员工）
   const commands = await getCommands()
 
-  // 生成帮助文本中显示的命令列表，过滤掉隐藏命令
+  // 📝 生成帮助文本中显示的命令列表，过滤掉隐藏命令
   const commandList = commands
     .filter(cmd => !cmd.isHidden)
     .map(cmd => `/${cmd.name} - ${cmd.description}`)
@@ -1531,7 +1624,16 @@ ${commandList}`,
   return program
 }
 
-// TODO: stream?
+/**
+ * 📥 标准输入读取器 - 处理管道输入和重定向数据
+ *
+ * 用途：
+ * - 读取通过管道传入的数据（如：echo "hello" | kode）
+ * - 支持文件重定向输入（如：kode < input.txt）
+ * - 在非TTY环境下收集所有输入数据
+ *
+ * @returns Promise<string> - 标准输入中的所有数据
+ */
 async function stdin() {
   if (process.stdin.isTTY) {
     return ''
@@ -1542,21 +1644,34 @@ async function stdin() {
   return data
 }
 
+// 🚪 进程退出事件处理：正常退出时的清理工作
 process.on('exit', () => {
   resetCursor()
   PersistentShell.getInstance().close()
 })
 
+/**
+ * 🛡️ 优雅退出处理器 - 确保资源正确清理
+ *
+ * 清理任务：
+ * 1. 重置终端光标状态
+ * 2. 关闭持久化Shell实例
+ * 3. 使用指定退出码退出进程
+ *
+ * @param code - 进程退出码（默认为0）
+ */
 function gracefulExit(code = 0) {
   try { resetCursor() } catch {}
   try { PersistentShell.getInstance().close() } catch {}
   process.exit(code)
 }
 
-process.on('SIGINT', () => gracefulExit(0))
-process.on('SIGTERM', () => gracefulExit(0))
-// Windows CTRL+BREAK
-process.on('SIGBREAK', () => gracefulExit(0))
+// 🔧 信号处理器：捕获各种进程信号并优雅退出
+process.on('SIGINT', () => gracefulExit(0))      // Ctrl+C
+process.on('SIGTERM', () => gracefulExit(0))     // 终止信号
+process.on('SIGBREAK', () => gracefulExit(0))    // Windows CTRL+BREAK
+
+// 🚨 错误处理器：捕获未处理的异常和Promise拒绝
 process.on('unhandledRejection', err => {
   console.error('Unhandled rejection:', err)
   gracefulExit(1)
@@ -1566,6 +1681,12 @@ process.on('uncaughtException', err => {
   gracefulExit(1)
 })
 
+/**
+ * 🖱️ 重置终端光标 - 恢复光标显示状态
+ *
+ * 确保终端光标在程序退出后可见，
+ * 优先使用stderr，其次使用stdout
+ */
 function resetCursor() {
   const terminal = process.stderr.isTTY
     ? process.stderr
@@ -1575,4 +1696,5 @@ function resetCursor() {
   terminal?.write(`\u001B[?25h${cursorShow}`)
 }
 
+// 🚀 启动应用程序
 main()
