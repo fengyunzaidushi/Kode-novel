@@ -39,7 +39,12 @@ interface ProjectStructure {
   totalFiles: number;
   directories: string[];
   entryPoints: string[];
+  coreModules: string[];
+  utilityModules: string[];
+  leafModules: string[];
+  readingOrder: string[];
   dependencyGraph: DependencyGraph;
+  moduleAnalysis: ModuleAnalysis;
   scannedAt: string;
 }
 
@@ -261,13 +266,31 @@ function isTypeScriptFile(fileName: string): boolean {
   return tsExtensions.includes(ext);
 }
 
+interface ModuleAnalysis {
+  entryPoints: string[];
+  coreModules: string[];
+  utilityModules: string[];
+  leafModules: string[];
+  readingOrder: string[];
+}
+
 /**
- * 识别可能的入口点文件
+ * 基于依赖关系识别入口点文件
  */
-function identifyEntryPoints(files: FileInfo[]): string[] {
+function identifyEntryPointsByDependencies(files: FileInfo[], dependencyGraph: DependencyGraph): string[] {
   const entryPoints: string[] = [];
 
-  // 常见的入口点文件名模式
+  // 方法1: 找到没有被其他文件依赖的文件（真正的入口点）
+  const dependentFiles = new Set<string>();
+  files.forEach(file => {
+    file.dependents.forEach(dependent => dependentFiles.add(dependent));
+  });
+
+  const trulyIndependentFiles = files
+    .filter(file => !dependentFiles.has(file.relativePath))
+    .map(file => file.relativePath);
+
+  // 方法2: 常见的入口点文件名模式
   const entryPatterns = [
     /^index\.(ts|tsx|mts|cts)$/,
     /^main\.(ts|tsx|mts|cts)$/,
@@ -278,16 +301,189 @@ function identifyEntryPoints(files: FileInfo[]): string[] {
     /entry/i
   ];
 
-  for (const file of files) {
-    const fileName = file.name;
-    const isEntryFile = entryPatterns.some(pattern => pattern.test(fileName));
+  const patternBasedEntries = files
+    .filter(file => entryPatterns.some(pattern => pattern.test(file.name)))
+    .map(file => file.relativePath);
 
-    if (isEntryFile) {
-      entryPoints.push(file.relativePath);
+  // 方法3: 在entrypoints目录中的文件
+  const entrypointDirFiles = files
+    .filter(file => file.directory.includes('entrypoint'))
+    .map(file => file.relativePath);
+
+  // 合并并去重
+  const allEntryPoints = [
+    ...trulyIndependentFiles,
+    ...patternBasedEntries,
+    ...entrypointDirFiles
+  ];
+
+  return Array.from(new Set(allEntryPoints));
+}
+
+/**
+ * 识别核心模块（被多个文件依赖的重要模块）
+ */
+function identifyCoreModules(files: FileInfo[]): string[] {
+  // 按被依赖次数排序
+  const modulesByDependents = files
+    .map(file => ({
+      path: file.relativePath,
+      dependentCount: file.dependents.length,
+      dependencies: file.dependencies.length
+    }))
+    .filter(module => module.dependentCount > 0)
+    .sort((a, b) => b.dependentCount - a.dependentCount);
+
+  // 核心模块标准：
+  // 1. 被至少3个文件依赖
+  // 2. 或者被依赖次数在前20%
+  const minDependents = Math.max(3, Math.ceil(files.length * 0.05));
+  const top20Percent = Math.ceil(modulesByDependents.length * 0.2);
+
+  const coreModules = modulesByDependents
+    .slice(0, Math.max(top20Percent, 10))
+    .filter(module => module.dependentCount >= Math.min(minDependents, 3))
+    .map(module => module.path);
+
+  return coreModules;
+}
+
+/**
+ * 识别工具模块（通常在utils、helpers目录，被多处引用）
+ */
+function identifyUtilityModules(files: FileInfo[]): string[] {
+  const utilityDirs = ['utils', 'helpers', 'lib', 'common', 'shared', 'constants'];
+
+  return files
+    .filter(file => {
+      const inUtilityDir = utilityDirs.some(dir => file.directory.includes(dir));
+      const hasMultipleDependents = file.dependents.length >= 2;
+      return inUtilityDir && hasMultipleDependents;
+    })
+    .map(file => file.relativePath);
+}
+
+/**
+ * 识别叶子模块（不被其他文件依赖的功能模块）
+ */
+function identifyLeafModules(files: FileInfo[]): string[] {
+  return files
+    .filter(file =>
+      file.dependents.length === 0 &&
+      file.dependencies.length > 0 &&
+      !file.relativePath.includes('entrypoint')
+    )
+    .map(file => file.relativePath);
+}
+
+/**
+ * 生成推荐的代码阅读顺序
+ */
+function generateReadingOrder(
+  files: FileInfo[],
+  entryPoints: string[],
+  coreModules: string[]
+): string[] {
+  const readingOrder: string[] = [];
+  const visited = new Set<string>();
+
+  // 辅助函数：基于依赖关系进行拓扑排序
+  function topologicalSort(startFiles: string[]): string[] {
+    const result: string[] = [];
+    const temp = new Set<string>();
+    const perm = new Set<string>();
+
+    function visit(filePath: string) {
+      if (perm.has(filePath)) return;
+      if (temp.has(filePath)) return; // 循环依赖，跳过
+
+      temp.add(filePath);
+
+      const file = files.find(f => f.relativePath === filePath);
+      if (file) {
+        // 先访问依赖
+        file.dependencies.forEach(dep => {
+          if (files.some(f => f.relativePath === dep)) {
+            visit(dep);
+          }
+        });
+      }
+
+      temp.delete(filePath);
+      perm.add(filePath);
+      result.push(filePath);
     }
+
+    startFiles.forEach(file => {
+      if (!perm.has(file)) {
+        visit(file);
+      }
+    });
+
+    return result;
   }
 
-  return entryPoints;
+  // 1. 从主要入口点开始
+  const mainEntryPoints = entryPoints.filter(entry =>
+    entry.includes('cli') || entry.includes('main') || entry.includes('index')
+  );
+
+  if (mainEntryPoints.length > 0) {
+    const entryOrder = topologicalSort(mainEntryPoints);
+    readingOrder.push(...entryOrder);
+    entryOrder.forEach(file => visited.add(file));
+  }
+
+  // 2. 核心模块（按重要性排序）
+  const unvisitedCoreModules = coreModules.filter(module => !visited.has(module));
+  readingOrder.push(...unvisitedCoreModules);
+  unvisitedCoreModules.forEach(file => visited.add(file));
+
+  // 3. 剩余的入口点
+  const remainingEntryPoints = entryPoints.filter(entry => !visited.has(entry));
+  readingOrder.push(...remainingEntryPoints);
+  remainingEntryPoints.forEach(file => visited.add(file));
+
+  // 4. 按目录结构和依赖关系排序剩余文件
+  const remainingFiles = files
+    .filter(file => !visited.has(file.relativePath))
+    .sort((a, b) => {
+      // 优先级：services > components > utils > others
+      const priorityDirs = ['services', 'components', 'utils', 'tools', 'screens'];
+      const aPriority = priorityDirs.findIndex(dir => a.directory.includes(dir));
+      const bPriority = priorityDirs.findIndex(dir => b.directory.includes(dir));
+
+      if (aPriority !== bPriority) {
+        return (aPriority === -1 ? 999 : aPriority) - (bPriority === -1 ? 999 : bPriority);
+      }
+
+      // 相同目录内按依赖数排序
+      return b.dependents.length - a.dependents.length;
+    })
+    .map(file => file.relativePath);
+
+  readingOrder.push(...remainingFiles);
+
+  return readingOrder;
+}
+
+/**
+ * 综合分析项目模块结构
+ */
+function analyzeProjectModules(files: FileInfo[], dependencyGraph: DependencyGraph): ModuleAnalysis {
+  const entryPoints = identifyEntryPointsByDependencies(files, dependencyGraph);
+  const coreModules = identifyCoreModules(files);
+  const utilityModules = identifyUtilityModules(files);
+  const leafModules = identifyLeafModules(files);
+  const readingOrder = generateReadingOrder(files, entryPoints, coreModules);
+
+  return {
+    entryPoints,
+    coreModules,
+    utilityModules,
+    leafModules,
+    readingOrder
+  };
 }
 
 /**
@@ -404,8 +600,10 @@ async function generateProjectStructure(): Promise<void> {
     // 计算依赖关系
     const { files, dependencyGraph } = calculateDependencies(scannedFiles);
 
-    // 识别入口点
-    const entryPoints = identifyEntryPoints(files);
+    console.log('🧠 分析模块结构和入口点...');
+
+    // 综合分析项目模块结构
+    const moduleAnalysis = analyzeProjectModules(files, dependencyGraph);
 
     // 获取目录结构
     const directories = getDirectories(files);
@@ -415,8 +613,13 @@ async function generateProjectStructure(): Promise<void> {
       files,
       totalFiles: files.length,
       directories,
-      entryPoints,
+      entryPoints: moduleAnalysis.entryPoints,
+      coreModules: moduleAnalysis.coreModules,
+      utilityModules: moduleAnalysis.utilityModules,
+      leafModules: moduleAnalysis.leafModules,
+      readingOrder: moduleAnalysis.readingOrder,
       dependencyGraph,
+      moduleAnalysis,
       scannedAt: new Date().toISOString()
     };
 
@@ -430,6 +633,9 @@ async function generateProjectStructure(): Promise<void> {
     console.log(`   📄 TypeScript文件总数: ${structure.totalFiles}`);
     console.log(`   📁 目录总数: ${structure.directories.length}`);
     console.log(`   🚪 识别的入口点: ${structure.entryPoints.length}`);
+    console.log(`   🏗️  核心模块: ${structure.coreModules.length}`);
+    console.log(`   🔧 工具模块: ${structure.utilityModules.length}`);
+    console.log(`   🍃 叶子模块: ${structure.leafModules.length}`);
     console.log(`   🔗 依赖关系总数: ${totalDependencies}`);
     console.log(`   📦 有依赖的文件: ${filesWithDependencies}/${structure.totalFiles}`);
     console.log(`   📈 最大依赖数: ${maxDependencies}`);
@@ -441,17 +647,28 @@ async function generateProjectStructure(): Promise<void> {
       });
     }
 
-    // 显示依赖关系最复杂的几个文件
-    const sortedByDependencies = Object.entries(dependencyGraph)
-      .sort(([,a], [,b]) => b.length - a.length)
-      .slice(0, 5);
-
-    if (sortedByDependencies.length > 0 && sortedByDependencies[0][1].length > 0) {
-      console.log('\n🔗 依赖关系最复杂的文件:');
-      sortedByDependencies.forEach(([file, deps]) => {
-        if (deps.length > 0) {
-          console.log(`   • ${file} (${deps.length}个依赖)`);
+    if (structure.coreModules.length > 0) {
+      console.log('\n🏗️  核心模块 (被多个文件依赖):');
+      structure.coreModules.slice(0, 8).forEach(module => {
+        const file = files.find(f => f.relativePath === module);
+        if (file) {
+          console.log(`   • ${module} (${file.dependents.length}个依赖者)`);
         }
+      });
+    }
+
+    if (structure.utilityModules.length > 0) {
+      console.log('\n🔧 工具模块:');
+      structure.utilityModules.slice(0, 5).forEach(module => {
+        console.log(`   • ${module}`);
+      });
+    }
+
+    // 显示推荐的阅读顺序（前10个）
+    if (structure.readingOrder.length > 0) {
+      console.log('\n📖 推荐的代码阅读顺序 (前10个文件):');
+      structure.readingOrder.slice(0, 10).forEach((file, index) => {
+        console.log(`   ${index + 1}. ${file}`);
       });
     }
 
