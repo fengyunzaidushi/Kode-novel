@@ -1,0 +1,2251 @@
+{
+  "files": [
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\agents.tsx",
+      "relativePath": "src/commands/agents.tsx",
+      "name": "agents.tsx",
+      "extension": ".tsx",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\approvedTools.ts",
+      "relativePath": "src/commands/approvedTools.ts",
+      "name": "approvedTools.ts",
+      "extension": ".ts",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\bug.tsx",
+      "relativePath": "src/commands/bug.tsx",
+      "name": "bug.tsx",
+      "extension": ".tsx",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\clear.ts",
+      "relativePath": "src/commands/clear.ts",
+      "name": "clear.ts",
+      "extension": ".ts",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\compact.ts",
+      "relativePath": "src/commands/compact.ts",
+      "name": "compact.ts",
+      "extension": ".ts",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\config.tsx",
+      "relativePath": "src/commands/config.tsx",
+      "name": "config.tsx",
+      "extension": ".tsx",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\cost.ts",
+      "relativePath": "src/commands/cost.ts",
+      "name": "cost.ts",
+      "extension": ".ts",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\ctx_viz.ts",
+      "relativePath": "src/commands/ctx_viz.ts",
+      "name": "ctx_viz.ts",
+      "extension": ".ts",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\doctor.ts",
+      "relativePath": "src/commands/doctor.ts",
+      "name": "doctor.ts",
+      "extension": ".ts",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\help.tsx",
+      "relativePath": "src/commands/help.tsx",
+      "name": "help.tsx",
+      "extension": ".tsx",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\init.ts",
+      "relativePath": "src/commands/init.ts",
+      "name": "init.ts",
+      "extension": ".ts",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\listen.ts",
+      "relativePath": "src/commands/listen.ts",
+      "name": "listen.ts",
+      "extension": ".ts",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\login.tsx",
+      "relativePath": "src/commands/login.tsx",
+      "name": "login.tsx",
+      "extension": ".tsx",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\logout.tsx",
+      "relativePath": "src/commands/logout.tsx",
+      "name": "logout.tsx",
+      "extension": ".tsx",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\mcp.ts",
+      "relativePath": "src/commands/mcp.ts",
+      "name": "mcp.ts",
+      "extension": ".ts",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\model.tsx",
+      "relativePath": "src/commands/model.tsx",
+      "name": "model.tsx",
+      "extension": ".tsx",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\modelstatus.tsx",
+      "relativePath": "src/commands/modelstatus.tsx",
+      "name": "modelstatus.tsx",
+      "extension": ".tsx",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\onboarding.tsx",
+      "relativePath": "src/commands/onboarding.tsx",
+      "name": "onboarding.tsx",
+      "extension": ".tsx",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\pr_comments.ts",
+      "relativePath": "src/commands/pr_comments.ts",
+      "name": "pr_comments.ts",
+      "extension": ".ts",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\refreshCommands.ts",
+      "relativePath": "src/commands/refreshCommands.ts",
+      "name": "refreshCommands.ts",
+      "extension": ".ts",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\release-notes.ts",
+      "relativePath": "src/commands/release-notes.ts",
+      "name": "release-notes.ts",
+      "extension": ".ts",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\resume.tsx",
+      "relativePath": "src/commands/resume.tsx",
+      "name": "resume.tsx",
+      "extension": ".tsx",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\review.ts",
+      "relativePath": "src/commands/review.ts",
+      "name": "review.ts",
+      "extension": ".ts",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands\\terminalSetup.ts",
+      "relativePath": "src/commands/terminalSetup.ts",
+      "name": "terminalSetup.ts",
+      "extension": ".ts",
+      "directory": "src/commands",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\commands.ts",
+      "relativePath": "src/commands.ts",
+      "name": "commands.ts",
+      "extension": ".ts",
+      "directory": "src",
+      "level": 0
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\ApproveApiKey.tsx",
+      "relativePath": "src/components/ApproveApiKey.tsx",
+      "name": "ApproveApiKey.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\AsciiLogo.tsx",
+      "relativePath": "src/components/AsciiLogo.tsx",
+      "name": "AsciiLogo.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\binary-feedback\\BinaryFeedback.tsx",
+      "relativePath": "src/components/binary-feedback/BinaryFeedback.tsx",
+      "name": "BinaryFeedback.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/binary-feedback",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\binary-feedback\\BinaryFeedbackOption.tsx",
+      "relativePath": "src/components/binary-feedback/BinaryFeedbackOption.tsx",
+      "name": "BinaryFeedbackOption.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/binary-feedback",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\binary-feedback\\BinaryFeedbackView.tsx",
+      "relativePath": "src/components/binary-feedback/BinaryFeedbackView.tsx",
+      "name": "BinaryFeedbackView.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/binary-feedback",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\binary-feedback\\utils.ts",
+      "relativePath": "src/components/binary-feedback/utils.ts",
+      "name": "utils.ts",
+      "extension": ".ts",
+      "directory": "src/components/binary-feedback",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\Bug.tsx",
+      "relativePath": "src/components/Bug.tsx",
+      "name": "Bug.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\Config.tsx",
+      "relativePath": "src/components/Config.tsx",
+      "name": "Config.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\ConsoleOAuthFlow.tsx",
+      "relativePath": "src/components/ConsoleOAuthFlow.tsx",
+      "name": "ConsoleOAuthFlow.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\Cost.tsx",
+      "relativePath": "src/components/Cost.tsx",
+      "name": "Cost.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\CostThresholdDialog.tsx",
+      "relativePath": "src/components/CostThresholdDialog.tsx",
+      "name": "CostThresholdDialog.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\CustomSelect\\option-map.ts",
+      "relativePath": "src/components/CustomSelect/option-map.ts",
+      "name": "option-map.ts",
+      "extension": ".ts",
+      "directory": "src/components/CustomSelect",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\CustomSelect\\select-option.tsx",
+      "relativePath": "src/components/CustomSelect/select-option.tsx",
+      "name": "select-option.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/CustomSelect",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\CustomSelect\\select.tsx",
+      "relativePath": "src/components/CustomSelect/select.tsx",
+      "name": "select.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/CustomSelect",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\CustomSelect\\theme.ts",
+      "relativePath": "src/components/CustomSelect/theme.ts",
+      "name": "theme.ts",
+      "extension": ".ts",
+      "directory": "src/components/CustomSelect",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\CustomSelect\\use-select-state.ts",
+      "relativePath": "src/components/CustomSelect/use-select-state.ts",
+      "name": "use-select-state.ts",
+      "extension": ".ts",
+      "directory": "src/components/CustomSelect",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\CustomSelect\\use-select.ts",
+      "relativePath": "src/components/CustomSelect/use-select.ts",
+      "name": "use-select.ts",
+      "extension": ".ts",
+      "directory": "src/components/CustomSelect",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\FallbackToolUseRejectedMessage.tsx",
+      "relativePath": "src/components/FallbackToolUseRejectedMessage.tsx",
+      "name": "FallbackToolUseRejectedMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\FileEditToolUpdatedMessage.tsx",
+      "relativePath": "src/components/FileEditToolUpdatedMessage.tsx",
+      "name": "FileEditToolUpdatedMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\Help.tsx",
+      "relativePath": "src/components/Help.tsx",
+      "name": "Help.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\HighlightedCode.tsx",
+      "relativePath": "src/components/HighlightedCode.tsx",
+      "name": "HighlightedCode.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\InvalidConfigDialog.tsx",
+      "relativePath": "src/components/InvalidConfigDialog.tsx",
+      "name": "InvalidConfigDialog.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\Link.tsx",
+      "relativePath": "src/components/Link.tsx",
+      "name": "Link.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\Logo.tsx",
+      "relativePath": "src/components/Logo.tsx",
+      "name": "Logo.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\LogSelector.tsx",
+      "relativePath": "src/components/LogSelector.tsx",
+      "name": "LogSelector.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\MCPServerApprovalDialog.tsx",
+      "relativePath": "src/components/MCPServerApprovalDialog.tsx",
+      "name": "MCPServerApprovalDialog.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\MCPServerDialogCopy.tsx",
+      "relativePath": "src/components/MCPServerDialogCopy.tsx",
+      "name": "MCPServerDialogCopy.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\MCPServerMultiselectDialog.tsx",
+      "relativePath": "src/components/MCPServerMultiselectDialog.tsx",
+      "name": "MCPServerMultiselectDialog.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\Message.tsx",
+      "relativePath": "src/components/Message.tsx",
+      "name": "Message.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\MessageResponse.tsx",
+      "relativePath": "src/components/MessageResponse.tsx",
+      "name": "MessageResponse.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\AssistantBashOutputMessage.tsx",
+      "relativePath": "src/components/messages/AssistantBashOutputMessage.tsx",
+      "name": "AssistantBashOutputMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\AssistantLocalCommandOutputMessage.tsx",
+      "relativePath": "src/components/messages/AssistantLocalCommandOutputMessage.tsx",
+      "name": "AssistantLocalCommandOutputMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\AssistantRedactedThinkingMessage.tsx",
+      "relativePath": "src/components/messages/AssistantRedactedThinkingMessage.tsx",
+      "name": "AssistantRedactedThinkingMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\AssistantTextMessage.tsx",
+      "relativePath": "src/components/messages/AssistantTextMessage.tsx",
+      "name": "AssistantTextMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\AssistantThinkingMessage.tsx",
+      "relativePath": "src/components/messages/AssistantThinkingMessage.tsx",
+      "name": "AssistantThinkingMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\AssistantToolUseMessage.tsx",
+      "relativePath": "src/components/messages/AssistantToolUseMessage.tsx",
+      "name": "AssistantToolUseMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\TaskProgressMessage.tsx",
+      "relativePath": "src/components/messages/TaskProgressMessage.tsx",
+      "name": "TaskProgressMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\TaskToolMessage.tsx",
+      "relativePath": "src/components/messages/TaskToolMessage.tsx",
+      "name": "TaskToolMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\UserBashInputMessage.tsx",
+      "relativePath": "src/components/messages/UserBashInputMessage.tsx",
+      "name": "UserBashInputMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\UserCommandMessage.tsx",
+      "relativePath": "src/components/messages/UserCommandMessage.tsx",
+      "name": "UserCommandMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\UserKodingInputMessage.tsx",
+      "relativePath": "src/components/messages/UserKodingInputMessage.tsx",
+      "name": "UserKodingInputMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\UserPromptMessage.tsx",
+      "relativePath": "src/components/messages/UserPromptMessage.tsx",
+      "name": "UserPromptMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\UserTextMessage.tsx",
+      "relativePath": "src/components/messages/UserTextMessage.tsx",
+      "name": "UserTextMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\UserToolResultMessage\\UserToolCanceledMessage.tsx",
+      "relativePath": "src/components/messages/UserToolResultMessage/UserToolCanceledMessage.tsx",
+      "name": "UserToolCanceledMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages/UserToolResultMessage",
+      "level": 3
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\UserToolResultMessage\\UserToolErrorMessage.tsx",
+      "relativePath": "src/components/messages/UserToolResultMessage/UserToolErrorMessage.tsx",
+      "name": "UserToolErrorMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages/UserToolResultMessage",
+      "level": 3
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\UserToolResultMessage\\UserToolRejectMessage.tsx",
+      "relativePath": "src/components/messages/UserToolResultMessage/UserToolRejectMessage.tsx",
+      "name": "UserToolRejectMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages/UserToolResultMessage",
+      "level": 3
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\UserToolResultMessage\\UserToolResultMessage.tsx",
+      "relativePath": "src/components/messages/UserToolResultMessage/UserToolResultMessage.tsx",
+      "name": "UserToolResultMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages/UserToolResultMessage",
+      "level": 3
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\UserToolResultMessage\\UserToolSuccessMessage.tsx",
+      "relativePath": "src/components/messages/UserToolResultMessage/UserToolSuccessMessage.tsx",
+      "name": "UserToolSuccessMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages/UserToolResultMessage",
+      "level": 3
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\messages\\UserToolResultMessage\\utils.tsx",
+      "relativePath": "src/components/messages/UserToolResultMessage/utils.tsx",
+      "name": "utils.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/messages/UserToolResultMessage",
+      "level": 3
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\MessageSelector.tsx",
+      "relativePath": "src/components/MessageSelector.tsx",
+      "name": "MessageSelector.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\ModeIndicator.tsx",
+      "relativePath": "src/components/ModeIndicator.tsx",
+      "name": "ModeIndicator.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\ModelConfig.tsx",
+      "relativePath": "src/components/ModelConfig.tsx",
+      "name": "ModelConfig.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\ModelListManager.tsx",
+      "relativePath": "src/components/ModelListManager.tsx",
+      "name": "ModelListManager.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\ModelSelector.tsx",
+      "relativePath": "src/components/ModelSelector.tsx",
+      "name": "ModelSelector.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\ModelStatusDisplay.tsx",
+      "relativePath": "src/components/ModelStatusDisplay.tsx",
+      "name": "ModelStatusDisplay.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\Onboarding.tsx",
+      "relativePath": "src/components/Onboarding.tsx",
+      "name": "Onboarding.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\permissions\\BashPermissionRequest\\BashPermissionRequest.tsx",
+      "relativePath": "src/components/permissions/BashPermissionRequest/BashPermissionRequest.tsx",
+      "name": "BashPermissionRequest.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/permissions/BashPermissionRequest",
+      "level": 3
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\permissions\\FallbackPermissionRequest.tsx",
+      "relativePath": "src/components/permissions/FallbackPermissionRequest.tsx",
+      "name": "FallbackPermissionRequest.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/permissions",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\permissions\\FileEditPermissionRequest\\FileEditPermissionRequest.tsx",
+      "relativePath": "src/components/permissions/FileEditPermissionRequest/FileEditPermissionRequest.tsx",
+      "name": "FileEditPermissionRequest.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/permissions/FileEditPermissionRequest",
+      "level": 3
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\permissions\\FileEditPermissionRequest\\FileEditToolDiff.tsx",
+      "relativePath": "src/components/permissions/FileEditPermissionRequest/FileEditToolDiff.tsx",
+      "name": "FileEditToolDiff.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/permissions/FileEditPermissionRequest",
+      "level": 3
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\permissions\\FilesystemPermissionRequest\\FilesystemPermissionRequest.tsx",
+      "relativePath": "src/components/permissions/FilesystemPermissionRequest/FilesystemPermissionRequest.tsx",
+      "name": "FilesystemPermissionRequest.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/permissions/FilesystemPermissionRequest",
+      "level": 3
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\permissions\\FileWritePermissionRequest\\FileWritePermissionRequest.tsx",
+      "relativePath": "src/components/permissions/FileWritePermissionRequest/FileWritePermissionRequest.tsx",
+      "name": "FileWritePermissionRequest.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/permissions/FileWritePermissionRequest",
+      "level": 3
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\permissions\\FileWritePermissionRequest\\FileWriteToolDiff.tsx",
+      "relativePath": "src/components/permissions/FileWritePermissionRequest/FileWriteToolDiff.tsx",
+      "name": "FileWriteToolDiff.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/permissions/FileWritePermissionRequest",
+      "level": 3
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\permissions\\hooks.ts",
+      "relativePath": "src/components/permissions/hooks.ts",
+      "name": "hooks.ts",
+      "extension": ".ts",
+      "directory": "src/components/permissions",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\permissions\\PermissionRequest.tsx",
+      "relativePath": "src/components/permissions/PermissionRequest.tsx",
+      "name": "PermissionRequest.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/permissions",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\permissions\\PermissionRequestTitle.tsx",
+      "relativePath": "src/components/permissions/PermissionRequestTitle.tsx",
+      "name": "PermissionRequestTitle.tsx",
+      "extension": ".tsx",
+      "directory": "src/components/permissions",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\permissions\\toolUseOptions.ts",
+      "relativePath": "src/components/permissions/toolUseOptions.ts",
+      "name": "toolUseOptions.ts",
+      "extension": ".ts",
+      "directory": "src/components/permissions",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\permissions\\utils.ts",
+      "relativePath": "src/components/permissions/utils.ts",
+      "name": "utils.ts",
+      "extension": ".ts",
+      "directory": "src/components/permissions",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\PressEnterToContinue.tsx",
+      "relativePath": "src/components/PressEnterToContinue.tsx",
+      "name": "PressEnterToContinue.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\PromptInput.tsx",
+      "relativePath": "src/components/PromptInput.tsx",
+      "name": "PromptInput.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\SentryErrorBoundary.ts",
+      "relativePath": "src/components/SentryErrorBoundary.ts",
+      "name": "SentryErrorBoundary.ts",
+      "extension": ".ts",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\Spinner.tsx",
+      "relativePath": "src/components/Spinner.tsx",
+      "name": "Spinner.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\StickerRequestForm.tsx",
+      "relativePath": "src/components/StickerRequestForm.tsx",
+      "name": "StickerRequestForm.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\StructuredDiff.tsx",
+      "relativePath": "src/components/StructuredDiff.tsx",
+      "name": "StructuredDiff.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\TextInput.tsx",
+      "relativePath": "src/components/TextInput.tsx",
+      "name": "TextInput.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\TodoItem.tsx",
+      "relativePath": "src/components/TodoItem.tsx",
+      "name": "TodoItem.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\TokenWarning.tsx",
+      "relativePath": "src/components/TokenWarning.tsx",
+      "name": "TokenWarning.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\ToolUseLoader.tsx",
+      "relativePath": "src/components/ToolUseLoader.tsx",
+      "name": "ToolUseLoader.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\components\\TrustDialog.tsx",
+      "relativePath": "src/components/TrustDialog.tsx",
+      "name": "TrustDialog.tsx",
+      "extension": ".tsx",
+      "directory": "src/components",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\constants\\claude-asterisk-ascii-art.tsx",
+      "relativePath": "src/constants/claude-asterisk-ascii-art.tsx",
+      "name": "claude-asterisk-ascii-art.tsx",
+      "extension": ".tsx",
+      "directory": "src/constants",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\constants\\figures.ts",
+      "relativePath": "src/constants/figures.ts",
+      "name": "figures.ts",
+      "extension": ".ts",
+      "directory": "src/constants",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\constants\\macros.ts",
+      "relativePath": "src/constants/macros.ts",
+      "name": "macros.ts",
+      "extension": ".ts",
+      "directory": "src/constants",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\constants\\modelCapabilities.ts",
+      "relativePath": "src/constants/modelCapabilities.ts",
+      "name": "modelCapabilities.ts",
+      "extension": ".ts",
+      "directory": "src/constants",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\constants\\models.ts",
+      "relativePath": "src/constants/models.ts",
+      "name": "models.ts",
+      "extension": ".ts",
+      "directory": "src/constants",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\constants\\oauth.ts",
+      "relativePath": "src/constants/oauth.ts",
+      "name": "oauth.ts",
+      "extension": ".ts",
+      "directory": "src/constants",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\constants\\product.ts",
+      "relativePath": "src/constants/product.ts",
+      "name": "product.ts",
+      "extension": ".ts",
+      "directory": "src/constants",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\constants\\prompts.ts",
+      "relativePath": "src/constants/prompts.ts",
+      "name": "prompts.ts",
+      "extension": ".ts",
+      "directory": "src/constants",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\constants\\releaseNotes.ts",
+      "relativePath": "src/constants/releaseNotes.ts",
+      "name": "releaseNotes.ts",
+      "extension": ".ts",
+      "directory": "src/constants",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\context\\PermissionContext.tsx",
+      "relativePath": "src/context/PermissionContext.tsx",
+      "name": "PermissionContext.tsx",
+      "extension": ".tsx",
+      "directory": "src/context",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\context.ts",
+      "relativePath": "src/context.ts",
+      "name": "context.ts",
+      "extension": ".ts",
+      "directory": "src",
+      "level": 0
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\cost-tracker.ts",
+      "relativePath": "src/cost-tracker.ts",
+      "name": "cost-tracker.ts",
+      "extension": ".ts",
+      "directory": "src",
+      "level": 0
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\entrypoints\\cli.tsx",
+      "relativePath": "src/entrypoints/cli.tsx",
+      "name": "cli.tsx",
+      "extension": ".tsx",
+      "directory": "src/entrypoints",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\entrypoints\\mcp.ts",
+      "relativePath": "src/entrypoints/mcp.ts",
+      "name": "mcp.ts",
+      "extension": ".ts",
+      "directory": "src/entrypoints",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\history.ts",
+      "relativePath": "src/history.ts",
+      "name": "history.ts",
+      "extension": ".ts",
+      "directory": "src",
+      "level": 0
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\hooks\\useApiKeyVerification.ts",
+      "relativePath": "src/hooks/useApiKeyVerification.ts",
+      "name": "useApiKeyVerification.ts",
+      "extension": ".ts",
+      "directory": "src/hooks",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\hooks\\useArrowKeyHistory.ts",
+      "relativePath": "src/hooks/useArrowKeyHistory.ts",
+      "name": "useArrowKeyHistory.ts",
+      "extension": ".ts",
+      "directory": "src/hooks",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\hooks\\useCancelRequest.ts",
+      "relativePath": "src/hooks/useCancelRequest.ts",
+      "name": "useCancelRequest.ts",
+      "extension": ".ts",
+      "directory": "src/hooks",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\hooks\\useCanUseTool.ts",
+      "relativePath": "src/hooks/useCanUseTool.ts",
+      "name": "useCanUseTool.ts",
+      "extension": ".ts",
+      "directory": "src/hooks",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\hooks\\useDoublePress.ts",
+      "relativePath": "src/hooks/useDoublePress.ts",
+      "name": "useDoublePress.ts",
+      "extension": ".ts",
+      "directory": "src/hooks",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\hooks\\useExitOnCtrlCD.ts",
+      "relativePath": "src/hooks/useExitOnCtrlCD.ts",
+      "name": "useExitOnCtrlCD.ts",
+      "extension": ".ts",
+      "directory": "src/hooks",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\hooks\\useInterval.ts",
+      "relativePath": "src/hooks/useInterval.ts",
+      "name": "useInterval.ts",
+      "extension": ".ts",
+      "directory": "src/hooks",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\hooks\\useLogMessages.ts",
+      "relativePath": "src/hooks/useLogMessages.ts",
+      "name": "useLogMessages.ts",
+      "extension": ".ts",
+      "directory": "src/hooks",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\hooks\\useLogStartupTime.ts",
+      "relativePath": "src/hooks/useLogStartupTime.ts",
+      "name": "useLogStartupTime.ts",
+      "extension": ".ts",
+      "directory": "src/hooks",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\hooks\\useNotifyAfterTimeout.ts",
+      "relativePath": "src/hooks/useNotifyAfterTimeout.ts",
+      "name": "useNotifyAfterTimeout.ts",
+      "extension": ".ts",
+      "directory": "src/hooks",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\hooks\\usePermissionRequestLogging.ts",
+      "relativePath": "src/hooks/usePermissionRequestLogging.ts",
+      "name": "usePermissionRequestLogging.ts",
+      "extension": ".ts",
+      "directory": "src/hooks",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\hooks\\useTerminalSize.ts",
+      "relativePath": "src/hooks/useTerminalSize.ts",
+      "name": "useTerminalSize.ts",
+      "extension": ".ts",
+      "directory": "src/hooks",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\hooks\\useTextInput.ts",
+      "relativePath": "src/hooks/useTextInput.ts",
+      "name": "useTextInput.ts",
+      "extension": ".ts",
+      "directory": "src/hooks",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\hooks\\useUnifiedCompletion.ts",
+      "relativePath": "src/hooks/useUnifiedCompletion.ts",
+      "name": "useUnifiedCompletion.ts",
+      "extension": ".ts",
+      "directory": "src/hooks",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\index.ts",
+      "relativePath": "src/index.ts",
+      "name": "index.ts",
+      "extension": ".ts",
+      "directory": "src",
+      "level": 0
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\messages.ts",
+      "relativePath": "src/messages.ts",
+      "name": "messages.ts",
+      "extension": ".ts",
+      "directory": "src",
+      "level": 0
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\permissions.ts",
+      "relativePath": "src/permissions.ts",
+      "name": "permissions.ts",
+      "extension": ".ts",
+      "directory": "src",
+      "level": 0
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\ProjectOnboarding.tsx",
+      "relativePath": "src/ProjectOnboarding.tsx",
+      "name": "ProjectOnboarding.tsx",
+      "extension": ".tsx",
+      "directory": "src",
+      "level": 0
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\query.ts",
+      "relativePath": "src/query.ts",
+      "name": "query.ts",
+      "extension": ".ts",
+      "directory": "src",
+      "level": 0
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\screens\\Doctor.tsx",
+      "relativePath": "src/screens/Doctor.tsx",
+      "name": "Doctor.tsx",
+      "extension": ".tsx",
+      "directory": "src/screens",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\screens\\LogList.tsx",
+      "relativePath": "src/screens/LogList.tsx",
+      "name": "LogList.tsx",
+      "extension": ".tsx",
+      "directory": "src/screens",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\screens\\REPL.tsx",
+      "relativePath": "src/screens/REPL.tsx",
+      "name": "REPL.tsx",
+      "extension": ".tsx",
+      "directory": "src/screens",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\screens\\ResumeConversation.tsx",
+      "relativePath": "src/screens/ResumeConversation.tsx",
+      "name": "ResumeConversation.tsx",
+      "extension": ".tsx",
+      "directory": "src/screens",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\adapters\\base.ts",
+      "relativePath": "src/services/adapters/base.ts",
+      "name": "base.ts",
+      "extension": ".ts",
+      "directory": "src/services/adapters",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\adapters\\chatCompletions.ts",
+      "relativePath": "src/services/adapters/chatCompletions.ts",
+      "name": "chatCompletions.ts",
+      "extension": ".ts",
+      "directory": "src/services/adapters",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\adapters\\responsesAPI.ts",
+      "relativePath": "src/services/adapters/responsesAPI.ts",
+      "name": "responsesAPI.ts",
+      "extension": ".ts",
+      "directory": "src/services/adapters",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\browserMocks.ts",
+      "relativePath": "src/services/browserMocks.ts",
+      "name": "browserMocks.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\claude.ts",
+      "relativePath": "src/services/claude.ts",
+      "name": "claude.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\customCommands.ts",
+      "relativePath": "src/services/customCommands.ts",
+      "name": "customCommands.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\fileFreshness.ts",
+      "relativePath": "src/services/fileFreshness.ts",
+      "name": "fileFreshness.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\gpt5ConnectionTest.ts",
+      "relativePath": "src/services/gpt5ConnectionTest.ts",
+      "name": "gpt5ConnectionTest.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\mcpClient.ts",
+      "relativePath": "src/services/mcpClient.ts",
+      "name": "mcpClient.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\mcpServerApproval.tsx",
+      "relativePath": "src/services/mcpServerApproval.tsx",
+      "name": "mcpServerApproval.tsx",
+      "extension": ".tsx",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\mentionProcessor.ts",
+      "relativePath": "src/services/mentionProcessor.ts",
+      "name": "mentionProcessor.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\modelAdapterFactory.ts",
+      "relativePath": "src/services/modelAdapterFactory.ts",
+      "name": "modelAdapterFactory.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\notifier.ts",
+      "relativePath": "src/services/notifier.ts",
+      "name": "notifier.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\oauth.ts",
+      "relativePath": "src/services/oauth.ts",
+      "name": "oauth.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\openai.ts",
+      "relativePath": "src/services/openai.ts",
+      "name": "openai.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\responseStateManager.ts",
+      "relativePath": "src/services/responseStateManager.ts",
+      "name": "responseStateManager.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\sentry.ts",
+      "relativePath": "src/services/sentry.ts",
+      "name": "sentry.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\systemReminder.ts",
+      "relativePath": "src/services/systemReminder.ts",
+      "name": "systemReminder.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\services\\vcr.ts",
+      "relativePath": "src/services/vcr.ts",
+      "name": "vcr.ts",
+      "extension": ".ts",
+      "directory": "src/services",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\test\\testAdapters.ts",
+      "relativePath": "src/test/testAdapters.ts",
+      "name": "testAdapters.ts",
+      "extension": ".ts",
+      "directory": "src/test",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\Tool.ts",
+      "relativePath": "src/Tool.ts",
+      "name": "Tool.ts",
+      "extension": ".ts",
+      "directory": "src",
+      "level": 0
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\ArchitectTool\\ArchitectTool.tsx",
+      "relativePath": "src/tools/ArchitectTool/ArchitectTool.tsx",
+      "name": "ArchitectTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/ArchitectTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\ArchitectTool\\prompt.ts",
+      "relativePath": "src/tools/ArchitectTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/ArchitectTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\AskExpertModelTool\\AskExpertModelTool.tsx",
+      "relativePath": "src/tools/AskExpertModelTool/AskExpertModelTool.tsx",
+      "name": "AskExpertModelTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/AskExpertModelTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\BashTool\\BashTool.tsx",
+      "relativePath": "src/tools/BashTool/BashTool.tsx",
+      "name": "BashTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/BashTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\BashTool\\BashToolResultMessage.tsx",
+      "relativePath": "src/tools/BashTool/BashToolResultMessage.tsx",
+      "name": "BashToolResultMessage.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/BashTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\BashTool\\OutputLine.tsx",
+      "relativePath": "src/tools/BashTool/OutputLine.tsx",
+      "name": "OutputLine.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/BashTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\BashTool\\prompt.ts",
+      "relativePath": "src/tools/BashTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/BashTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\BashTool\\utils.ts",
+      "relativePath": "src/tools/BashTool/utils.ts",
+      "name": "utils.ts",
+      "extension": ".ts",
+      "directory": "src/tools/BashTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\FileEditTool\\FileEditTool.tsx",
+      "relativePath": "src/tools/FileEditTool/FileEditTool.tsx",
+      "name": "FileEditTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/FileEditTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\FileEditTool\\prompt.ts",
+      "relativePath": "src/tools/FileEditTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/FileEditTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\FileEditTool\\utils.ts",
+      "relativePath": "src/tools/FileEditTool/utils.ts",
+      "name": "utils.ts",
+      "extension": ".ts",
+      "directory": "src/tools/FileEditTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\FileReadTool\\FileReadTool.tsx",
+      "relativePath": "src/tools/FileReadTool/FileReadTool.tsx",
+      "name": "FileReadTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/FileReadTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\FileReadTool\\prompt.ts",
+      "relativePath": "src/tools/FileReadTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/FileReadTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\FileWriteTool\\FileWriteTool.tsx",
+      "relativePath": "src/tools/FileWriteTool/FileWriteTool.tsx",
+      "name": "FileWriteTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/FileWriteTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\FileWriteTool\\prompt.ts",
+      "relativePath": "src/tools/FileWriteTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/FileWriteTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\GlobTool\\GlobTool.tsx",
+      "relativePath": "src/tools/GlobTool/GlobTool.tsx",
+      "name": "GlobTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/GlobTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\GlobTool\\prompt.ts",
+      "relativePath": "src/tools/GlobTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/GlobTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\GrepTool\\GrepTool.tsx",
+      "relativePath": "src/tools/GrepTool/GrepTool.tsx",
+      "name": "GrepTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/GrepTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\GrepTool\\prompt.ts",
+      "relativePath": "src/tools/GrepTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/GrepTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\lsTool\\lsTool.tsx",
+      "relativePath": "src/tools/lsTool/lsTool.tsx",
+      "name": "lsTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/lsTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\lsTool\\prompt.ts",
+      "relativePath": "src/tools/lsTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/lsTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\MCPTool\\MCPTool.tsx",
+      "relativePath": "src/tools/MCPTool/MCPTool.tsx",
+      "name": "MCPTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/MCPTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\MCPTool\\prompt.ts",
+      "relativePath": "src/tools/MCPTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/MCPTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\MemoryReadTool\\MemoryReadTool.tsx",
+      "relativePath": "src/tools/MemoryReadTool/MemoryReadTool.tsx",
+      "name": "MemoryReadTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/MemoryReadTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\MemoryReadTool\\prompt.ts",
+      "relativePath": "src/tools/MemoryReadTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/MemoryReadTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\MemoryWriteTool\\MemoryWriteTool.tsx",
+      "relativePath": "src/tools/MemoryWriteTool/MemoryWriteTool.tsx",
+      "name": "MemoryWriteTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/MemoryWriteTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\MemoryWriteTool\\prompt.ts",
+      "relativePath": "src/tools/MemoryWriteTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/MemoryWriteTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\MultiEditTool\\MultiEditTool.tsx",
+      "relativePath": "src/tools/MultiEditTool/MultiEditTool.tsx",
+      "name": "MultiEditTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/MultiEditTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\MultiEditTool\\prompt.ts",
+      "relativePath": "src/tools/MultiEditTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/MultiEditTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\NotebookEditTool\\NotebookEditTool.tsx",
+      "relativePath": "src/tools/NotebookEditTool/NotebookEditTool.tsx",
+      "name": "NotebookEditTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/NotebookEditTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\NotebookEditTool\\prompt.ts",
+      "relativePath": "src/tools/NotebookEditTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/NotebookEditTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\NotebookReadTool\\NotebookReadTool.tsx",
+      "relativePath": "src/tools/NotebookReadTool/NotebookReadTool.tsx",
+      "name": "NotebookReadTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/NotebookReadTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\NotebookReadTool\\prompt.ts",
+      "relativePath": "src/tools/NotebookReadTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/NotebookReadTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\StickerRequestTool\\prompt.ts",
+      "relativePath": "src/tools/StickerRequestTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/StickerRequestTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\StickerRequestTool\\StickerRequestTool.tsx",
+      "relativePath": "src/tools/StickerRequestTool/StickerRequestTool.tsx",
+      "name": "StickerRequestTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/StickerRequestTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\TaskTool\\constants.ts",
+      "relativePath": "src/tools/TaskTool/constants.ts",
+      "name": "constants.ts",
+      "extension": ".ts",
+      "directory": "src/tools/TaskTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\TaskTool\\prompt.ts",
+      "relativePath": "src/tools/TaskTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/TaskTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\TaskTool\\TaskTool.tsx",
+      "relativePath": "src/tools/TaskTool/TaskTool.tsx",
+      "name": "TaskTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/TaskTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\ThinkTool\\prompt.ts",
+      "relativePath": "src/tools/ThinkTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/ThinkTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\ThinkTool\\ThinkTool.tsx",
+      "relativePath": "src/tools/ThinkTool/ThinkTool.tsx",
+      "name": "ThinkTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/ThinkTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\TodoWriteTool\\prompt.ts",
+      "relativePath": "src/tools/TodoWriteTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/TodoWriteTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\TodoWriteTool\\TodoWriteTool.tsx",
+      "relativePath": "src/tools/TodoWriteTool/TodoWriteTool.tsx",
+      "name": "TodoWriteTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/TodoWriteTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\URLFetcherTool\\cache.ts",
+      "relativePath": "src/tools/URLFetcherTool/cache.ts",
+      "name": "cache.ts",
+      "extension": ".ts",
+      "directory": "src/tools/URLFetcherTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\URLFetcherTool\\htmlToMarkdown.ts",
+      "relativePath": "src/tools/URLFetcherTool/htmlToMarkdown.ts",
+      "name": "htmlToMarkdown.ts",
+      "extension": ".ts",
+      "directory": "src/tools/URLFetcherTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\URLFetcherTool\\prompt.ts",
+      "relativePath": "src/tools/URLFetcherTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/URLFetcherTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\URLFetcherTool\\URLFetcherTool.tsx",
+      "relativePath": "src/tools/URLFetcherTool/URLFetcherTool.tsx",
+      "name": "URLFetcherTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/URLFetcherTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\WebSearchTool\\prompt.ts",
+      "relativePath": "src/tools/WebSearchTool/prompt.ts",
+      "name": "prompt.ts",
+      "extension": ".ts",
+      "directory": "src/tools/WebSearchTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\WebSearchTool\\searchProviders.ts",
+      "relativePath": "src/tools/WebSearchTool/searchProviders.ts",
+      "name": "searchProviders.ts",
+      "extension": ".ts",
+      "directory": "src/tools/WebSearchTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools\\WebSearchTool\\WebSearchTool.tsx",
+      "relativePath": "src/tools/WebSearchTool/WebSearchTool.tsx",
+      "name": "WebSearchTool.tsx",
+      "extension": ".tsx",
+      "directory": "src/tools/WebSearchTool",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\tools.ts",
+      "relativePath": "src/tools.ts",
+      "name": "tools.ts",
+      "extension": ".ts",
+      "directory": "src",
+      "level": 0
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\types\\common.d.ts",
+      "relativePath": "src/types/common.d.ts",
+      "name": "common.d.ts",
+      "extension": ".ts",
+      "directory": "src/types",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\types\\conversation.ts",
+      "relativePath": "src/types/conversation.ts",
+      "name": "conversation.ts",
+      "extension": ".ts",
+      "directory": "src/types",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\types\\logs.ts",
+      "relativePath": "src/types/logs.ts",
+      "name": "logs.ts",
+      "extension": ".ts",
+      "directory": "src/types",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\types\\modelCapabilities.ts",
+      "relativePath": "src/types/modelCapabilities.ts",
+      "name": "modelCapabilities.ts",
+      "extension": ".ts",
+      "directory": "src/types",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\types\\notebook.ts",
+      "relativePath": "src/types/notebook.ts",
+      "name": "notebook.ts",
+      "extension": ".ts",
+      "directory": "src/types",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\types\\PermissionMode.ts",
+      "relativePath": "src/types/PermissionMode.ts",
+      "name": "PermissionMode.ts",
+      "extension": ".ts",
+      "directory": "src/types",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\types\\RequestContext.ts",
+      "relativePath": "src/types/RequestContext.ts",
+      "name": "RequestContext.ts",
+      "extension": ".ts",
+      "directory": "src/types",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\advancedFuzzyMatcher.ts",
+      "relativePath": "src/utils/advancedFuzzyMatcher.ts",
+      "name": "advancedFuzzyMatcher.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\agentLoader.ts",
+      "relativePath": "src/utils/agentLoader.ts",
+      "name": "agentLoader.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\agentStorage.ts",
+      "relativePath": "src/utils/agentStorage.ts",
+      "name": "agentStorage.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\array.ts",
+      "relativePath": "src/utils/array.ts",
+      "name": "array.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\ask.tsx",
+      "relativePath": "src/utils/ask.tsx",
+      "name": "ask.tsx",
+      "extension": ".tsx",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\auth.ts",
+      "relativePath": "src/utils/auth.ts",
+      "name": "auth.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\autoCompactCore.ts",
+      "relativePath": "src/utils/autoCompactCore.ts",
+      "name": "autoCompactCore.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\autoUpdater.ts",
+      "relativePath": "src/utils/autoUpdater.ts",
+      "name": "autoUpdater.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\browser.ts",
+      "relativePath": "src/utils/browser.ts",
+      "name": "browser.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\cleanup.ts",
+      "relativePath": "src/utils/cleanup.ts",
+      "name": "cleanup.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\commands.ts",
+      "relativePath": "src/utils/commands.ts",
+      "name": "commands.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\commonUnixCommands.ts",
+      "relativePath": "src/utils/commonUnixCommands.ts",
+      "name": "commonUnixCommands.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\config.ts",
+      "relativePath": "src/utils/config.ts",
+      "name": "config.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\conversationRecovery.ts",
+      "relativePath": "src/utils/conversationRecovery.ts",
+      "name": "conversationRecovery.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\Cursor.ts",
+      "relativePath": "src/utils/Cursor.ts",
+      "name": "Cursor.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\debugLogger.ts",
+      "relativePath": "src/utils/debugLogger.ts",
+      "name": "debugLogger.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\diff.ts",
+      "relativePath": "src/utils/diff.ts",
+      "name": "diff.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\env.ts",
+      "relativePath": "src/utils/env.ts",
+      "name": "env.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\errors.ts",
+      "relativePath": "src/utils/errors.ts",
+      "name": "errors.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\exampleCommands.ts",
+      "relativePath": "src/utils/exampleCommands.ts",
+      "name": "exampleCommands.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\execFileNoThrow.ts",
+      "relativePath": "src/utils/execFileNoThrow.ts",
+      "name": "execFileNoThrow.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\expertChatStorage.ts",
+      "relativePath": "src/utils/expertChatStorage.ts",
+      "name": "expertChatStorage.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\file.ts",
+      "relativePath": "src/utils/file.ts",
+      "name": "file.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\fileRecoveryCore.ts",
+      "relativePath": "src/utils/fileRecoveryCore.ts",
+      "name": "fileRecoveryCore.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\format.tsx",
+      "relativePath": "src/utils/format.tsx",
+      "name": "format.tsx",
+      "extension": ".tsx",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\fuzzyMatcher.ts",
+      "relativePath": "src/utils/fuzzyMatcher.ts",
+      "name": "fuzzyMatcher.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\generators.ts",
+      "relativePath": "src/utils/generators.ts",
+      "name": "generators.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\git.ts",
+      "relativePath": "src/utils/git.ts",
+      "name": "git.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\globalLogger.ts",
+      "relativePath": "src/utils/globalLogger.ts",
+      "name": "globalLogger.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\http.ts",
+      "relativePath": "src/utils/http.ts",
+      "name": "http.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\imagePaste.ts",
+      "relativePath": "src/utils/imagePaste.ts",
+      "name": "imagePaste.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\json.ts",
+      "relativePath": "src/utils/json.ts",
+      "name": "json.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\log.ts",
+      "relativePath": "src/utils/log.ts",
+      "name": "log.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\markdown.ts",
+      "relativePath": "src/utils/markdown.ts",
+      "name": "markdown.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\messageContextManager.ts",
+      "relativePath": "src/utils/messageContextManager.ts",
+      "name": "messageContextManager.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\messages.tsx",
+      "relativePath": "src/utils/messages.tsx",
+      "name": "messages.tsx",
+      "extension": ".tsx",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\model.ts",
+      "relativePath": "src/utils/model.ts",
+      "name": "model.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\permissions\\filesystem.ts",
+      "relativePath": "src/utils/permissions/filesystem.ts",
+      "name": "filesystem.ts",
+      "extension": ".ts",
+      "directory": "src/utils/permissions",
+      "level": 2
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\PersistentShell.ts",
+      "relativePath": "src/utils/PersistentShell.ts",
+      "name": "PersistentShell.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\responseState.ts",
+      "relativePath": "src/utils/responseState.ts",
+      "name": "responseState.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\ripgrep.ts",
+      "relativePath": "src/utils/ripgrep.ts",
+      "name": "ripgrep.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\secureFile.ts",
+      "relativePath": "src/utils/secureFile.ts",
+      "name": "secureFile.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\sessionState.ts",
+      "relativePath": "src/utils/sessionState.ts",
+      "name": "sessionState.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\state.ts",
+      "relativePath": "src/utils/state.ts",
+      "name": "state.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\style.ts",
+      "relativePath": "src/utils/style.ts",
+      "name": "style.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\terminal.ts",
+      "relativePath": "src/utils/terminal.ts",
+      "name": "terminal.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\theme.ts",
+      "relativePath": "src/utils/theme.ts",
+      "name": "theme.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\thinking.ts",
+      "relativePath": "src/utils/thinking.ts",
+      "name": "thinking.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\todoStorage.ts",
+      "relativePath": "src/utils/todoStorage.ts",
+      "name": "todoStorage.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\tokens.ts",
+      "relativePath": "src/utils/tokens.ts",
+      "name": "tokens.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\toolExecutionController.ts",
+      "relativePath": "src/utils/toolExecutionController.ts",
+      "name": "toolExecutionController.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\unaryLogging.ts",
+      "relativePath": "src/utils/unaryLogging.ts",
+      "name": "unaryLogging.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\user.ts",
+      "relativePath": "src/utils/user.ts",
+      "name": "user.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    },
+    {
+      "path": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev\\src\\utils\\validate.ts",
+      "relativePath": "src/utils/validate.ts",
+      "name": "validate.ts",
+      "extension": ".ts",
+      "directory": "src/utils",
+      "level": 1
+    }
+  ],
+  "totalFiles": 274,
+  "directories": [
+    "src",
+    "src/commands",
+    "src/components",
+    "src/components/CustomSelect",
+    "src/components/binary-feedback",
+    "src/components/messages",
+    "src/components/messages/UserToolResultMessage",
+    "src/components/permissions",
+    "src/components/permissions/BashPermissionRequest",
+    "src/components/permissions/FileEditPermissionRequest",
+    "src/components/permissions/FileWritePermissionRequest",
+    "src/components/permissions/FilesystemPermissionRequest",
+    "src/constants",
+    "src/context",
+    "src/entrypoints",
+    "src/hooks",
+    "src/screens",
+    "src/services",
+    "src/services/adapters",
+    "src/test",
+    "src/tools",
+    "src/tools/ArchitectTool",
+    "src/tools/AskExpertModelTool",
+    "src/tools/BashTool",
+    "src/tools/FileEditTool",
+    "src/tools/FileReadTool",
+    "src/tools/FileWriteTool",
+    "src/tools/GlobTool",
+    "src/tools/GrepTool",
+    "src/tools/MCPTool",
+    "src/tools/MemoryReadTool",
+    "src/tools/MemoryWriteTool",
+    "src/tools/MultiEditTool",
+    "src/tools/NotebookEditTool",
+    "src/tools/NotebookReadTool",
+    "src/tools/StickerRequestTool",
+    "src/tools/TaskTool",
+    "src/tools/ThinkTool",
+    "src/tools/TodoWriteTool",
+    "src/tools/URLFetcherTool",
+    "src/tools/WebSearchTool",
+    "src/tools/lsTool",
+    "src/types",
+    "src/utils",
+    "src/utils/permissions"
+  ],
+  "entryPoints": [
+    "src/components/SentryErrorBoundary.ts",
+    "src/entrypoints/cli.tsx",
+    "src/index.ts",
+    "src/services/sentry.ts"
+  ],
+  "scannedAt": "2025-09-17T07:08:34.235Z"
+}
