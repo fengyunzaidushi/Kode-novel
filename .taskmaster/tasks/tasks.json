@@ -527,11 +527,551 @@
         ],
         "status": "done",
         "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "自动化代码结构扫描与依赖分析",
+        "description": "开发脚本自动扫描 src 目录结构，分析文件间的 import/export 依赖关系，识别入口点和主要模块。",
+        "details": "使用 TypeScript（推荐 >=5.3）结合 ts-morph（v20+）或 @babel/parser（v7.23+）实现 AST 解析，递归遍历 src 目录，提取文件层级、依赖关系和注释。输出结构化 JSON，作为后续架构图和文档生成的基础。脚本建议命名为 scripts/generate-architecture.ts。",
+        "testStrategy": "准备包含多层级和多依赖的 src 目录，运行脚本，验证输出 JSON 是否准确反映目录结构、依赖关系和入口文件。覆盖边界情况如循环依赖和动态 import。",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "递归扫描 src 目录并收集所有 TypeScript 文件",
+            "description": "实现脚本递归遍历 src 目录，收集所有 .ts 和 .tsx 文件的路径，为后续 AST 解析做准备。",
+            "dependencies": [],
+            "details": "使用 Node.js 文件系统 API，递归读取 src 目录下所有 TypeScript 源文件，过滤掉非代码文件，生成文件路径列表。",
+            "status": "pending",
+            "testStrategy": "准备多层级 src 目录，运行脚本，验证所有 TypeScript 文件路径均被正确收集。"
+          },
+          {
+            "id": 2,
+            "title": "解析文件 AST 并提取 import/export 依赖关系",
+            "description": "利用 ts-morph 或 @babel/parser 解析每个文件的 AST，分析并提取 import/export 语句，建立文件间依赖关系。",
+            "dependencies": [
+              "26.1"
+            ],
+            "details": "对每个收集到的 TypeScript 文件，使用 ts-morph 或 @babel/parser 解析 AST，遍历节点，提取所有 import/export 信息，记录依赖来源和目标。",
+            "status": "pending",
+            "testStrategy": "选取包含多种依赖形式（静态、动态、循环）的文件，验证依赖关系提取的准确性。"
+          },
+          {
+            "id": 3,
+            "title": "识别入口点文件和主要模块",
+            "description": "根据依赖关系分析，自动识别项目入口文件（如无被其他文件引用的文件）及主要模块。",
+            "dependencies": [
+              "26.2"
+            ],
+            "details": "遍历依赖关系图，找出未被其他文件 import 的文件作为入口点，统计被多文件依赖的模块作为主要模块。",
+            "status": "pending",
+            "testStrategy": "准备有多个入口和核心模块的项目结构，验证入口点和主要模块识别是否准确。"
+          },
+          {
+            "id": 4,
+            "title": "提取文件层级结构与注释信息",
+            "description": "分析每个文件的目录层级，并提取文件头部及主要节点的注释内容，丰富结构化输出。",
+            "dependencies": [
+              "26.1"
+            ],
+            "details": "根据文件路径生成层级结构，利用 AST 节点属性提取文件头部和导出节点的注释，归档到结构化数据中。",
+            "status": "pending",
+            "testStrategy": "选取含多层级目录和丰富注释的代码，验证层级与注释信息提取的完整性。"
+          },
+          {
+            "id": 5,
+            "title": "生成结构化 JSON 并输出到指定路径",
+            "description": "将收集到的文件层级、依赖关系、入口点、主要模块和注释信息整合为结构化 JSON，输出到指定文件。",
+            "dependencies": [
+              "26.2",
+              "26.3",
+              "26.4"
+            ],
+            "details": "设计 JSON 数据结构，整合所有分析结果，输出到 scripts/generate-architecture.ts 指定的路径，供后续架构图和文档生成使用。",
+            "status": "pending",
+            "testStrategy": "运行脚本，检查输出 JSON 是否完整、规范，覆盖所有分析维度，并能被后续工具正确解析。"
+          }
+        ]
+      },
+      {
+        "id": 27,
+        "title": "Mermaid 架构图生成与多格式输出",
+        "description": "根据扫描结果自动生成项目架构图，支持 Mermaid、ASCII、SVG、PNG、HTML 等多种格式。",
+        "details": "利用 mermaid-js（v10.9+）和 mermaid-cli（v10.0+）将 JSON 结构转为 Mermaid 语法，区分不同层级（入口层、服务层、工具层、UI层）并用颜色标识。通过 mermaid-cli 实现 SVG/PNG 导出，ASCII 图可用 tree-cli（v1.0+）或自定义文本生成。输出到 docs/architecture-diagram.md。",
+        "testStrategy": "对比生成的架构图与实际代码结构，检查层级、依赖、颜色区分是否正确。测试多种输出格式在 VSCode/GitHub/本地预览的兼容性。",
+        "priority": "high",
+        "dependencies": [
+          26
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "解析扫描结果并生成分层 JSON 结构",
+            "description": "根据项目扫描结果，自动识别并归类各模块至入口层、服务层、工具层、UI 层，生成带层级和依赖关系的 JSON 结构。",
+            "dependencies": [],
+            "details": "实现自动化脚本，分析项目目录和代码依赖，输出包含层级、模块、依赖关系的标准 JSON 文件，为后续图形生成提供数据基础。",
+            "status": "pending",
+            "testStrategy": "对比生成的 JSON 结构与实际项目结构，确保层级归类和依赖关系准确无误。"
+          },
+          {
+            "id": 2,
+            "title": "将 JSON 结构转换为 Mermaid 语法并区分层级颜色",
+            "description": "利用 mermaid-js，将 JSON 结构自动转换为 Mermaid 语法，按不同层级分配颜色标识。",
+            "dependencies": [
+              "27.1"
+            ],
+            "details": "编写转换脚本，将 JSON 中的层级、模块、依赖关系映射为 Mermaid 代码，使用不同颜色区分入口层、服务层、工具层、UI 层节点。",
+            "status": "pending",
+            "testStrategy": "检查生成的 Mermaid 代码，确认层级、依赖、颜色标识与 JSON 结构一致。"
+          },
+          {
+            "id": 3,
+            "title": "多格式架构图导出（SVG/PNG/HTML/ASCII）",
+            "description": "通过 mermaid-cli 实现 Mermaid 语法到 SVG、PNG、HTML 的导出，利用 tree-cli 或自定义脚本生成 ASCII 架构图。",
+            "dependencies": [
+              "27.2"
+            ],
+            "details": "集成 mermaid-cli 命令行工具，批量将 Mermaid 文件导出为 SVG、PNG、HTML 格式；调用 tree-cli 或自定义文本生成脚本输出 ASCII 图。",
+            "status": "pending",
+            "testStrategy": "分别在 VSCode、GitHub、本地预览各格式输出，确保内容完整、格式兼容。"
+          },
+          {
+            "id": 4,
+            "title": "自动输出架构图至 docs/architecture-diagram.md",
+            "description": "将所有格式的架构图及 Mermaid 源码自动集成输出到 docs/architecture-diagram.md 文档。",
+            "dependencies": [
+              "27.3"
+            ],
+            "details": "实现自动化脚本，将 SVG、PNG、HTML、ASCII 图及 Mermaid 代码片段插入到指定 Markdown 文档，确保文档结构清晰、内容齐全。",
+            "status": "pending",
+            "testStrategy": "检查 docs/architecture-diagram.md，确认所有格式图表和 Mermaid 代码均已正确嵌入，排版无误。"
+          },
+          {
+            "id": 5,
+            "title": "架构图与实际代码结构一致性与多格式兼容性测试",
+            "description": "对比生成的架构图与实际代码结构，测试多种输出格式在主流环境下的兼容性。",
+            "dependencies": [
+              "27.4"
+            ],
+            "details": "人工或自动化脚本比对架构图与项目代码层级、依赖关系，检查颜色区分准确性；在 VSCode、GitHub、本地等环境预览各格式输出，验证兼容性。",
+            "status": "pending",
+            "testStrategy": "记录并修复发现的结构、颜色、兼容性问题，确保架构图真实反映项目结构且多格式输出可用。"
+          }
+        ]
+      },
+      {
+        "id": 28,
+        "title": "阅读顺序指南自动生成",
+        "description": "根据架构分析结果，自动生成新手友好的代码阅读顺序指南，包含模块功能说明和关键文件解释。",
+        "details": "结合入口点和依赖关系，自动排序推荐阅读顺序。为每个主要模块生成简要功能说明和关键文件作用，自动插入注释和解释。输出 Markdown 格式到 docs/reading-guide.md，支持中文显示。",
+        "testStrategy": "邀请新开发者根据指南阅读项目，收集反馈，确保内容易懂且顺序合理。检查所有主要模块和关键文件均有说明。",
+        "priority": "high",
+        "dependencies": [
+          26
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "收集并解析架构分析结果",
+            "description": "自动收集项目的架构分析数据，包括入口点、模块划分、依赖关系和关键文件列表，为后续指南生成提供基础。",
+            "dependencies": [],
+            "details": "通过静态分析工具或已有架构分析脚本，提取项目的模块结构、文件依赖关系和入口点信息，确保数据完整且可用于自动化处理。",
+            "status": "pending",
+            "testStrategy": "验证提取结果覆盖所有主要模块和关键文件，检查依赖关系和入口点识别的准确性。"
+          },
+          {
+            "id": 2,
+            "title": "自动排序推荐代码阅读顺序",
+            "description": "根据入口点和依赖关系，自动生成合理的新手友好代码阅读顺序列表。",
+            "dependencies": [
+              "28.1"
+            ],
+            "details": "结合模块间依赖关系和入口文件优先级，采用拓扑排序或自定义算法，输出适合新手逐步理解的阅读顺序。",
+            "status": "pending",
+            "testStrategy": "检查排序结果是否符合依赖逻辑，邀请新开发者测试阅读顺序的合理性。"
+          },
+          {
+            "id": 3,
+            "title": "生成模块功能说明与关键文件解释",
+            "description": "为每个主要模块自动生成简要功能说明，并解释关键文件的作用。",
+            "dependencies": [
+              "28.1"
+            ],
+            "details": "利用架构分析数据和注释，自动提取或生成每个模块的功能简介及关键文件的用途，确保内容简明易懂，适合新手阅读。",
+            "status": "pending",
+            "testStrategy": "检查所有主要模块和关键文件均有说明，内容准确且表达清晰。"
+          },
+          {
+            "id": 4,
+            "title": "自动插入注释与解释内容",
+            "description": "在生成的指南中自动插入针对模块和关键文件的注释与解释，提升可读性。",
+            "dependencies": [
+              "28.3"
+            ],
+            "details": "根据模块说明和文件解释，自动生成适当的中文注释和解释文本，插入到对应的 Markdown 内容中，确保表达规范且易于理解。",
+            "status": "pending",
+            "testStrategy": "邀请新开发者阅读注释内容，收集反馈，确保注释表达规范、解释清晰。"
+          },
+          {
+            "id": 5,
+            "title": "输出 Markdown 格式指南并支持中文显示",
+            "description": "将自动生成的阅读顺序指南以 Markdown 格式输出到 docs/reading-guide.md，确保内容完整且支持中文显示。",
+            "dependencies": [
+              "28.2",
+              "28.4"
+            ],
+            "details": "自动生成 Markdown 文档，包含推荐阅读顺序、模块说明、关键文件解释和注释，确保排版美观、目录清晰、中文显示无乱码。",
+            "status": "pending",
+            "testStrategy": "检查 docs/reading-guide.md 文件内容完整、格式规范、中文显示正常，并邀请新开发者测试可读性。"
+          }
+        ]
+      },
+      {
+        "id": 29,
+        "title": "模块概览与职责文档生成",
+        "description": "生成各层级职责、模块间交互、设计模式和架构原则的技术文档。",
+        "details": "根据扫描和分析结果，自动归纳各层级职责、模块交互方式，提取常用设计模式（如单例、工厂、观察者等）并生成说明。输出 Markdown 格式到 docs/module-overview.md，包含代码片段和示例。",
+        "testStrategy": "人工审核文档内容，确保职责划分、交互方式和设计模式描述准确。与实际代码实现对比，验证一致性。",
+        "priority": "medium",
+        "dependencies": [
+          26
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "自动提取各层级模块及其职责",
+            "description": "根据扫描和分析结果，识别系统中所有模块及其层级结构，自动归纳每个模块的主要职责。",
+            "dependencies": [],
+            "details": "结合模块视图和职责分割理论，自动分析源代码和相关文档，提取模块名称、层级关系及详细职责描述，确保覆盖所有实现单元。",
+            "status": "pending",
+            "testStrategy": "人工审核模块及职责列表，确保与实际代码结构和需求规格说明一致。"
+          },
+          {
+            "id": 2,
+            "title": "梳理模块间交互方式与接口",
+            "description": "分析并归纳各模块之间的交互关系，包括调用链、数据流和接口定义。",
+            "dependencies": [
+              "29.1"
+            ],
+            "details": "自动扫描代码中的依赖、调用和数据传递，生成模块间交互图和接口说明，明确输入输出格式及依赖关系。",
+            "status": "pending",
+            "testStrategy": "与实际接口文档和代码实现对比，验证交互关系和接口描述的准确性。"
+          },
+          {
+            "id": 3,
+            "title": "识别并提炼常用设计模式",
+            "description": "自动检测代码中出现的常用设计模式（如单例、工厂、观察者等），并生成模式说明。",
+            "dependencies": [
+              "29.1"
+            ],
+            "details": "通过静态分析和模式识别算法，提取各模块实现中应用的设计模式，归纳其使用场景、结构和优缺点，配合简要代码片段。",
+            "status": "pending",
+            "testStrategy": "人工核查设计模式识别结果，确保与实际代码实现和设计意图一致。"
+          },
+          {
+            "id": 4,
+            "title": "归纳架构原则与整体设计思想",
+            "description": "总结项目采用的主要架构原则和设计思想，说明其对模块划分和交互的影响。",
+            "dependencies": [
+              "29.1",
+              "29.2",
+              "29.3"
+            ],
+            "details": "结合分析结果，归纳如分层、解耦、可扩展性等架构原则，阐述其在项目中的具体体现及对系统演化的支持。",
+            "status": "pending",
+            "testStrategy": "由架构师或高级开发人员审核架构原则归纳内容，确保理论与实际架构一致。"
+          },
+          {
+            "id": 5,
+            "title": "生成 Markdown 技术文档并输出示例",
+            "description": "将上述分析结果整理为结构化 Markdown 文档，包含代码片段和交互示例，输出到 docs/module-overview.md。",
+            "dependencies": [
+              "29.1",
+              "29.2",
+              "29.3",
+              "29.4"
+            ],
+            "details": "按照详细设计文档规范，组织内容结构，插入自动生成的模块职责、交互关系、设计模式说明及架构原则，配合必要的代码和示例。",
+            "status": "pending",
+            "testStrategy": "人工审核最终文档内容和格式，确保信息完整、结构清晰、示例准确，并与实际代码实现保持一致。"
+          }
+        ]
+      },
+      {
+        "id": 30,
+        "title": "交互式导航功能开发",
+        "description": "为架构图和文档添加可点击文件路径、快速跳转和搜索过滤功能。",
+        "details": "在 Markdown 文档中嵌入 VSCode/GitHub 兼容的文件路径链接。利用 mermaid-js 支持的 HTML 导出，集成可点击节点。为 docs 文档添加简单的搜索/过滤脚本（如 lunr.js v2.3+ 或自定义 JS），提升导航体验。",
+        "testStrategy": "在 VSCode、GitHub 和本地预览环境测试链接跳转、搜索过滤功能。确保所有主要模块均可快速定位。",
+        "priority": "medium",
+        "dependencies": [
+          27,
+          28,
+          29
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "分析并规范文件路径链接格式",
+            "description": "梳理项目中所有架构图和文档涉及的文件路径，制定 VSCode/GitHub 兼容的 Markdown 链接格式规范，确保路径可点击跳转。",
+            "dependencies": [],
+            "details": "收集 docs 及架构图中出现的文件路径，统一为相对路径或绝对路径，并测试在 VSCode、GitHub 等主流环境下的跳转效果。",
+            "status": "pending",
+            "testStrategy": "在 VSCode、GitHub Web、Typora 等环境下预览文档，验证所有路径链接均可正确跳转到目标文件。"
+          },
+          {
+            "id": 2,
+            "title": "实现架构图节点可点击跳转",
+            "description": "基于 mermaid-js，扩展架构图节点为可点击，支持跳转到对应文档或代码文件。",
+            "dependencies": [
+              "30.1"
+            ],
+            "details": "在 mermaid 源码中为关键节点添加 click 事件（如 click nodeId url \"tooltip\"），并配置 HTML 导出时允许交互（如调整 securityLevel）。",
+            "status": "pending",
+            "testStrategy": "导出 HTML 后在本地浏览器、GitHub Pages 等环境下测试节点点击跳转功能，确保所有主要节点均可跳转。"
+          },
+          {
+            "id": 3,
+            "title": "为 Markdown 文档集成搜索/过滤功能",
+            "description": "为 docs 目录下的 Markdown 文档集成 lunr.js v2.3+ 或自定义 JS，实现全文搜索和内容过滤。",
+            "dependencies": [
+              "30.1"
+            ],
+            "details": "引入 lunr.js 或自定义脚本，构建索引并实现前端搜索 UI，支持关键词高亮和多条件过滤。",
+            "status": "pending",
+            "testStrategy": "在本地和 GitHub Pages 上测试搜索功能，验证检索速度、准确性及兼容性。"
+          },
+          {
+            "id": 4,
+            "title": "优化导航与跳转体验",
+            "description": "整合文件路径链接、架构图跳转和搜索功能，提升整体导航流畅性和用户体验。",
+            "dependencies": [
+              "30.2",
+              "30.3"
+            ],
+            "details": "统一导航风格，优化跳转逻辑，确保不同入口（文档、架构图、搜索）间切换顺畅，减少重复和死链。",
+            "status": "pending",
+            "testStrategy": "邀请团队成员多端体验导航流程，收集反馈并修复体验问题。"
+          },
+          {
+            "id": 5,
+            "title": "多环境兼容性与回归测试",
+            "description": "在 VSCode、GitHub、浏览器本地预览等多环境下，全面测试所有交互式导航功能。",
+            "dependencies": [
+              "30.4"
+            ],
+            "details": "制定详细测试用例，覆盖所有主要模块和典型操作路径，确保功能在不同平台表现一致。",
+            "status": "pending",
+            "testStrategy": "逐项执行测试用例，记录并修复兼容性问题，最终形成测试报告。"
+          }
+        ]
+      },
+      {
+        "id": 31,
+        "title": "自动化文档集成与版本控制",
+        "description": "将架构图和文档自动集成到项目 docs 目录，并确保与代码同步更新。",
+        "details": "在 scripts/generate-architecture.ts 中实现文档自动生成和覆盖，结合 Husky（v8.0+）或 simple-git-hooks 实现提交前自动更新。确保 Markdown 文档和架构图随代码变更自动刷新。",
+        "testStrategy": "修改 src 目录结构，提交代码，验证 docs 下所有文档和架构图自动更新。检查版本控制历史是否同步。",
+        "priority": "medium",
+        "dependencies": [
+          27,
+          28,
+          29
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "架构图与文档自动生成脚本开发",
+            "description": "开发并完善 scripts/generate-architecture.ts，实现根据 src 目录结构自动生成架构图和 Markdown 文档，并覆盖 docs 目录下旧文件。",
+            "dependencies": [],
+            "details": "脚本需支持检测 src 目录变更，自动更新架构图与文档内容，保证 docs 目录始终与代码结构一致。",
+            "status": "pending",
+            "testStrategy": "修改 src 目录结构，运行脚本，验证 docs 下架构图和文档自动刷新且内容准确。"
+          },
+          {
+            "id": 2,
+            "title": "集成 Husky 或 simple-git-hooks 实现提交前自动更新",
+            "description": "配置 Husky（v8.0+）或 simple-git-hooks，在 pre-commit 阶段自动运行文档生成脚本，确保每次提交前 docs 目录内容与代码同步。",
+            "dependencies": [
+              "31.1"
+            ],
+            "details": "在项目中集成 Git Hooks 工具，编写 pre-commit 钩子，自动调用 scripts/generate-architecture.ts 并将更新后的 docs 目录纳入提交。",
+            "status": "pending",
+            "testStrategy": "提交代码前触发 pre-commit，验证 docs 目录自动更新且变更被正确纳入版本控制。"
+          },
+          {
+            "id": 3,
+            "title": "架构图与文档的版本控制策略优化",
+            "description": "制定并实现架构图和文档的版本控制策略，确保每次代码变更时相关文档与架构图同步提交，避免遗漏和冲突。",
+            "dependencies": [
+              "31.2"
+            ],
+            "details": "优化 .gitignore、提交规范和分支管理，确保 docs 目录下所有自动生成文件均被正确跟踪和管理。",
+            "status": "pending",
+            "testStrategy": "多次修改 src 目录并提交，检查 docs 目录文件历史，确保所有变更均被版本控制系统完整记录。"
+          },
+          {
+            "id": 4,
+            "title": "自动化文档与架构图内容校验",
+            "description": "实现自动校验机制，检测 docs 目录下文档和架构图内容是否与当前代码结构一致，防止遗漏或错误。",
+            "dependencies": [
+              "31.3"
+            ],
+            "details": "开发校验脚本或集成现有工具，在提交前或 CI 阶段自动比对 src 目录与 docs 目录内容，发现不一致时阻止提交并提示修正。",
+            "status": "pending",
+            "testStrategy": "故意制造 src 与 docs 不一致，验证校验机制能准确识别并阻止错误提交。"
+          },
+          {
+            "id": 5,
+            "title": "自动化流程文档与团队使用指南编写",
+            "description": "编写详细的自动化集成与版本控制流程说明文档，指导团队成员正确使用和维护自动化文档系统。",
+            "dependencies": [
+              "31.4"
+            ],
+            "details": "整理自动生成、钩子集成、版本控制和校验流程，编写 docs/automation-guide.md，涵盖常见问题与操作流程。",
+            "status": "pending",
+            "testStrategy": "团队成员根据指南完成文档自动集成与提交，收集反馈并优化说明内容。"
+          }
+        ]
+      },
+      {
+        "id": 32,
+        "title": "用户体验优化与反馈收集",
+        "description": "优化文档结构和交互体验，收集团队成员反馈并持续改进。",
+        "details": "采用简洁的 Markdown 样式和目录导航，定期收集团队成员意见（可用 GitHub Discussions 或 Google Forms），根据反馈调整文档内容和架构图展示方式。",
+        "testStrategy": "定期发起用户调研，分析反馈数据，针对痛点进行优化。测试文档在不同设备和编辑器下的可读性和交互性。",
+        "priority": "low",
+        "dependencies": [
+          30,
+          31
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "优化 Markdown 文档结构和样式",
+            "description": "根据 Markdown 最佳实践，优化现有文档的结构层次、标题规划和可读性设计。",
+            "dependencies": [],
+            "details": "采用清晰的标题层次规划（H1-H4），实现信息层次设计的倒金字塔原则，优化目录导航结构。确保每个文档只使用一个 H1 标题，合理使用 H2-H4 标题划分章节。添加适当的空白行提升视觉清晰度，使用一致的命名风格。",
+            "status": "pending",
+            "testStrategy": "检查文档标题层次是否符合最佳实践，验证目录导航的可用性，测试文档在不同 Markdown 编辑器中的渲染效果。"
+          },
+          {
+            "id": 2,
+            "title": "建立用户反馈收集机制",
+            "description": "设置 GitHub Discussions 和 Google Forms 等多渠道反馈收集系统，制定反馈收集流程。",
+            "dependencies": [],
+            "details": "在项目仓库中启用 GitHub Discussions，创建专门的反馈分类。设计 Google Forms 问卷，包含文档可读性、导航便利性、内容完整性等评估维度。建立定期反馈收集计划（如每月一次），制定反馈处理和响应流程。",
+            "status": "pending",
+            "testStrategy": "测试反馈渠道的可访问性和易用性，验证问卷设计的有效性，确保反馈数据能够正确收集和整理。"
+          },
+          {
+            "id": 3,
+            "title": "实现反馈数据分析和处理系统",
+            "description": "开发反馈数据的收集、分析和可视化系统，识别用户痛点和改进机会。",
+            "dependencies": [
+              "32.2"
+            ],
+            "details": "建立反馈数据的分类和标签系统，实现数据统计和趋势分析。创建反馈优先级评估机制，识别高频问题和关键改进点。设计反馈处理工作流，包括问题确认、解决方案制定、实施和验证环节。",
+            "status": "pending",
+            "testStrategy": "验证反馈数据能够正确分类和统计，测试优先级评估算法的准确性，检查工作流的完整性和可执行性。"
+          },
+          {
+            "id": 4,
+            "title": "优化架构图展示和交互体验",
+            "description": "改进架构图的视觉设计和交互方式，提升用户理解和使用体验。",
+            "dependencies": [
+              "32.1"
+            ],
+            "details": "优化 Mermaid 图表的样式配置，改进节点布局和连线设计。添加图表说明和图例，提供不同详细程度的视图选项。实现响应式设计，确保架构图在不同设备和屏幕尺寸下的良好显示效果。",
+            "status": "pending",
+            "testStrategy": "测试架构图在不同设备和浏览器中的显示效果，验证交互功能的可用性，检查图表的可读性和理解性。"
+          },
+          {
+            "id": 5,
+            "title": "建立持续改进和迭代机制",
+            "description": "基于收集的反馈数据，建立文档和用户体验的持续改进流程。",
+            "dependencies": [
+              "32.3",
+              "32.4"
+            ],
+            "details": "制定基于反馈的改进计划和实施时间表，建立改进效果的评估指标。设计 A/B 测试机制，验证改进措施的有效性。建立定期回顾和优化机制，确保用户体验持续提升。创建改进历史记录和最佳实践总结。",
+            "status": "pending",
+            "testStrategy": "验证改进计划的可执行性，测试 A/B 测试机制的有效性，检查评估指标的准确性和改进效果的可衡量性。"
+          }
+        ]
+      },
+      {
+        "id": 33,
+        "title": "最佳实践与维护指南编写",
+        "description": "整理项目架构文档和脚本的维护、扩展和最佳实践建议。",
+        "details": "编写 docs/maintenance-best-practices.md，涵盖架构图和文档的维护流程、脚本扩展方法、常见问题处理和团队协作建议。参考业界最新文档维护标准（如 Diagram as Code、Mermaid 官方建议）。",
+        "testStrategy": "团队成员根据维护指南进行文档和脚本更新，验证流程可行性。定期回顾并更新最佳实践内容。",
+        "priority": "low",
+        "dependencies": [
+          31,
+          32
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "架构图维护流程规范制定",
+            "description": "制定项目架构图（如 Mermaid、Diagram as Code）维护的标准流程，包括图形生成、版本控制、自动化集成与更新机制。",
+            "dependencies": [],
+            "details": "参考 Mermaid 官方建议和 Diagram as Code 实践，明确架构图的编写、存储、自动化生成与更新流程，确保架构图与代码同步，便于团队协作和版本追踪。",
+            "status": "pending",
+            "testStrategy": "团队成员根据流程进行架构图维护，验证自动化集成与版本控制是否有效。"
+          },
+          {
+            "id": 2,
+            "title": "文档维护与扩展方法梳理",
+            "description": "整理项目文档（Markdown、架构说明等）的维护、扩展和结构优化方法，确保文档可持续更新和易读性。",
+            "dependencies": [],
+            "details": "结合业界文档维护标准，制定文档目录结构、内容更新流程、协作编辑规范，明确文档扩展和重构的操作步骤。",
+            "status": "pending",
+            "testStrategy": "团队成员根据指南进行文档编辑和扩展，定期评估文档结构合理性和可维护性。"
+          },
+          {
+            "id": 3,
+            "title": "脚本扩展与维护最佳实践总结",
+            "description": "归纳项目脚本（如自动化生成、集成脚本）的扩展、维护和重构建议，提升脚本可用性和可扩展性。",
+            "dependencies": [],
+            "details": "结合实际项目需求，整理脚本模块化、注释规范、依赖管理、自动化测试等最佳实践，确保脚本易于维护和扩展。",
+            "status": "pending",
+            "testStrategy": "团队成员根据最佳实践对脚本进行扩展和维护，验证脚本可读性和可扩展性。"
+          },
+          {
+            "id": 4,
+            "title": "常见问题处理与故障排查流程编写",
+            "description": "总结架构图、文档和脚本维护过程中常见问题及处理方法，制定故障排查和修复流程。",
+            "dependencies": [],
+            "details": "收集维护过程中遇到的典型问题，编写问题处理流程和排查建议，形成可查阅的 FAQ 或故障处理指南。",
+            "status": "pending",
+            "testStrategy": "团队成员遇到问题时参考流程进行排查，反馈流程的有效性和覆盖度。"
+          },
+          {
+            "id": 5,
+            "title": "团队协作与持续改进机制设计",
+            "description": "制定文档和脚本维护的团队协作流程，明确角色分工、沟通机制和持续改进方法。",
+            "dependencies": [],
+            "details": "参考业界协作标准，设计团队成员在文档和脚本维护中的协作流程，建立定期回顾和优化机制，促进知识共享和最佳实践更新。",
+            "status": "pending",
+            "testStrategy": "团队定期回顾维护流程，收集协作反馈，持续优化协作机制和维护指南内容。"
+          }
+        ]
       }
     ],
     "metadata": {
       "created": "2025-09-15T13:48:21.446Z",
-      "updated": "2025-09-16T22:58:29.447Z",
+      "updated": "2025-09-17T07:02:20.484Z",
       "description": "Tasks for master context"
     }
   }

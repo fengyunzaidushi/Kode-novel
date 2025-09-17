@@ -1,213 +1,77 @@
 {
 	"meta": {
-		"generatedAt": "2025-09-15T13:49:58.438Z",
-		"tasksAnalyzed": 25,
-		"totalTasks": 25,
-		"analysisCount": 25,
-		"thresholdScore": 6,
+		"generatedAt": "2025-09-17T07:02:56.614Z",
+		"tasksAnalyzed": 8,
+		"totalTasks": 33,
+		"analysisCount": 8,
+		"thresholdScore": 5,
 		"projectName": "Taskmaster",
-		"usedResearch": false
+		"usedResearch": true
 	},
 	"complexityAnalysis": [
 		{
-			"taskId": 1,
-			"taskTitle": "Establish Annotation Style Guide",
-			"complexityScore": 7,
-			"recommendedSubtasks": 4,
-			"expansionPrompt": "Break down the annotation style guide creation into: researching existing JSDoc standards and Chinese documentation practices, defining file header templates and conventions, creating function/class annotation standards with Chinese examples, and establishing inline comment guidelines with technical analogy frameworks.",
-			"reasoning": "High complexity due to need to establish project-wide standards, balance Chinese language requirements with technical clarity, and create comprehensive examples. Requires research, standardization, and peer validation."
-		},
-		{
-			"taskId": 2,
-			"taskTitle": "Setup Annotation Progress Tracking",
-			"complexityScore": 6,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Divide into: configuring TaskMaster tool integration with repository hooks, defining annotation status workflow states and transitions, and implementing real-time progress dashboard with file-level tracking.",
-			"reasoning": "Moderate-high complexity involving tool integration, workflow design, and automation setup. Depends on Task 1 completion and requires technical configuration knowledge."
-		},
-		{
-			"taskId": 3,
-			"taskTitle": "Annotate Type Definitions (src/types/)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Split into: auditing all type definition files to catalog current state, creating file headers with purpose and dependency documentation, and adding JSDoc comments to all exported types and interfaces with Chinese descriptions and usage examples.",
-			"reasoning": "Medium complexity as it's systematic documentation work requiring understanding of type relationships and dependencies. Foundation for other annotation tasks."
-		},
-		{
-			"taskId": 7,
-			"taskTitle": "Annotate Model Management (src/utils/model.ts)",
-			"complexityScore": 6,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break into: documenting model switching logic and AI integration patterns, annotating data flow between model management and dependent modules, and creating comprehensive JSDoc for all functions with error handling scenarios.",
-			"reasoning": "Moderate-high complexity due to AI model integration complexity, multiple dependencies, and need to explain sophisticated data flows and module interactions."
-		},
-		{
-			"taskId": 11,
-			"taskTitle": "Annotate MCP Client (src/services/mcpClient.ts)",
-			"complexityScore": 7,
-			"recommendedSubtasks": 4,
-			"expansionPrompt": "Divide into: documenting MCP protocol implementation and integration patterns, annotating client connection and session management methods, documenting error recovery and retry mechanisms, and creating protocol flow diagrams with JSDoc examples.",
-			"reasoning": "High complexity due to protocol-level integration, error handling requirements, and need to document complex client-server interactions with recovery scenarios."
-		},
-		{
-			"taskId": 14,
-			"taskTitle": "Annotate Tool Prompts (src/tools/*/prompt.ts)",
-			"complexityScore": 4,
-			"recommendedSubtasks": 2,
-			"expansionPrompt": "Split into: cataloging all prompt template files across tool directories and documenting prompt template structures and helper functions with usage examples and parameter descriptions.",
-			"reasoning": "Medium-low complexity as it involves systematic documentation of prompt templates. Straightforward but requires consistency across multiple tool directories."
-		},
-		{
-			"taskId": 16,
-			"taskTitle": "Annotate Task Tool (src/tools/TaskTool/)",
+			"taskId": 26,
+			"taskTitle": "自动化代码结构扫描与依赖分析",
 			"complexityScore": 8,
-			"recommendedSubtasks": 5,
-			"expansionPrompt": "Break into: documenting task orchestration architecture and agent coordination patterns, annotating task lifecycle management and state transitions, documenting inter-agent communication protocols, annotating task execution engine and error handling, and creating comprehensive examples of task flow scenarios.",
-			"reasoning": "High complexity due to sophisticated agent system architecture, multiple coordination patterns, complex state management, and need to explain orchestration flows."
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "请细化以下子任务：1. AST 解析器选型与环境搭建；2. 递归遍历 src 目录实现；3. 文件 import/export 依赖关系分析；4. 入口点与主要模块识别算法；5. 注释提取与结构化处理；6. 循环依赖与动态 import 边界处理；7. 输出结构化 JSON 并测试覆盖。",
+			"reasoning": "该任务涉及 AST 解析、递归遍历、依赖分析、入口识别、注释处理及边界情况覆盖，技术细节多且需兼容多种代码结构，复杂度高。需分解为多个子任务以降低认知负担并提升可维护性。"
 		},
 		{
-			"taskId": 18,
-			"taskTitle": "Annotate Bash Tool (src/tools/BashTool/)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Divide into: documenting command execution architecture and security considerations, annotating error handling and output processing mechanisms, and creating comprehensive JSDoc for all shell interaction methods with safety examples.",
-			"reasoning": "Medium complexity involving shell command execution, security implications, error handling, and need to document potentially dangerous operations clearly."
+			"taskId": 27,
+			"taskTitle": "Mermaid 架构图生成与多格式输出",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "请细化以下子任务：1. JSON 到 Mermaid 语法转换模块开发；2. 层级与颜色标识规则设计与实现；3. Mermaid 图生成与 Markdown 集成；4. SVG/PNG 导出流程实现；5. ASCII 图生成与 tree-cli 集成；6. 多格式输出兼容性测试。",
+			"reasoning": "需实现多格式架构图自动生成，涉及数据转换、可视化、格式兼容与多工具集成，技术栈跨度大，需分解以确保各环节质量和可扩展性。"
 		},
 		{
-			"taskId": 20,
-			"taskTitle": "Annotate Message Components (src/components/messages/)",
+			"taskId": 28,
+			"taskTitle": "阅读顺序指南自动生成",
 			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "请细化以下子任务：1. 入口点与依赖关系排序算法实现；2. 主要模块功能说明自动生成；3. 关键文件解释与注释插入；4. Markdown 格式输出与中文支持；5. 新手体验测试与反馈收集。",
+			"reasoning": "自动生成阅读顺序指南需结合依赖分析、内容生成与用户体验，逻辑复杂但技术实现相对明确，建议分为五个子任务以覆盖主要流程。"
+		},
+		{
+			"taskId": 29,
+			"taskTitle": "模块概览与职责文档生成",
+			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "请细化以下子任务：1. 层级职责自动归纳；2. 模块交互方式提取与说明；3. 设计模式识别与文档生成；4. 架构原则归纳与示例代码插入；5. Markdown 文档输出与人工审核流程。",
+			"reasoning": "需自动归纳职责、交互和设计模式，涉及静态分析与文档生成，技术难度适中但需保证内容准确性，建议分为五个子任务。"
+		},
+		{
+			"taskId": 30,
+			"taskTitle": "交互式导航功能开发",
+			"complexityScore": 7,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "请细化以下子任务：1. Markdown 文件路径链接自动嵌入；2. Mermaid HTML 导出与可点击节点集成；3. 搜索/过滤脚本开发（lunr.js 或自定义）；4. VSCode/GitHub 兼容性测试；5. 本地预览环境适配；6. 主模块快速定位功能测试。",
+			"reasoning": "需实现多平台兼容的交互式导航，涉及前端脚本、Markdown/HTML集成及多环境测试，技术细节多，建议分为六个子任务。"
+		},
+		{
+			"taskId": 31,
+			"taskTitle": "自动化文档集成与版本控制",
+			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "请细化以下子任务：1. 文档自动生成与覆盖逻辑实现；2. Husky/simple-git-hooks 集成与配置；3. 提交前自动更新流程开发；4. 文档与架构图同步刷新机制；5. 版本控制历史一致性测试。",
+			"reasoning": "涉及自动化脚本、Git 钩子集成及文档同步，流程较为标准但需兼顾多工具协作，建议分为五个子任务。"
+		},
+		{
+			"taskId": 32,
+			"taskTitle": "用户体验优化与反馈收集",
+			"complexityScore": 4,
 			"recommendedSubtasks": 4,
-			"expansionPrompt": "Split into: cataloging all message component files and their responsibilities, documenting component props and state management patterns, annotating rendering logic and data flow between components, and creating comprehensive examples of message display scenarios.",
-			"reasoning": "Moderate-high complexity due to multiple React components, complex state management, UI interaction patterns, and need to document component relationships."
+			"expansionPrompt": "请细化以下子任务：1. Markdown 样式与目录导航优化；2. 反馈收集渠道搭建（GitHub Discussions/Google Forms）；3. 反馈数据分析与痛点归纳；4. 文档与架构图展示方式迭代优化。",
+			"reasoning": "以用户体验和反馈为主，技术实现较简单但需持续迭代，建议分为四个子任务以覆盖主要流程。"
 		},
 		{
-			"taskId": 22,
-			"taskTitle": "Annotate Config Component (src/components/Config.tsx)",
+			"taskId": 33,
+			"taskTitle": "最佳实践与维护指南编写",
 			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break into: documenting configuration UI architecture and validation logic, annotating state management and form handling mechanisms, and creating comprehensive JSDoc for configuration editing workflows with validation examples.",
-			"reasoning": "Medium complexity involving React component documentation, form validation logic, configuration management integration, and user interaction flows."
-		},
-		{
-			"taskId": 4,
-			"taskTitle": "Annotate Constants (src/constants/)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate constants (src/constants/).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
-		},
-		{
-			"taskId": 5,
-			"taskTitle": "Annotate Tool System Interface (src/Tool.ts)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate tool system interface (src/tool.ts).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
-		},
-		{
-			"taskId": 6,
-			"taskTitle": "Annotate Config Management (src/utils/config.ts)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate config management (src/utils/config.ts).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
-		},
-		{
-			"taskId": 8,
-			"taskTitle": "Annotate Permission System (src/permissions.ts)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate permission system (src/permissions.ts).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
-		},
-		{
-			"taskId": 9,
-			"taskTitle": "Annotate Claude AI Service (src/services/claude.ts)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate claude ai service (src/services/claude.ts).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
-		},
-		{
-			"taskId": 10,
-			"taskTitle": "Annotate Model Adapter Factory (src/services/modelAdapterFactory.ts)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate model adapter factory (src/services/modeladapterfactory.ts).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
-		},
-		{
-			"taskId": 12,
-			"taskTitle": "Annotate Message Context Manager (src/utils/messageContextManager.ts)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate message context manager (src/utils/messagecontextmanager.ts).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
-		},
-		{
-			"taskId": 13,
-			"taskTitle": "Annotate Tool Registration System (src/tools.ts)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate tool registration system (src/tools.ts).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
-		},
-		{
-			"taskId": 15,
-			"taskTitle": "Annotate Tool Implementations (src/tools/*/*.tsx)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate tool implementations (src/tools/*/*.tsx).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
-		},
-		{
-			"taskId": 17,
-			"taskTitle": "Annotate File Edit Tool (src/tools/FileEditTool/)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate file edit tool (src/tools/fileedittool/).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
-		},
-		{
-			"taskId": 19,
-			"taskTitle": "Annotate Search Tools (src/tools/GrepTool/, src/tools/GlobTool/)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate search tools (src/tools/greptool/, src/tools/globtool/).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
-		},
-		{
-			"taskId": 21,
-			"taskTitle": "Annotate Permission Components (src/components/permissions/)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate permission components (src/components/permissions/).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
-		},
-		{
-			"taskId": 23,
-			"taskTitle": "Annotate Model Selector Component (src/components/ModelSelector.tsx)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate model selector component (src/components/modelselector.tsx).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
-		},
-		{
-			"taskId": 24,
-			"taskTitle": "Annotate Main Interface (src/screens/REPL.tsx)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate main interface (src/screens/repl.tsx).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
-		},
-		{
-			"taskId": 25,
-			"taskTitle": "Annotate CLI Entry Point (src/entrypoints/cli.tsx)",
-			"complexityScore": 5,
-			"recommendedSubtasks": 3,
-			"expansionPrompt": "Break down this task with a focus on annotate cli entry point (src/entrypoints/cli.tsx).",
-			"reasoning": "Automatically added due to missing analysis in AI response."
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "请细化以下子任务：1. 架构图与文档维护流程梳理；2. 脚本扩展方法与常见问题处理归纳；3. 团队协作建议与业界标准参考；4. 维护指南定期回顾与内容更新机制。",
+			"reasoning": "以文档编写和流程梳理为主，需结合业界标准和团队实际，技术难度适中，建议分为四个子任务。"
 		}
 	]
 }
