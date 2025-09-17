@@ -958,16 +958,9 @@ async function generateProjectStructure(): Promise<void> {
       });
     }
 
-    // 输出文件到JSON
-    const outputPath = path.join(projectRoot, '.taskmaster', 'reports', 'project-structure.json');
+    // 生成多种格式的输出
+    await generateStructuredOutputs(structure, projectRoot);
 
-    // 确保输出目录存在
-    await fs.mkdir(path.dirname(outputPath), { recursive: true });
-
-    // 写入文件
-    await fs.writeFile(outputPath, JSON.stringify(structure, null, 2));
-
-    console.log(`\n✅ 项目结构已保存到: ${outputPath}`);
     console.log('\n🎉 扫描完成！');
 
   } catch (error) {
@@ -976,9 +969,224 @@ async function generateProjectStructure(): Promise<void> {
   }
 }
 
+/**
+ * 验证项目结构数据的完整性
+ */
+function validateProjectStructure(structure: ProjectStructure): { isValid: boolean, errors: string[] } {
+  const errors: string[] = [];
+
+  // 基本字段验证
+  if (!structure.files || !Array.isArray(structure.files)) {
+    errors.push('files字段缺失或不是数组');
+  }
+
+  if (typeof structure.totalFiles !== 'number' || structure.totalFiles <= 0) {
+    errors.push('totalFiles字段无效');
+  }
+
+  if (structure.files.length !== structure.totalFiles) {
+    errors.push(`文件数量不匹配: 实际${structure.files.length}, 声明${structure.totalFiles}`);
+  }
+
+  // 依赖关系验证
+  const filePathSet = new Set(structure.files.map(f => f.relativePath));
+  let dependencyErrors = 0;
+
+  structure.files.forEach((file, index) => {
+    if (!file.relativePath || !file.name) {
+      errors.push(`文件${index}: 缺少基本信息`);
+    }
+
+    // 验证依赖关系的有效性
+    file.dependencies.forEach(dep => {
+      if (!filePathSet.has(dep)) {
+        dependencyErrors++;
+      }
+    });
+  });
+
+  if (dependencyErrors > 0) {
+    errors.push(`发现${dependencyErrors}个无效的依赖关系`);
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+}
+
+/**
+ * 生成项目摘要报告
+ */
+function generateProjectSummary(structure: ProjectStructure): object {
+  const files = structure.files;
+
+  // 目录分析
+  const directoryStats = structure.directories.reduce((stats, dir) => {
+    const filesInDir = files.filter(f => f.directory === dir).length;
+    stats[dir] = filesInDir;
+    return stats;
+  }, {} as { [key: string]: number });
+
+  // 复杂度分析
+  const complexityDistribution = files.reduce((dist, file) => {
+    dist[file.complexity] = (dist[file.complexity] || 0) + 1;
+    return dist;
+  }, {} as { [key: string]: number });
+
+  // 语言特性使用统计
+  const languageFeatures = {
+    totalFunctions: files.reduce((sum, f) => sum + f.functions.length, 0),
+    totalClasses: files.reduce((sum, f) => sum + f.classes.length, 0),
+    totalInterfaces: files.reduce((sum, f) => sum + f.interfaces.length, 0),
+    totalTypes: files.reduce((sum, f) => sum + f.types.length, 0),
+    totalConstants: files.reduce((sum, f) => sum + f.constants.length, 0),
+    averageFunctionsPerFile: files.reduce((sum, f) => sum + f.functions.length, 0) / files.length,
+    filesWithClasses: files.filter(f => f.classes.length > 0).length,
+    filesWithInterfaces: files.filter(f => f.interfaces.length > 0).length
+  };
+
+  // 注释统计
+  const commentStats = {
+    filesWithComments: files.filter(f => f.comments.fileHeader || f.comments.description).length,
+    filesWithFileHeader: files.filter(f => f.comments.fileHeader).length,
+    filesWithDescription: files.filter(f => f.comments.description).length,
+    commentCoverage: Math.round((files.filter(f => f.comments.fileHeader || f.comments.description).length / files.length) * 100)
+  };
+
+  return {
+    projectMetadata: {
+      totalFiles: structure.totalFiles,
+      totalDirectories: structure.directories.length,
+      totalLines: files.reduce((sum, f) => sum + f.lineCount, 0),
+      scanDate: structure.scannedAt,
+      entryPoints: structure.entryPoints.length,
+      coreModules: structure.coreModules.length
+    },
+    directoryStats,
+    complexityDistribution,
+    languageFeatures,
+    commentStats,
+    dependencyStats: {
+      totalDependencies: Object.values(structure.dependencyGraph).reduce((sum, deps) => sum + deps.length, 0),
+      filesWithDependencies: Object.values(structure.dependencyGraph).filter(deps => deps.length > 0).length,
+      maxDependencies: Math.max(...Object.values(structure.dependencyGraph).map(deps => deps.length)),
+      averageDependencies: Object.values(structure.dependencyGraph).reduce((sum, deps) => sum + deps.length, 0) / Object.keys(structure.dependencyGraph).length
+    }
+  };
+}
+
+/**
+ * 生成结构化输出文件
+ */
+async function generateStructuredOutputs(structure: ProjectStructure, projectRoot: string): Promise<void> {
+  try {
+    const reportsDir = path.join(projectRoot, '.taskmaster', 'reports');
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+
+    // 确保输出目录存在
+    await fs.mkdir(reportsDir, { recursive: true });
+
+    console.log('\n📄 生成结构化输出...');
+
+    // 1. 验证数据完整性
+    const validation = validateProjectStructure(structure);
+    if (!validation.isValid) {
+      console.warn('⚠️  数据验证发现问题:');
+      validation.errors.forEach(error => console.warn(`   • ${error}`));
+    }
+
+    // 2. 备份旧文件（如果存在）
+    const mainOutputPath = path.join(reportsDir, 'project-structure.json');
+    try {
+      await fs.access(mainOutputPath);
+      const backupPath = path.join(reportsDir, 'backups', `project-structure-backup-${timestamp}.json`);
+      await fs.mkdir(path.dirname(backupPath), { recursive: true });
+      const oldContent = await fs.readFile(mainOutputPath, 'utf-8');
+      await fs.writeFile(backupPath, oldContent);
+      console.log(`📦 旧文件已备份到: ${path.relative(projectRoot, backupPath)}`);
+    } catch {
+      // 文件不存在，无需备份
+    }
+
+    // 3. 生成主要的项目结构文件
+    await fs.writeFile(mainOutputPath, JSON.stringify(structure, null, 2));
+    console.log(`✅ 完整项目结构: ${path.relative(projectRoot, mainOutputPath)}`);
+
+    // 4. 生成项目摘要报告
+    const summary = generateProjectSummary(structure);
+    const summaryPath = path.join(reportsDir, 'project-summary.json');
+    await fs.writeFile(summaryPath, JSON.stringify(summary, null, 2));
+    console.log(`📊 项目摘要报告: ${path.relative(projectRoot, summaryPath)}`);
+
+    // 5. 生成简化的依赖关系图
+    const dependencyGraphPath = path.join(reportsDir, 'dependency-graph.json');
+    await fs.writeFile(dependencyGraphPath, JSON.stringify(structure.dependencyGraph, null, 2));
+    console.log(`🔗 依赖关系图: ${path.relative(projectRoot, dependencyGraphPath)}`);
+
+    // 6. 生成阅读指南
+    const readingGuide = {
+      recommendedOrder: structure.readingOrder,
+      entryPoints: structure.entryPoints,
+      coreModules: structure.coreModules.map(modulePath => {
+        const file = structure.files.find(f => f.relativePath === modulePath);
+        return {
+          path: modulePath,
+          dependents: file?.dependents.length || 0,
+          description: file?.comments.description || file?.comments.fileHeader || '',
+          functions: file?.functions.length || 0,
+          complexity: file?.complexity || 'unknown'
+        };
+      }),
+      utilityModules: structure.utilityModules,
+      beginner: {
+        startWith: structure.readingOrder.slice(0, 5),
+        avoidInitially: structure.files
+          .filter(f => f.complexity === 'high')
+          .map(f => f.relativePath)
+          .slice(0, 5)
+      }
+    };
+
+    const readingGuidePath = path.join(reportsDir, 'reading-guide.json');
+    await fs.writeFile(readingGuidePath, JSON.stringify(readingGuide, null, 2));
+    console.log(`📖 阅读指南: ${path.relative(projectRoot, readingGuidePath)}`);
+
+    // 7. 生成元数据文件
+    const metadata = {
+      version: '1.0.0',
+      generatedAt: structure.scannedAt,
+      generatedBy: 'Kode Architecture Scanner',
+      projectRoot: projectRoot,
+      outputFiles: [
+        'project-structure.json',
+        'project-summary.json',
+        'dependency-graph.json',
+        'reading-guide.json'
+      ],
+      validation: validation,
+      stats: {
+        processingTime: new Date().toISOString(),
+        totalFiles: structure.totalFiles,
+        totalSize: JSON.stringify(structure).length
+      }
+    };
+
+    const metadataPath = path.join(reportsDir, 'scan-metadata.json');
+    await fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2));
+    console.log(`ℹ️  扫描元数据: ${path.relative(projectRoot, metadataPath)}`);
+
+    console.log(`\n📁 所有文件已保存到: ${path.relative(projectRoot, reportsDir)}`);
+
+  } catch (error) {
+    console.error('❌ 生成输出文件时发生错误:', error);
+    throw error;
+  }
+}
+
 // 如果直接运行此脚本
 if (require.main === module) {
   generateProjectStructure();
 }
 
-export { generateProjectStructure, scanDirectory, FileInfo, ProjectStructure };
+export { generateProjectStructure, scanDirectory, FileInfo, ProjectStructure, generateStructuredOutputs };

@@ -1,0 +1,1564 @@
+{
+  "src/commands/agents.tsx": [
+    "src/utils/agentLoader.ts",
+    "src/utils/state.ts",
+    "src/utils/theme.ts",
+    "src/services/mcpClient.ts",
+    "src/utils/model.ts",
+    "src/services/claude.ts"
+  ],
+  "src/commands/approvedTools.ts": [],
+  "src/commands/bug.tsx": [
+    "src/commands.ts",
+    "src/components/Bug.tsx",
+    "src/constants/product.ts"
+  ],
+  "src/commands/clear.ts": [
+    "src/commands.ts",
+    "src/messages.ts",
+    "src/context.ts",
+    "src/utils/style.ts",
+    "src/utils/terminal.ts",
+    "src/utils/state.ts",
+    "src/query.ts",
+    "src/services/systemReminder.ts",
+    "src/services/fileFreshness.ts"
+  ],
+  "src/commands/compact.ts": [
+    "src/commands.ts",
+    "src/context.ts",
+    "src/messages.ts",
+    "src/services/claude.ts",
+    "src/utils/style.ts",
+    "src/utils/terminal.ts",
+    "src/services/systemReminder.ts",
+    "src/services/fileFreshness.ts"
+  ],
+  "src/commands/config.tsx": [
+    "src/commands.ts",
+    "src/components/Config.tsx"
+  ],
+  "src/commands/cost.ts": [
+    "src/commands.ts",
+    "src/cost-tracker.ts"
+  ],
+  "src/commands/ctx_viz.ts": [
+    "src/commands.ts",
+    "src/Tool.ts",
+    "src/constants/prompts.ts",
+    "src/context.ts",
+    "src/messages.ts",
+    "src/constants/product.ts"
+  ],
+  "src/commands/doctor.ts": [
+    "src/commands.ts",
+    "src/screens/Doctor.tsx",
+    "src/constants/product.ts"
+  ],
+  "src/commands/help.tsx": [
+    "src/commands.ts",
+    "src/components/Help.tsx"
+  ],
+  "src/commands/init.ts": [
+    "src/commands.ts",
+    "src/ProjectOnboarding.tsx",
+    "src/constants/product.ts"
+  ],
+  "src/commands/listen.ts": [
+    "src/commands.ts",
+    "src/utils/log.ts",
+    "src/utils/execFileNoThrow.ts"
+  ],
+  "src/commands/login.tsx": [
+    "src/commands.ts",
+    "src/components/ConsoleOAuthFlow.tsx",
+    "src/utils/terminal.ts",
+    "src/utils/auth.ts",
+    "src/hooks/useExitOnCtrlCD.ts",
+    "src/commands/clear.ts"
+  ],
+  "src/commands/logout.tsx": [
+    "src/commands.ts",
+    "src/utils/config.ts",
+    "src/utils/terminal.ts"
+  ],
+  "src/commands/mcp.ts": [
+    "src/commands.ts",
+    "src/services/mcpClient.ts",
+    "src/constants/product.ts",
+    "src/utils/theme.ts"
+  ],
+  "src/commands/model.tsx": [
+    "src/components/ModelConfig.tsx",
+    "src/utils/config.ts",
+    "src/messages.ts",
+    "src/utils/model.ts"
+  ],
+  "src/commands/modelstatus.tsx": [
+    "src/commands.ts",
+    "src/components/ModelStatusDisplay.tsx"
+  ],
+  "src/commands/onboarding.tsx": [
+    "src/commands.ts",
+    "src/components/Onboarding.tsx",
+    "src/utils/terminal.ts",
+    "src/utils/config.ts",
+    "src/commands/clear.ts"
+  ],
+  "src/commands/pr_comments.ts": [
+    "src/commands.ts"
+  ],
+  "src/commands/refreshCommands.ts": [
+    "src/commands.ts",
+    "src/services/customCommands.ts"
+  ],
+  "src/commands/release-notes.ts": [
+    "src/commands.ts",
+    "src/constants/releaseNotes.ts"
+  ],
+  "src/commands/resume.tsx": [
+    "src/commands.ts",
+    "src/screens/ResumeConversation.tsx",
+    "src/utils/log.ts"
+  ],
+  "src/commands/review.ts": [
+    "src/commands.ts",
+    "src/tools/BashTool/BashTool.tsx"
+  ],
+  "src/commands/terminalSetup.ts": [
+    "src/commands.ts",
+    "src/utils/execFileNoThrow.ts",
+    "src/utils/theme.ts",
+    "src/utils/env.ts",
+    "src/utils/config.ts",
+    "src/ProjectOnboarding.tsx",
+    "src/utils/json.ts",
+    "src/utils/log.ts"
+  ],
+  "src/commands.ts": [
+    "src/commands/bug.tsx",
+    "src/commands/clear.ts",
+    "src/commands/compact.ts",
+    "src/commands/config.tsx",
+    "src/commands/cost.ts",
+    "src/commands/ctx_viz.ts",
+    "src/commands/doctor.ts",
+    "src/commands/help.tsx",
+    "src/commands/init.ts",
+    "src/commands/listen.ts",
+    "src/commands/login.tsx",
+    "src/commands/logout.tsx",
+    "src/commands/mcp.ts",
+    "src/commands/model.tsx",
+    "src/commands/modelstatus.tsx",
+    "src/commands/onboarding.tsx",
+    "src/commands/pr_comments.ts",
+    "src/commands/refreshCommands.ts",
+    "src/commands/release-notes.ts",
+    "src/commands/review.ts",
+    "src/commands/terminalSetup.ts",
+    "src/Tool.ts",
+    "src/commands/resume.tsx",
+    "src/commands/agents.tsx",
+    "src/services/mcpClient.ts",
+    "src/services/customCommands.ts",
+    "src/query.ts",
+    "src/utils/auth.ts"
+  ],
+  "src/components/ApproveApiKey.tsx": [
+    "src/utils/config.ts",
+    "src/utils/theme.ts",
+    "src/components/CustomSelect/select.tsx",
+    "src/hooks/useExitOnCtrlCD.ts"
+  ],
+  "src/components/AsciiLogo.tsx": [
+    "src/utils/theme.ts",
+    "src/constants/product.ts"
+  ],
+  "src/components/binary-feedback/BinaryFeedback.tsx": [
+    "src/hooks/useNotifyAfterTimeout.ts",
+    "src/query.ts",
+    "src/Tool.ts",
+    "src/utils/messages.tsx",
+    "src/components/binary-feedback/BinaryFeedbackView.tsx",
+    "src/constants/product.ts"
+  ],
+  "src/components/binary-feedback/BinaryFeedbackOption.tsx": [
+    "src/tools/FileEditTool/FileEditTool.tsx",
+    "src/components/permissions/FileEditPermissionRequest/FileEditToolDiff.tsx",
+    "src/components/Message.tsx",
+    "src/Tool.ts",
+    "src/hooks/useTerminalSize.ts",
+    "src/tools/FileWriteTool/FileWriteTool.tsx",
+    "src/components/permissions/FileWritePermissionRequest/FileWriteToolDiff.tsx",
+    "src/query.ts"
+  ],
+  "src/components/binary-feedback/BinaryFeedbackView.tsx": [
+    "src/utils/theme.ts",
+    "src/components/CustomSelect/select.tsx",
+    "src/Tool.ts",
+    "src/utils/messages.tsx",
+    "src/components/binary-feedback/BinaryFeedbackOption.tsx",
+    "src/query.ts",
+    "src/components/binary-feedback/utils.ts",
+    "src/hooks/useExitOnCtrlCD.ts",
+    "src/constants/product.ts"
+  ],
+  "src/components/binary-feedback/utils.ts": [
+    "src/query.ts",
+    "src/services/claude.ts",
+    "src/utils/git.ts"
+  ],
+  "src/components/Bug.tsx": [
+    "src/utils/theme.ts",
+    "src/messages.ts",
+    "src/query.ts",
+    "src/components/TextInput.tsx",
+    "src/utils/log.ts",
+    "src/utils/env.ts",
+    "src/utils/git.ts",
+    "src/hooks/useTerminalSize.ts",
+    "src/utils/config.ts",
+    "src/utils/http.ts",
+    "src/constants/product.ts",
+    "src/services/claude.ts",
+    "src/utils/browser.ts",
+    "src/hooks/useExitOnCtrlCD.ts",
+    "src/constants/macros.ts"
+  ],
+  "src/components/Config.tsx": [
+    "src/utils/theme.ts",
+    "src/hooks/useExitOnCtrlCD.ts",
+    "src/utils/model.ts"
+  ],
+  "src/components/ConsoleOAuthFlow.tsx": [
+    "src/components/TextInput.tsx",
+    "src/services/oauth.ts",
+    "src/utils/theme.ts",
+    "src/components/AsciiLogo.tsx",
+    "src/hooks/useTerminalSize.ts",
+    "src/utils/log.ts",
+    "src/utils/terminal.ts",
+    "src/components/Spinner.tsx",
+    "src/components/Onboarding.tsx",
+    "src/constants/product.ts",
+    "src/services/notifier.ts"
+  ],
+  "src/components/Cost.tsx": [],
+  "src/components/CostThresholdDialog.tsx": [
+    "src/components/CustomSelect/select.tsx",
+    "src/utils/theme.ts",
+    "src/components/Link.tsx"
+  ],
+  "src/components/CustomSelect/option-map.ts": [
+    "src/components/CustomSelect/select.tsx"
+  ],
+  "src/components/CustomSelect/select-option.tsx": [
+    "src/components/CustomSelect/theme.ts",
+    "src/utils/theme.ts"
+  ],
+  "src/components/CustomSelect/select.tsx": [
+    "src/components/CustomSelect/select-option.tsx",
+    "src/components/CustomSelect/theme.ts",
+    "src/components/CustomSelect/use-select-state.ts",
+    "src/components/CustomSelect/use-select.ts",
+    "src/utils/theme.ts"
+  ],
+  "src/components/CustomSelect/theme.ts": [],
+  "src/components/CustomSelect/use-select-state.ts": [
+    "src/components/CustomSelect/option-map.ts",
+    "src/components/CustomSelect/select.tsx"
+  ],
+  "src/components/CustomSelect/use-select.ts": [
+    "src/components/CustomSelect/use-select-state.ts"
+  ],
+  "src/components/FallbackToolUseRejectedMessage.tsx": [
+    "src/utils/theme.ts",
+    "src/constants/product.ts"
+  ],
+  "src/components/FileEditToolUpdatedMessage.tsx": [
+    "src/utils/array.ts",
+    "src/components/StructuredDiff.tsx",
+    "src/utils/theme.ts",
+    "src/utils/state.ts",
+    "src/hooks/useTerminalSize.ts"
+  ],
+  "src/components/Help.tsx": [
+    "src/commands.ts",
+    "src/constants/product.ts",
+    "src/services/customCommands.ts",
+    "src/utils/theme.ts",
+    "src/components/PressEnterToContinue.tsx",
+    "src/constants/macros.ts"
+  ],
+  "src/components/HighlightedCode.tsx": [
+    "src/utils/log.ts"
+  ],
+  "src/components/InvalidConfigDialog.tsx": [
+    "src/utils/theme.ts",
+    "src/components/CustomSelect/select.tsx",
+    "src/utils/errors.ts",
+    "src/hooks/useExitOnCtrlCD.ts"
+  ],
+  "src/components/Link.tsx": [
+    "src/utils/env.ts"
+  ],
+  "src/components/Logo.tsx": [
+    "src/utils/theme.ts",
+    "src/constants/product.ts",
+    "src/utils/config.ts",
+    "src/utils/state.ts",
+    "src/components/AsciiLogo.tsx",
+    "src/services/mcpClient.ts",
+    "src/utils/model.ts",
+    "src/constants/macros.ts"
+  ],
+  "src/components/LogSelector.tsx": [
+    "src/components/CustomSelect/select.tsx",
+    "src/types/logs.ts",
+    "src/utils/theme.ts",
+    "src/hooks/useTerminalSize.ts",
+    "src/utils/log.ts"
+  ],
+  "src/components/MCPServerApprovalDialog.tsx": [
+    "src/utils/theme.ts",
+    "src/components/CustomSelect/select.tsx",
+    "src/components/MCPServerDialogCopy.tsx",
+    "src/hooks/useExitOnCtrlCD.ts"
+  ],
+  "src/components/MCPServerDialogCopy.tsx": [
+    "src/constants/product.ts"
+  ],
+  "src/components/MCPServerMultiselectDialog.tsx": [
+    "src/utils/theme.ts",
+    "src/components/MCPServerDialogCopy.tsx",
+    "src/hooks/useExitOnCtrlCD.ts"
+  ],
+  "src/components/Message.tsx": [
+    "src/query.ts",
+    "src/Tool.ts",
+    "src/utils/log.ts",
+    "src/components/messages/UserToolResultMessage/UserToolResultMessage.tsx",
+    "src/components/messages/AssistantToolUseMessage.tsx",
+    "src/components/messages/AssistantTextMessage.tsx",
+    "src/components/messages/UserTextMessage.tsx",
+    "src/utils/messages.tsx",
+    "src/components/messages/AssistantThinkingMessage.tsx",
+    "src/components/messages/AssistantRedactedThinkingMessage.tsx",
+    "src/hooks/useTerminalSize.ts"
+  ],
+  "src/components/MessageResponse.tsx": [],
+  "src/components/messages/AssistantBashOutputMessage.tsx": [
+    "src/tools/BashTool/BashToolResultMessage.tsx",
+    "src/utils/messages.tsx"
+  ],
+  "src/components/messages/AssistantLocalCommandOutputMessage.tsx": [
+    "src/utils/messages.tsx",
+    "src/utils/theme.ts"
+  ],
+  "src/components/messages/AssistantRedactedThinkingMessage.tsx": [
+    "src/utils/theme.ts"
+  ],
+  "src/components/messages/AssistantTextMessage.tsx": [
+    "src/components/messages/AssistantBashOutputMessage.tsx",
+    "src/components/messages/AssistantLocalCommandOutputMessage.tsx",
+    "src/utils/theme.ts",
+    "src/components/Cost.tsx",
+    "src/constants/figures.ts",
+    "src/utils/markdown.ts",
+    "src/hooks/useTerminalSize.ts"
+  ],
+  "src/components/messages/AssistantThinkingMessage.tsx": [
+    "src/utils/theme.ts",
+    "src/utils/markdown.ts"
+  ],
+  "src/components/messages/AssistantToolUseMessage.tsx": [
+    "src/utils/log.ts",
+    "src/Tool.ts",
+    "src/components/Cost.tsx",
+    "src/components/ToolUseLoader.tsx",
+    "src/utils/theme.ts",
+    "src/constants/figures.ts",
+    "src/tools/ThinkTool/ThinkTool.tsx",
+    "src/components/messages/AssistantThinkingMessage.tsx",
+    "src/components/messages/TaskToolMessage.tsx"
+  ],
+  "src/components/messages/TaskProgressMessage.tsx": [
+    "src/utils/theme.ts"
+  ],
+  "src/components/messages/TaskToolMessage.tsx": [
+    "src/utils/agentLoader.ts",
+    "src/utils/theme.ts"
+  ],
+  "src/components/messages/UserBashInputMessage.tsx": [
+    "src/utils/messages.tsx",
+    "src/utils/theme.ts"
+  ],
+  "src/components/messages/UserCommandMessage.tsx": [
+    "src/utils/theme.ts",
+    "src/utils/messages.tsx"
+  ],
+  "src/components/messages/UserKodingInputMessage.tsx": [
+    "src/utils/messages.tsx",
+    "src/utils/theme.ts"
+  ],
+  "src/components/messages/UserPromptMessage.tsx": [
+    "src/utils/theme.ts",
+    "src/utils/log.ts",
+    "src/hooks/useTerminalSize.ts"
+  ],
+  "src/components/messages/UserTextMessage.tsx": [
+    "src/components/messages/UserBashInputMessage.tsx",
+    "src/components/messages/UserKodingInputMessage.tsx",
+    "src/components/messages/UserCommandMessage.tsx",
+    "src/components/messages/UserPromptMessage.tsx",
+    "src/services/claude.ts"
+  ],
+  "src/components/messages/UserToolResultMessage/UserToolCanceledMessage.tsx": [
+    "src/utils/theme.ts"
+  ],
+  "src/components/messages/UserToolResultMessage/UserToolErrorMessage.tsx": [
+    "src/utils/theme.ts"
+  ],
+  "src/components/messages/UserToolResultMessage/UserToolRejectMessage.tsx": [
+    "src/Tool.ts",
+    "src/query.ts",
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/components/messages/UserToolResultMessage/utils.tsx",
+    "src/hooks/useTerminalSize.ts"
+  ],
+  "src/components/messages/UserToolResultMessage/UserToolResultMessage.tsx": [
+    "src/Tool.ts",
+    "src/query.ts",
+    "src/utils/messages.tsx",
+    "src/components/messages/UserToolResultMessage/UserToolCanceledMessage.tsx",
+    "src/components/messages/UserToolResultMessage/UserToolErrorMessage.tsx",
+    "src/components/messages/UserToolResultMessage/UserToolRejectMessage.tsx",
+    "src/components/messages/UserToolResultMessage/UserToolSuccessMessage.tsx"
+  ],
+  "src/components/messages/UserToolResultMessage/UserToolSuccessMessage.tsx": [
+    "src/Tool.ts",
+    "src/query.ts",
+    "src/components/messages/UserToolResultMessage/utils.tsx"
+  ],
+  "src/components/messages/UserToolResultMessage/utils.tsx": [
+    "src/query.ts",
+    "src/Tool.ts",
+    "src/tools/GlobTool/GlobTool.tsx",
+    "src/tools/GrepTool/GrepTool.tsx"
+  ],
+  "src/components/MessageSelector.tsx": [
+    "src/utils/theme.ts",
+    "src/components/Message.tsx",
+    "src/Tool.ts",
+    "src/query.ts",
+    "src/hooks/useExitOnCtrlCD.ts"
+  ],
+  "src/components/ModeIndicator.tsx": [
+    "src/context/PermissionContext.tsx",
+    "src/utils/theme.ts"
+  ],
+  "src/components/ModelConfig.tsx": [
+    "src/utils/theme.ts",
+    "src/utils/model.ts",
+    "src/hooks/useExitOnCtrlCD.ts",
+    "src/components/ModelSelector.tsx",
+    "src/components/ModelListManager.tsx"
+  ],
+  "src/components/ModelListManager.tsx": [
+    "src/utils/theme.ts",
+    "src/utils/model.ts",
+    "src/hooks/useExitOnCtrlCD.ts",
+    "src/components/ModelSelector.tsx"
+  ],
+  "src/components/ModelSelector.tsx": [
+    "src/utils/theme.ts",
+    "src/components/CustomSelect/select.tsx",
+    "src/utils/model.ts",
+    "src/constants/product.ts",
+    "src/hooks/useExitOnCtrlCD.ts",
+    "src/constants/models.ts",
+    "src/components/TextInput.tsx",
+    "src/services/claude.ts",
+    "src/services/openai.ts",
+    "src/services/gpt5ConnectionTest.ts"
+  ],
+  "src/components/ModelStatusDisplay.tsx": [
+    "src/utils/model.ts",
+    "src/utils/config.ts",
+    "src/hooks/useExitOnCtrlCD.ts",
+    "src/utils/theme.ts"
+  ],
+  "src/components/Onboarding.tsx": [
+    "src/constants/product.ts",
+    "src/hooks/useExitOnCtrlCD.ts",
+    "src/components/Logo.tsx",
+    "src/components/CustomSelect/select.tsx",
+    "src/components/StructuredDiff.tsx",
+    "src/utils/theme.ts",
+    "src/utils/terminal.ts",
+    "src/components/PressEnterToContinue.tsx",
+    "src/components/ModelSelector.tsx"
+  ],
+  "src/components/permissions/BashPermissionRequest/BashPermissionRequest.tsx": [
+    "src/hooks/usePermissionRequestLogging.ts",
+    "src/permissions.ts",
+    "src/tools/BashTool/BashTool.tsx",
+    "src/utils/theme.ts",
+    "src/components/permissions/hooks.ts",
+    "src/components/permissions/PermissionRequestTitle.tsx",
+    "src/components/permissions/utils.ts",
+    "src/components/CustomSelect/select.tsx",
+    "src/components/permissions/toolUseOptions.ts"
+  ],
+  "src/components/permissions/FallbackPermissionRequest.tsx": [
+    "src/components/CustomSelect/select.tsx",
+    "src/utils/theme.ts",
+    "src/utils/unaryLogging.ts",
+    "src/utils/env.ts",
+    "src/utils/state.ts",
+    "src/permissions.ts"
+  ],
+  "src/components/permissions/FileEditPermissionRequest/FileEditPermissionRequest.tsx": [
+    "src/components/CustomSelect/select.tsx",
+    "src/permissions.ts",
+    "src/utils/env.ts",
+    "src/utils/theme.ts",
+    "src/utils/unaryLogging.ts",
+    "src/components/permissions/FileEditPermissionRequest/FileEditToolDiff.tsx",
+    "src/hooks/useTerminalSize.ts",
+    "src/utils/permissions/filesystem.ts"
+  ],
+  "src/components/permissions/FileEditPermissionRequest/FileEditToolDiff.tsx": [
+    "src/components/StructuredDiff.tsx",
+    "src/utils/theme.ts",
+    "src/utils/array.ts",
+    "src/utils/state.ts",
+    "src/utils/diff.ts"
+  ],
+  "src/components/permissions/FilesystemPermissionRequest/FilesystemPermissionRequest.tsx": [
+    "src/components/CustomSelect/select.tsx",
+    "src/utils/theme.ts",
+    "src/utils/unaryLogging.ts",
+    "src/utils/env.ts",
+    "src/tools/FileEditTool/FileEditTool.tsx",
+    "src/tools/FileWriteTool/FileWriteTool.tsx",
+    "src/tools/GrepTool/GrepTool.tsx",
+    "src/tools/GlobTool/GlobTool.tsx",
+    "src/tools/lsTool/lsTool.tsx",
+    "src/tools/FileReadTool/FileReadTool.tsx",
+    "src/tools/NotebookEditTool/NotebookEditTool.tsx",
+    "src/tools/NotebookReadTool/NotebookReadTool.tsx",
+    "src/components/permissions/FallbackPermissionRequest.tsx",
+    "src/utils/state.ts"
+  ],
+  "src/components/permissions/FileWritePermissionRequest/FileWritePermissionRequest.tsx": [
+    "src/components/CustomSelect/select.tsx",
+    "src/utils/theme.ts",
+    "src/utils/unaryLogging.ts",
+    "src/utils/env.ts",
+    "src/permissions.ts",
+    "src/components/permissions/FileWritePermissionRequest/FileWriteToolDiff.tsx",
+    "src/hooks/useTerminalSize.ts"
+  ],
+  "src/components/permissions/FileWritePermissionRequest/FileWriteToolDiff.tsx": [
+    "src/components/StructuredDiff.tsx",
+    "src/utils/theme.ts",
+    "src/utils/array.ts",
+    "src/utils/state.ts",
+    "src/utils/file.ts",
+    "src/components/HighlightedCode.tsx",
+    "src/utils/diff.ts"
+  ],
+  "src/components/permissions/hooks.ts": [
+    "src/utils/unaryLogging.ts",
+    "src/components/permissions/PermissionRequest.tsx",
+    "src/utils/env.ts"
+  ],
+  "src/components/permissions/PermissionRequest.tsx": [
+    "src/Tool.ts",
+    "src/query.ts",
+    "src/tools/FileEditTool/FileEditTool.tsx",
+    "src/tools/FileWriteTool/FileWriteTool.tsx",
+    "src/tools/BashTool/BashTool.tsx",
+    "src/components/permissions/FileEditPermissionRequest/FileEditPermissionRequest.tsx",
+    "src/components/permissions/BashPermissionRequest/BashPermissionRequest.tsx",
+    "src/components/permissions/FallbackPermissionRequest.tsx",
+    "src/hooks/useNotifyAfterTimeout.ts",
+    "src/components/permissions/FileWritePermissionRequest/FileWritePermissionRequest.tsx",
+    "src/utils/commands.ts",
+    "src/components/permissions/FilesystemPermissionRequest/FilesystemPermissionRequest.tsx",
+    "src/tools/NotebookEditTool/NotebookEditTool.tsx",
+    "src/tools/GlobTool/GlobTool.tsx",
+    "src/tools/GrepTool/GrepTool.tsx",
+    "src/tools/lsTool/lsTool.tsx",
+    "src/tools/FileReadTool/FileReadTool.tsx",
+    "src/tools/NotebookReadTool/NotebookReadTool.tsx",
+    "src/constants/product.ts"
+  ],
+  "src/components/permissions/PermissionRequestTitle.tsx": [
+    "src/utils/theme.ts"
+  ],
+  "src/components/permissions/toolUseOptions.ts": [
+    "src/utils/commands.ts",
+    "src/utils/state.ts",
+    "src/utils/theme.ts",
+    "src/components/CustomSelect/select.tsx"
+  ],
+  "src/components/permissions/utils.ts": [
+    "src/utils/env.ts",
+    "src/utils/unaryLogging.ts",
+    "src/components/permissions/PermissionRequest.tsx"
+  ],
+  "src/components/PressEnterToContinue.tsx": [
+    "src/utils/theme.ts"
+  ],
+  "src/components/PromptInput.tsx": [
+    "src/utils/exampleCommands.ts",
+    "src/query.ts",
+    "src/utils/messages.tsx",
+    "src/hooks/useArrowKeyHistory.ts",
+    "src/hooks/useUnifiedCompletion.ts",
+    "src/history.ts",
+    "src/components/TextInput.tsx",
+    "src/utils/tokens.ts",
+    "src/components/SentryErrorBoundary.ts",
+    "src/commands.ts",
+    "src/Tool.ts",
+    "src/components/TokenWarning.tsx",
+    "src/hooks/useTerminalSize.ts",
+    "src/utils/theme.ts",
+    "src/utils/model.ts",
+    "src/utils/config.ts",
+    "src/utils/terminal.ts",
+    "src/commands/terminalSetup.ts",
+    "src/context/PermissionContext.tsx",
+    "src/services/claude.ts"
+  ],
+  "src/components/SentryErrorBoundary.ts": [
+    "src/services/sentry.ts"
+  ],
+  "src/components/Spinner.tsx": [
+    "src/utils/theme.ts",
+    "src/utils/sessionState.ts"
+  ],
+  "src/components/StickerRequestForm.tsx": [],
+  "src/components/StructuredDiff.tsx": [
+    "src/utils/theme.ts",
+    "src/utils/format.tsx"
+  ],
+  "src/components/TextInput.tsx": [
+    "src/hooks/useTextInput.ts",
+    "src/utils/theme.ts"
+  ],
+  "src/components/TodoItem.tsx": [
+    "src/utils/todoStorage.ts"
+  ],
+  "src/components/TokenWarning.tsx": [
+    "src/utils/theme.ts"
+  ],
+  "src/components/ToolUseLoader.tsx": [
+    "src/hooks/useInterval.ts",
+    "src/utils/theme.ts",
+    "src/constants/figures.ts"
+  ],
+  "src/components/TrustDialog.tsx": [
+    "src/utils/theme.ts",
+    "src/components/CustomSelect/select.tsx",
+    "src/constants/product.ts",
+    "src/hooks/useExitOnCtrlCD.ts",
+    "src/utils/state.ts",
+    "src/components/Link.tsx"
+  ],
+  "src/constants/claude-asterisk-ascii-art.tsx": [],
+  "src/constants/figures.ts": [
+    "src/utils/env.ts"
+  ],
+  "src/constants/macros.ts": [],
+  "src/constants/modelCapabilities.ts": [
+    "src/types/modelCapabilities.ts"
+  ],
+  "src/constants/models.ts": [],
+  "src/constants/oauth.ts": [],
+  "src/constants/product.ts": [],
+  "src/constants/prompts.ts": [
+    "src/utils/env.ts",
+    "src/utils/git.ts",
+    "src/utils/state.ts",
+    "src/constants/product.ts",
+    "src/tools/BashTool/BashTool.tsx",
+    "src/constants/macros.ts"
+  ],
+  "src/constants/releaseNotes.ts": [],
+  "src/context/PermissionContext.tsx": [
+    "src/types/PermissionMode.ts"
+  ],
+  "src/context.ts": [
+    "src/utils/log.ts",
+    "src/utils/style.ts",
+    "src/utils/state.ts",
+    "src/tools/lsTool/lsTool.tsx",
+    "src/utils/git.ts",
+    "src/utils/ripgrep.ts",
+    "src/utils/execFileNoThrow.ts",
+    "src/utils/model.ts",
+    "src/utils/generators.ts",
+    "src/utils/user.ts",
+    "src/constants/product.ts"
+  ],
+  "src/cost-tracker.ts": [
+    "src/utils/format.tsx",
+    "src/utils/log.ts"
+  ],
+  "src/entrypoints/cli.tsx": [
+    "src/services/sentry.ts",
+    "src/constants/product.ts",
+    "src/history.ts",
+    "src/context.ts",
+    "src/utils/ask.tsx",
+    "src/permissions.ts",
+    "src/tools.ts",
+    "src/utils/config.ts",
+    "src/utils/log.ts",
+    "src/utils/debugLogger.ts",
+    "src/components/Onboarding.tsx",
+    "src/screens/Doctor.tsx",
+    "src/components/ApproveApiKey.tsx",
+    "src/components/TrustDialog.tsx",
+    "src/screens/LogList.tsx",
+    "src/screens/ResumeConversation.tsx",
+    "src/utils/model.ts",
+    "src/entrypoints/mcp.ts",
+    "src/utils/env.ts",
+    "src/utils/state.ts",
+    "src/commands.ts",
+    "src/utils/conversationRecovery.ts",
+    "src/utils/cleanup.ts",
+    "src/commands/approvedTools.ts",
+    "src/services/mcpClient.ts",
+    "src/services/mcpServerApproval.tsx",
+    "src/utils/exampleCommands.ts",
+    "src/utils/autoUpdater.ts",
+    "src/utils/PersistentShell.ts",
+    "src/utils/terminal.ts",
+    "src/components/InvalidConfigDialog.tsx",
+    "src/utils/errors.ts",
+    "src/utils/permissions/filesystem.ts",
+    "src/constants/macros.ts",
+    "src/utils/agentLoader.ts",
+    "src/screens/REPL.tsx",
+    "src/utils/theme.ts"
+  ],
+  "src/entrypoints/mcp.ts": [
+    "src/tools/TaskTool/TaskTool.tsx",
+    "src/permissions.ts",
+    "src/utils/state.ts",
+    "src/utils/model.ts",
+    "src/utils/log.ts",
+    "src/tools/lsTool/lsTool.tsx",
+    "src/tools/BashTool/BashTool.tsx",
+    "src/tools/FileEditTool/FileEditTool.tsx",
+    "src/tools/FileReadTool/FileReadTool.tsx",
+    "src/tools/GlobTool/GlobTool.tsx",
+    "src/tools/GrepTool/GrepTool.tsx",
+    "src/tools/FileWriteTool/FileWriteTool.tsx",
+    "src/Tool.ts",
+    "src/commands.ts",
+    "src/commands/review.ts",
+    "src/utils/generators.ts",
+    "src/constants/macros.ts"
+  ],
+  "src/history.ts": [],
+  "src/hooks/useApiKeyVerification.ts": [
+    "src/services/claude.ts",
+    "src/utils/config.ts"
+  ],
+  "src/hooks/useArrowKeyHistory.ts": [
+    "src/history.ts"
+  ],
+  "src/hooks/useCancelRequest.ts": [
+    "src/components/permissions/PermissionRequest.tsx",
+    "src/screens/REPL.tsx",
+    "src/Tool.ts"
+  ],
+  "src/hooks/useCanUseTool.ts": [
+    "src/permissions.ts",
+    "src/tools/BashTool/BashTool.tsx",
+    "src/utils/commands.ts",
+    "src/utils/messages.tsx",
+    "src/Tool.ts",
+    "src/query.ts",
+    "src/components/permissions/PermissionRequest.tsx",
+    "src/utils/errors.ts",
+    "src/utils/log.ts"
+  ],
+  "src/hooks/useDoublePress.ts": [],
+  "src/hooks/useExitOnCtrlCD.ts": [
+    "src/hooks/useDoublePress.ts"
+  ],
+  "src/hooks/useInterval.ts": [],
+  "src/hooks/useLogMessages.ts": [
+    "src/query.ts",
+    "src/utils/log.ts"
+  ],
+  "src/hooks/useLogStartupTime.ts": [],
+  "src/hooks/useNotifyAfterTimeout.ts": [
+    "src/services/notifier.ts"
+  ],
+  "src/hooks/usePermissionRequestLogging.ts": [
+    "src/utils/unaryLogging.ts",
+    "src/components/permissions/PermissionRequest.tsx",
+    "src/utils/env.ts"
+  ],
+  "src/hooks/useTerminalSize.ts": [],
+  "src/hooks/useTextInput.ts": [
+    "src/hooks/useDoublePress.ts",
+    "src/utils/Cursor.ts"
+  ],
+  "src/hooks/useUnifiedCompletion.ts": [
+    "src/utils/state.ts",
+    "src/commands.ts",
+    "src/utils/agentLoader.ts",
+    "src/utils/model.ts",
+    "src/utils/fuzzyMatcher.ts",
+    "src/utils/commonUnixCommands.ts"
+  ],
+  "src/index.ts": [],
+  "src/messages.ts": [
+    "src/query.ts"
+  ],
+  "src/permissions.ts": [
+    "src/hooks/useCanUseTool.ts",
+    "src/Tool.ts",
+    "src/tools/BashTool/BashTool.tsx",
+    "src/tools/FileEditTool/FileEditTool.tsx",
+    "src/tools/FileWriteTool/FileWriteTool.tsx",
+    "src/tools/NotebookEditTool/NotebookEditTool.tsx",
+    "src/utils/commands.ts",
+    "src/utils/errors.ts",
+    "src/utils/log.ts",
+    "src/utils/permissions/filesystem.ts",
+    "src/utils/state.ts",
+    "src/constants/product.ts"
+  ],
+  "src/ProjectOnboarding.tsx": [
+    "src/commands/terminalSetup.ts",
+    "src/utils/theme.ts",
+    "src/constants/releaseNotes.ts",
+    "src/utils/file.ts",
+    "src/constants/macros.ts",
+    "src/constants/product.ts"
+  ],
+  "src/query.ts": [
+    "src/Tool.ts",
+    "src/hooks/useCanUseTool.ts",
+    "src/services/systemReminder.ts",
+    "src/utils/generators.ts",
+    "src/utils/log.ts",
+    "src/utils/debugLogger.ts",
+    "src/utils/toolExecutionController.ts",
+    "src/tools/BashTool/BashTool.tsx",
+    "src/utils/state.ts",
+    "src/utils/autoCompactCore.ts"
+  ],
+  "src/screens/Doctor.tsx": [
+    "src/utils/theme.ts",
+    "src/components/PressEnterToContinue.tsx"
+  ],
+  "src/screens/LogList.tsx": [
+    "src/utils/log.ts",
+    "src/components/LogSelector.tsx",
+    "src/types/logs.ts"
+  ],
+  "src/screens/REPL.tsx": [
+    "src/components/CostThresholdDialog.tsx",
+    "src/commands.ts",
+    "src/components/Logo.tsx",
+    "src/components/Message.tsx",
+    "src/components/MessageResponse.tsx",
+    "src/components/MessageSelector.tsx",
+    "src/components/PromptInput.tsx",
+    "src/components/Spinner.tsx",
+    "src/constants/prompts.ts",
+    "src/context.ts",
+    "src/cost-tracker.ts",
+    "src/hooks/useLogStartupTime.ts",
+    "src/history.ts",
+    "src/hooks/useApiKeyVerification.ts",
+    "src/hooks/useCancelRequest.ts",
+    "src/hooks/useCanUseTool.ts",
+    "src/hooks/useLogMessages.ts",
+    "src/context/PermissionContext.tsx",
+    "src/components/ModeIndicator.tsx",
+    "src/messages.ts",
+    "src/services/mcpClient.ts",
+    "src/Tool.ts",
+    "src/utils/config.ts",
+    "src/constants/macros.ts",
+    "src/utils/log.ts",
+    "src/utils/model.ts",
+    "src/utils/terminal.ts",
+    "src/components/binary-feedback/BinaryFeedback.tsx",
+    "src/utils/thinking.ts",
+    "src/utils/state.ts",
+    "src/commands/terminalSetup.ts",
+    "src/utils/debugLogger.ts"
+  ],
+  "src/screens/ResumeConversation.tsx": [
+    "src/screens/REPL.tsx",
+    "src/utils/conversationRecovery.ts",
+    "src/components/LogSelector.tsx",
+    "src/types/logs.ts",
+    "src/utils/log.ts",
+    "src/Tool.ts",
+    "src/commands.ts",
+    "src/utils/model.ts"
+  ],
+  "src/services/adapters/base.ts": [
+    "src/types/modelCapabilities.ts",
+    "src/utils/config.ts",
+    "src/Tool.ts"
+  ],
+  "src/services/adapters/chatCompletions.ts": [
+    "src/services/adapters/base.ts",
+    "src/types/modelCapabilities.ts",
+    "src/Tool.ts"
+  ],
+  "src/services/adapters/responsesAPI.ts": [
+    "src/services/adapters/base.ts",
+    "src/types/modelCapabilities.ts",
+    "src/Tool.ts"
+  ],
+  "src/services/browserMocks.ts": [],
+  "src/services/claude.ts": [
+    "src/cost-tracker.ts",
+    "src/constants/models.ts",
+    "src/query.ts",
+    "src/Tool.ts",
+    "src/utils/config.ts",
+    "src/context.ts",
+    "src/utils/log.ts",
+    "src/utils/http.ts",
+    "src/utils/messages.tsx",
+    "src/utils/tokens.ts",
+    "src/services/vcr.ts",
+    "src/utils/debugLogger.ts",
+    "src/utils/messageContextManager.ts",
+    "src/utils/model.ts",
+    "src/services/modelAdapterFactory.ts",
+    "src/types/modelCapabilities.ts",
+    "src/services/responseStateManager.ts",
+    "src/constants/prompts.ts",
+    "src/services/openai.ts",
+    "src/utils/thinking.ts",
+    "src/services/systemReminder.ts"
+  ],
+  "src/services/customCommands.ts": [
+    "src/commands.ts",
+    "src/utils/state.ts"
+  ],
+  "src/services/fileFreshness.ts": [
+    "src/services/systemReminder.ts",
+    "src/utils/agentStorage.ts"
+  ],
+  "src/services/gpt5ConnectionTest.ts": [
+    "src/services/openai.ts"
+  ],
+  "src/services/mcpClient.ts": [
+    "src/utils/state.ts",
+    "src/utils/json.ts",
+    "src/Tool.ts",
+    "src/tools/MCPTool/MCPTool.tsx",
+    "src/utils/log.ts",
+    "src/commands.ts"
+  ],
+  "src/services/mcpServerApproval.tsx": [
+    "src/components/MCPServerMultiselectDialog.tsx",
+    "src/components/MCPServerApprovalDialog.tsx",
+    "src/services/mcpClient.ts",
+    "src/utils/config.ts"
+  ],
+  "src/services/mentionProcessor.ts": [
+    "src/services/systemReminder.ts",
+    "src/utils/agentLoader.ts",
+    "src/utils/state.ts"
+  ],
+  "src/services/modelAdapterFactory.ts": [
+    "src/services/adapters/base.ts",
+    "src/services/adapters/responsesAPI.ts",
+    "src/services/adapters/chatCompletions.ts",
+    "src/constants/modelCapabilities.ts",
+    "src/utils/config.ts",
+    "src/types/modelCapabilities.ts"
+  ],
+  "src/services/notifier.ts": [
+    "src/utils/config.ts"
+  ],
+  "src/services/oauth.ts": [
+    "src/constants/oauth.ts",
+    "src/utils/browser.ts",
+    "src/utils/log.ts",
+    "src/services/claude.ts"
+  ],
+  "src/services/openai.ts": [
+    "src/utils/config.ts",
+    "src/utils/sessionState.ts",
+    "src/utils/debugLogger.ts"
+  ],
+  "src/services/responseStateManager.ts": [],
+  "src/services/sentry.ts": [],
+  "src/services/systemReminder.ts": [
+    "src/utils/todoStorage.ts"
+  ],
+  "src/services/vcr.ts": [
+    "src/query.ts",
+    "src/utils/env.ts",
+    "src/utils/state.ts"
+  ],
+  "src/test/testAdapters.ts": [
+    "src/services/modelAdapterFactory.ts",
+    "src/constants/modelCapabilities.ts",
+    "src/utils/config.ts"
+  ],
+  "src/Tool.ts": [],
+  "src/tools/ArchitectTool/ArchitectTool.tsx": [
+    "src/Tool.ts",
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/components/HighlightedCode.tsx",
+    "src/context.ts",
+    "src/query.ts",
+    "src/utils/generators.ts",
+    "src/utils/messages.tsx",
+    "src/tools/BashTool/BashTool.tsx",
+    "src/tools/FileReadTool/FileReadTool.tsx",
+    "src/tools/FileWriteTool/FileWriteTool.tsx",
+    "src/tools/GlobTool/GlobTool.tsx",
+    "src/tools/GrepTool/GrepTool.tsx",
+    "src/tools/lsTool/lsTool.tsx",
+    "src/tools/ArchitectTool/prompt.ts"
+  ],
+  "src/tools/ArchitectTool/prompt.ts": [],
+  "src/tools/AskExpertModelTool/AskExpertModelTool.tsx": [
+    "src/Tool.ts",
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/utils/model.ts",
+    "src/utils/theme.ts",
+    "src/utils/messages.tsx",
+    "src/utils/log.ts",
+    "src/utils/expertChatStorage.ts",
+    "src/services/claude.ts",
+    "src/utils/debugLogger.ts",
+    "src/utils/markdown.ts"
+  ],
+  "src/tools/BashTool/BashTool.tsx": [
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/constants/product.ts",
+    "src/services/claude.ts",
+    "src/Tool.ts",
+    "src/utils/commands.ts",
+    "src/utils/file.ts",
+    "src/utils/log.ts",
+    "src/utils/PersistentShell.ts",
+    "src/utils/state.ts",
+    "src/utils/config.ts",
+    "src/utils/model.ts",
+    "src/tools/BashTool/BashToolResultMessage.tsx",
+    "src/tools/BashTool/prompt.ts",
+    "src/tools/BashTool/utils.ts"
+  ],
+  "src/tools/BashTool/BashToolResultMessage.tsx": [
+    "src/tools/BashTool/OutputLine.tsx",
+    "src/utils/theme.ts",
+    "src/tools/BashTool/BashTool.tsx"
+  ],
+  "src/tools/BashTool/OutputLine.tsx": [
+    "src/utils/theme.ts",
+    "src/tools/BashTool/prompt.ts"
+  ],
+  "src/tools/BashTool/prompt.ts": [
+    "src/constants/product.ts",
+    "src/tools/TaskTool/constants.ts",
+    "src/tools/FileReadTool/FileReadTool.tsx",
+    "src/tools/GlobTool/prompt.ts",
+    "src/tools/GrepTool/prompt.ts",
+    "src/tools/lsTool/lsTool.tsx"
+  ],
+  "src/tools/BashTool/utils.ts": [
+    "src/services/claude.ts",
+    "src/utils/messages.tsx",
+    "src/tools/BashTool/prompt.ts"
+  ],
+  "src/tools/FileEditTool/FileEditTool.tsx": [
+    "src/components/FileEditToolUpdatedMessage.tsx",
+    "src/components/StructuredDiff.tsx",
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/Tool.ts",
+    "src/utils/array.ts",
+    "src/utils/log.ts",
+    "src/utils/state.ts",
+    "src/utils/theme.ts",
+    "src/services/systemReminder.ts",
+    "src/services/fileFreshness.ts",
+    "src/tools/NotebookEditTool/NotebookEditTool.tsx",
+    "src/tools/FileEditTool/prompt.ts",
+    "src/tools/FileEditTool/utils.ts",
+    "src/utils/permissions/filesystem.ts",
+    "src/constants/product.ts"
+  ],
+  "src/tools/FileEditTool/prompt.ts": [
+    "src/tools/NotebookEditTool/NotebookEditTool.tsx"
+  ],
+  "src/tools/FileEditTool/utils.ts": [
+    "src/utils/state.ts",
+    "src/utils/file.ts",
+    "src/utils/diff.ts"
+  ],
+  "src/tools/FileReadTool/FileReadTool.tsx": [
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/components/HighlightedCode.tsx",
+    "src/Tool.ts",
+    "src/utils/state.ts",
+    "src/utils/log.ts",
+    "src/utils/theme.ts",
+    "src/services/systemReminder.ts",
+    "src/services/fileFreshness.ts",
+    "src/tools/FileReadTool/prompt.ts",
+    "src/utils/permissions/filesystem.ts",
+    "src/utils/secureFile.ts"
+  ],
+  "src/tools/FileReadTool/prompt.ts": [
+    "src/tools/NotebookReadTool/NotebookReadTool.tsx"
+  ],
+  "src/tools/FileWriteTool/FileWriteTool.tsx": [
+    "src/components/FileEditToolUpdatedMessage.tsx",
+    "src/components/HighlightedCode.tsx",
+    "src/components/StructuredDiff.tsx",
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/Tool.ts",
+    "src/utils/array.ts",
+    "src/utils/log.ts",
+    "src/utils/state.ts",
+    "src/utils/theme.ts",
+    "src/tools/FileWriteTool/prompt.ts",
+    "src/utils/permissions/filesystem.ts",
+    "src/utils/diff.ts",
+    "src/constants/product.ts",
+    "src/services/systemReminder.ts",
+    "src/services/fileFreshness.ts"
+  ],
+  "src/tools/FileWriteTool/prompt.ts": [],
+  "src/tools/GlobTool/GlobTool.tsx": [
+    "src/components/Cost.tsx",
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/Tool.ts",
+    "src/utils/state.ts",
+    "src/utils/file.ts",
+    "src/tools/GlobTool/prompt.ts",
+    "src/utils/permissions/filesystem.ts"
+  ],
+  "src/tools/GlobTool/prompt.ts": [],
+  "src/tools/GrepTool/GrepTool.tsx": [
+    "src/components/Cost.tsx",
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/Tool.ts",
+    "src/utils/state.ts",
+    "src/utils/ripgrep.ts",
+    "src/tools/GrepTool/prompt.ts",
+    "src/utils/permissions/filesystem.ts"
+  ],
+  "src/tools/GrepTool/prompt.ts": [],
+  "src/tools/lsTool/lsTool.tsx": [
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/Tool.ts",
+    "src/utils/log.ts",
+    "src/utils/state.ts",
+    "src/utils/theme.ts",
+    "src/tools/lsTool/prompt.ts",
+    "src/utils/permissions/filesystem.ts"
+  ],
+  "src/tools/lsTool/prompt.ts": [],
+  "src/tools/MCPTool/MCPTool.tsx": [
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/Tool.ts",
+    "src/utils/theme.ts",
+    "src/tools/MCPTool/prompt.ts",
+    "src/tools/BashTool/OutputLine.tsx"
+  ],
+  "src/tools/MCPTool/prompt.ts": [],
+  "src/tools/MemoryReadTool/MemoryReadTool.tsx": [
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/Tool.ts",
+    "src/utils/env.ts",
+    "src/utils/agentStorage.ts",
+    "src/tools/MemoryReadTool/prompt.ts"
+  ],
+  "src/tools/MemoryReadTool/prompt.ts": [],
+  "src/tools/MemoryWriteTool/MemoryWriteTool.tsx": [
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/Tool.ts",
+    "src/utils/env.ts",
+    "src/utils/agentStorage.ts",
+    "src/services/fileFreshness.ts",
+    "src/tools/MemoryWriteTool/prompt.ts"
+  ],
+  "src/tools/MemoryWriteTool/prompt.ts": [],
+  "src/tools/MultiEditTool/MultiEditTool.tsx": [
+    "src/components/FileEditToolUpdatedMessage.tsx",
+    "src/components/StructuredDiff.tsx",
+    "src/Tool.ts",
+    "src/utils/array.ts",
+    "src/utils/log.ts",
+    "src/utils/state.ts",
+    "src/utils/theme.ts",
+    "src/tools/NotebookEditTool/NotebookEditTool.tsx",
+    "src/utils/permissions/filesystem.ts",
+    "src/constants/product.ts",
+    "src/tools/MultiEditTool/prompt.ts",
+    "src/services/systemReminder.ts",
+    "src/services/fileFreshness.ts",
+    "src/utils/diff.ts"
+  ],
+  "src/tools/MultiEditTool/prompt.ts": [
+    "src/tools/NotebookEditTool/NotebookEditTool.tsx"
+  ],
+  "src/tools/NotebookEditTool/NotebookEditTool.tsx": [
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/components/HighlightedCode.tsx",
+    "src/Tool.ts",
+    "src/types/notebook.ts",
+    "src/utils/json.ts",
+    "src/utils/state.ts",
+    "src/tools/NotebookEditTool/prompt.ts",
+    "src/utils/permissions/filesystem.ts",
+    "src/services/systemReminder.ts",
+    "src/services/fileFreshness.ts"
+  ],
+  "src/tools/NotebookEditTool/prompt.ts": [],
+  "src/tools/NotebookReadTool/NotebookReadTool.tsx": [
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/Tool.ts",
+    "src/types/notebook.ts",
+    "src/tools/BashTool/utils.ts",
+    "src/utils/state.ts",
+    "src/utils/file.ts",
+    "src/tools/NotebookReadTool/prompt.ts",
+    "src/utils/permissions/filesystem.ts"
+  ],
+  "src/tools/NotebookReadTool/prompt.ts": [],
+  "src/tools/StickerRequestTool/prompt.ts": [],
+  "src/tools/StickerRequestTool/StickerRequestTool.tsx": [
+    "src/Tool.ts",
+    "src/tools/StickerRequestTool/prompt.ts",
+    "src/components/StickerRequestForm.tsx",
+    "src/utils/theme.ts"
+  ],
+  "src/tools/TaskTool/constants.ts": [],
+  "src/tools/TaskTool/prompt.ts": [
+    "src/Tool.ts",
+    "src/tools.ts",
+    "src/tools/TaskTool/TaskTool.tsx",
+    "src/tools/BashTool/BashTool.tsx",
+    "src/tools/FileWriteTool/FileWriteTool.tsx",
+    "src/tools/FileEditTool/FileEditTool.tsx",
+    "src/tools/NotebookEditTool/NotebookEditTool.tsx",
+    "src/tools/GlobTool/GlobTool.tsx",
+    "src/tools/FileReadTool/FileReadTool.tsx",
+    "src/utils/model.ts",
+    "src/utils/agentLoader.ts"
+  ],
+  "src/tools/TaskTool/TaskTool.tsx": [
+    "src/Tool.ts",
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/constants/prompts.ts",
+    "src/context.ts",
+    "src/permissions.ts",
+    "src/query.ts",
+    "src/utils/format.tsx",
+    "src/utils/markdown.ts",
+    "src/utils/model.ts",
+    "src/utils/thinking.ts",
+    "src/utils/theme.ts",
+    "src/utils/agentStorage.ts",
+    "src/utils/debugLogger.ts",
+    "src/tools/TaskTool/prompt.ts",
+    "src/tools/TaskTool/constants.ts",
+    "src/utils/agentLoader.ts"
+  ],
+  "src/tools/ThinkTool/prompt.ts": [],
+  "src/tools/ThinkTool/ThinkTool.tsx": [
+    "src/Tool.ts",
+    "src/tools/ThinkTool/prompt.ts",
+    "src/utils/theme.ts",
+    "src/components/MessageResponse.tsx",
+    "src/utils/model.ts"
+  ],
+  "src/tools/TodoWriteTool/prompt.ts": [],
+  "src/tools/TodoWriteTool/TodoWriteTool.tsx": [
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/components/TodoItem.tsx",
+    "src/Tool.ts",
+    "src/utils/todoStorage.ts",
+    "src/services/systemReminder.ts",
+    "src/services/fileFreshness.ts",
+    "src/tools/TodoWriteTool/prompt.ts",
+    "src/utils/theme.ts"
+  ],
+  "src/tools/URLFetcherTool/cache.ts": [],
+  "src/tools/URLFetcherTool/htmlToMarkdown.ts": [],
+  "src/tools/URLFetcherTool/prompt.ts": [],
+  "src/tools/URLFetcherTool/URLFetcherTool.tsx": [
+    "src/components/Cost.tsx",
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/Tool.ts",
+    "src/tools/URLFetcherTool/prompt.ts",
+    "src/tools/URLFetcherTool/htmlToMarkdown.ts",
+    "src/tools/URLFetcherTool/cache.ts",
+    "src/services/claude.ts"
+  ],
+  "src/tools/WebSearchTool/prompt.ts": [],
+  "src/tools/WebSearchTool/searchProviders.ts": [],
+  "src/tools/WebSearchTool/WebSearchTool.tsx": [
+    "src/components/Cost.tsx",
+    "src/components/FallbackToolUseRejectedMessage.tsx",
+    "src/Tool.ts",
+    "src/tools/WebSearchTool/prompt.ts",
+    "src/tools/WebSearchTool/searchProviders.ts"
+  ],
+  "src/tools.ts": [
+    "src/Tool.ts",
+    "src/tools/TaskTool/TaskTool.tsx",
+    "src/tools/ArchitectTool/ArchitectTool.tsx",
+    "src/tools/BashTool/BashTool.tsx",
+    "src/tools/AskExpertModelTool/AskExpertModelTool.tsx",
+    "src/tools/FileEditTool/FileEditTool.tsx",
+    "src/tools/FileReadTool/FileReadTool.tsx",
+    "src/tools/FileWriteTool/FileWriteTool.tsx",
+    "src/tools/MultiEditTool/MultiEditTool.tsx",
+    "src/tools/GlobTool/GlobTool.tsx",
+    "src/tools/GrepTool/GrepTool.tsx",
+    "src/tools/lsTool/lsTool.tsx",
+    "src/tools/NotebookEditTool/NotebookEditTool.tsx",
+    "src/tools/NotebookReadTool/NotebookReadTool.tsx",
+    "src/tools/MemoryReadTool/MemoryReadTool.tsx",
+    "src/tools/MemoryWriteTool/MemoryWriteTool.tsx",
+    "src/tools/ThinkTool/ThinkTool.tsx",
+    "src/tools/TodoWriteTool/TodoWriteTool.tsx",
+    "src/tools/WebSearchTool/WebSearchTool.tsx",
+    "src/tools/URLFetcherTool/URLFetcherTool.tsx",
+    "src/services/mcpClient.ts"
+  ],
+  "src/types/common.d.ts": [],
+  "src/types/conversation.ts": [],
+  "src/types/logs.ts": [],
+  "src/types/modelCapabilities.ts": [],
+  "src/types/notebook.ts": [],
+  "src/types/PermissionMode.ts": [],
+  "src/types/RequestContext.ts": [],
+  "src/utils/advancedFuzzyMatcher.ts": [],
+  "src/utils/agentLoader.ts": [
+    "src/utils/state.ts"
+  ],
+  "src/utils/agentStorage.ts": [],
+  "src/utils/array.ts": [],
+  "src/utils/ask.tsx": [
+    "src/commands.ts",
+    "src/constants/prompts.ts",
+    "src/context.ts",
+    "src/cost-tracker.ts",
+    "src/query.ts",
+    "src/hooks/useCanUseTool.ts",
+    "src/Tool.ts",
+    "src/utils/model.ts",
+    "src/utils/state.ts",
+    "src/utils/log.ts",
+    "src/utils/messages.tsx"
+  ],
+  "src/utils/auth.ts": [
+    "src/utils/model.ts",
+    "src/utils/config.ts"
+  ],
+  "src/utils/autoCompactCore.ts": [
+    "src/query.ts",
+    "src/utils/tokens.ts",
+    "src/messages.ts",
+    "src/context.ts",
+    "src/utils/style.ts",
+    "src/utils/terminal.ts",
+    "src/services/fileFreshness.ts",
+    "src/utils/messages.tsx",
+    "src/services/claude.ts",
+    "src/utils/fileRecoveryCore.ts",
+    "src/utils/file.ts",
+    "src/utils/model.ts"
+  ],
+  "src/utils/autoUpdater.ts": [
+    "src/utils/execFileNoThrow.ts",
+    "src/utils/log.ts",
+    "src/constants/macros.ts",
+    "src/constants/product.ts",
+    "src/utils/config.ts",
+    "src/utils/env.ts"
+  ],
+  "src/utils/browser.ts": [
+    "src/utils/execFileNoThrow.ts"
+  ],
+  "src/utils/cleanup.ts": [
+    "src/utils/log.ts"
+  ],
+  "src/utils/commands.ts": [
+    "src/services/claude.ts",
+    "src/constants/product.ts"
+  ],
+  "src/utils/commonUnixCommands.ts": [],
+  "src/utils/config.ts": [
+    "src/utils/env.ts",
+    "src/utils/state.ts",
+    "src/utils/json.ts",
+    "src/utils/errors.ts",
+    "src/utils/theme.ts",
+    "src/utils/debugLogger.ts",
+    "src/utils/sessionState.ts",
+    "src/utils/model.ts"
+  ],
+  "src/utils/conversationRecovery.ts": [
+    "src/utils/log.ts",
+    "src/Tool.ts"
+  ],
+  "src/utils/Cursor.ts": [],
+  "src/utils/debugLogger.ts": [
+    "src/constants/product.ts",
+    "src/utils/log.ts",
+    "src/types/conversation.ts"
+  ],
+  "src/utils/diff.ts": [],
+  "src/utils/env.ts": [
+    "src/utils/execFileNoThrow.ts",
+    "src/constants/product.ts"
+  ],
+  "src/utils/errors.ts": [],
+  "src/utils/exampleCommands.ts": [
+    "src/utils/env.ts",
+    "src/utils/state.ts",
+    "src/utils/log.ts",
+    "src/utils/git.ts",
+    "src/services/claude.ts"
+  ],
+  "src/utils/execFileNoThrow.ts": [
+    "src/utils/state.ts",
+    "src/utils/log.ts"
+  ],
+  "src/utils/expertChatStorage.ts": [],
+  "src/utils/file.ts": [
+    "src/utils/log.ts",
+    "src/utils/ripgrep.ts",
+    "src/utils/state.ts"
+  ],
+  "src/utils/fileRecoveryCore.ts": [
+    "src/utils/file.ts",
+    "src/services/fileFreshness.ts"
+  ],
+  "src/utils/format.tsx": [],
+  "src/utils/fuzzyMatcher.ts": [
+    "src/utils/advancedFuzzyMatcher.ts"
+  ],
+  "src/utils/generators.ts": [],
+  "src/utils/git.ts": [
+    "src/utils/execFileNoThrow.ts"
+  ],
+  "src/utils/globalLogger.ts": [],
+  "src/utils/http.ts": [
+    "src/constants/macros.ts",
+    "src/constants/product.ts"
+  ],
+  "src/utils/imagePaste.ts": [],
+  "src/utils/json.ts": [
+    "src/utils/log.ts"
+  ],
+  "src/utils/log.ts": [
+    "src/services/sentry.ts",
+    "src/types/logs.ts",
+    "src/constants/macros.ts",
+    "src/constants/product.ts"
+  ],
+  "src/utils/markdown.ts": [
+    "src/utils/messages.tsx",
+    "src/utils/log.ts"
+  ],
+  "src/utils/messageContextManager.ts": [
+    "src/query.ts",
+    "src/utils/tokens.ts"
+  ],
+  "src/utils/messages.tsx": [
+    "src/commands.ts",
+    "src/utils/errors.ts",
+    "src/utils/log.ts",
+    "src/Tool.ts",
+    "src/utils/generators.ts",
+    "src/services/claude.ts",
+    "src/utils/state.ts",
+    "src/components/messages/UserBashInputMessage.tsx",
+    "src/components/Spinner.tsx",
+    "src/tools/BashTool/BashTool.tsx",
+    "src/services/customCommands.ts",
+    "src/services/mentionProcessor.ts"
+  ],
+  "src/utils/model.ts": [
+    "src/utils/log.ts",
+    "src/utils/config.ts"
+  ],
+  "src/utils/permissions/filesystem.ts": [
+    "src/utils/state.ts"
+  ],
+  "src/utils/PersistentShell.ts": [
+    "src/utils/log.ts",
+    "src/constants/product.ts"
+  ],
+  "src/utils/responseState.ts": [],
+  "src/utils/ripgrep.ts": [
+    "src/utils/log.ts",
+    "src/utils/execFileNoThrow.ts"
+  ],
+  "src/utils/secureFile.ts": [],
+  "src/utils/sessionState.ts": [],
+  "src/utils/state.ts": [
+    "src/utils/PersistentShell.ts"
+  ],
+  "src/utils/style.ts": [
+    "src/utils/state.ts",
+    "src/constants/product.ts"
+  ],
+  "src/utils/terminal.ts": [
+    "src/utils/json.ts",
+    "src/utils/log.ts",
+    "src/services/claude.ts"
+  ],
+  "src/utils/theme.ts": [
+    "src/utils/config.ts"
+  ],
+  "src/utils/thinking.ts": [
+    "src/query.ts",
+    "src/utils/messages.tsx",
+    "src/tools/ThinkTool/ThinkTool.tsx",
+    "src/utils/model.ts"
+  ],
+  "src/utils/todoStorage.ts": [
+    "src/utils/sessionState.ts",
+    "src/utils/agentStorage.ts"
+  ],
+  "src/utils/tokens.ts": [
+    "src/query.ts",
+    "src/utils/messages.tsx"
+  ],
+  "src/utils/toolExecutionController.ts": [
+    "src/Tool.ts"
+  ],
+  "src/utils/unaryLogging.ts": [],
+  "src/utils/user.ts": [
+    "src/utils/config.ts",
+    "src/utils/env.ts",
+    "src/utils/execFileNoThrow.ts",
+    "src/utils/log.ts",
+    "src/constants/macros.ts"
+  ],
+  "src/utils/validate.ts": []
+}

@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2025-09-17T09:35:25.953Z",
+  "generatedBy": "Kode Architecture Scanner",
+  "projectRoot": "D:\\github\\2015\\09\\Kode-novel-worktrees\\local-dev",
+  "outputFiles": [
+    "project-structure.json",
+    "project-summary.json",
+    "dependency-graph.json",
+    "reading-guide.json"
+  ],
+  "validation": {
+    "isValid": true,
+    "errors": []
+  },
+  "stats": {
+    "processingTime": "2025-09-17T09:35:25.984Z",
+    "totalFiles": 274,
+    "totalSize": 662870
+  }
+}
