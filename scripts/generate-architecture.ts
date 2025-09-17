@@ -15,6 +15,35 @@ interface ExportInfo {
   name: string;
   type: 'named' | 'default' | 're-export';
   source?: string; // export from 'xxx'
+  description?: string; // 从注释中提取的描述
+}
+
+interface FunctionInfo {
+  name: string;
+  isExported: boolean;
+  isAsync: boolean;
+  parameters: string[];
+  returnType?: string;
+  description?: string;
+  lineNumber: number;
+}
+
+interface ClassInfo {
+  name: string;
+  isExported: boolean;
+  extends?: string;
+  implements?: string[];
+  methods: string[];
+  description?: string;
+  lineNumber: number;
+}
+
+interface FileComments {
+  fileHeader?: string; // 文件顶部注释
+  description?: string; // 从JSDoc @fileoverview 提取
+  author?: string;
+  created?: string;
+  purpose?: string; // 文件用途
 }
 
 interface FileInfo {
@@ -28,6 +57,14 @@ interface FileInfo {
   exports: ExportInfo[];
   dependencies: string[]; // 依赖的文件路径
   dependents: string[]; // 依赖此文件的文件路径
+  comments: FileComments; // 文件注释信息
+  functions: FunctionInfo[]; // 函数列表
+  classes: ClassInfo[]; // 类列表
+  interfaces: string[]; // 接口列表
+  types: string[]; // 类型定义列表
+  constants: string[]; // 常量列表
+  lineCount: number; // 行数
+  complexity: 'low' | 'medium' | 'high'; // 复杂度评估
 }
 
 interface DependencyGraph {
@@ -49,9 +86,85 @@ interface ProjectStructure {
 }
 
 /**
- * 解析TypeScript文件的AST并提取import/export信息
+ * 提取注释文本并清理格式
  */
-async function parseFileAST(filePath: string): Promise<{ imports: ImportInfo[], exports: ExportInfo[] }> {
+function extractCommentText(commentNode: ts.CommentRange, sourceText: string): string {
+  const commentText = sourceText.substring(commentNode.pos, commentNode.end);
+
+  // 清理注释格式
+  return commentText
+    .replace(/^\/\*\*?|\*\/$/g, '') // 移除 /** */ 或 /* */
+    .replace(/^\/\/|^\s*\*/gm, '') // 移除 // 和行首的 *
+    .replace(/^\s+|\s+$/gm, '') // 移除行首尾空格
+    .split('\n')
+    .filter(line => line.trim())
+    .join('\n')
+    .trim();
+}
+
+/**
+ * 从JSDoc注释中提取特定标签
+ */
+function parseJSDocTags(commentText: string): { [key: string]: string } {
+  const tags: { [key: string]: string } = {};
+  const tagRegex = /@(\w+)\s+(.+?)(?=@\w+|$)/gs;
+  let match;
+
+  while ((match = tagRegex.exec(commentText)) !== null) {
+    tags[match[1]] = match[2].trim();
+  }
+
+  return tags;
+}
+
+/**
+ * 评估文件复杂度
+ */
+function assessFileComplexity(
+  functions: FunctionInfo[],
+  classes: ClassInfo[],
+  lineCount: number,
+  dependencies: number
+): 'low' | 'medium' | 'high' {
+  let complexityScore = 0;
+
+  // 基于代码行数
+  if (lineCount > 300) complexityScore += 3;
+  else if (lineCount > 150) complexityScore += 2;
+  else if (lineCount > 50) complexityScore += 1;
+
+  // 基于函数数量
+  if (functions.length > 20) complexityScore += 3;
+  else if (functions.length > 10) complexityScore += 2;
+  else if (functions.length > 5) complexityScore += 1;
+
+  // 基于类数量
+  complexityScore += classes.length > 5 ? 3 : classes.length > 2 ? 2 : classes.length > 0 ? 1 : 0;
+
+  // 基于依赖数量
+  if (dependencies > 20) complexityScore += 3;
+  else if (dependencies > 10) complexityScore += 2;
+  else if (dependencies > 5) complexityScore += 1;
+
+  if (complexityScore >= 8) return 'high';
+  if (complexityScore >= 4) return 'medium';
+  return 'low';
+}
+
+/**
+ * 解析TypeScript文件的AST并提取所有信息
+ */
+async function parseFileAST(filePath: string): Promise<{
+  imports: ImportInfo[],
+  exports: ExportInfo[],
+  comments: FileComments,
+  functions: FunctionInfo[],
+  classes: ClassInfo[],
+  interfaces: string[],
+  types: string[],
+  constants: string[],
+  lineCount: number
+}> {
   try {
     const content = await fs.readFile(filePath, 'utf-8');
     const sourceFile = ts.createSourceFile(
@@ -63,6 +176,41 @@ async function parseFileAST(filePath: string): Promise<{ imports: ImportInfo[], 
 
     const imports: ImportInfo[] = [];
     const exports: ExportInfo[] = [];
+    const functions: FunctionInfo[] = [];
+    const classes: ClassInfo[] = [];
+    const interfaces: string[] = [];
+    const types: string[] = [];
+    const constants: string[] = [];
+    const comments: FileComments = {};
+
+    // 计算行数
+    const lineCount = content.split('\n').length;
+
+    // 提取文件头部注释
+    const leadingComments = ts.getLeadingCommentRanges(content, 0);
+    if (leadingComments && leadingComments.length > 0) {
+      const headerComment = extractCommentText(leadingComments[0], content);
+      comments.fileHeader = headerComment;
+
+      // 解析JSDoc标签
+      const tags = parseJSDocTags(headerComment);
+      if (tags.fileoverview || tags.description) {
+        comments.description = tags.fileoverview || tags.description;
+      }
+      if (tags.author) comments.author = tags.author;
+      if (tags.created) comments.created = tags.created;
+    }
+
+    // 获取前导注释的描述文本
+    function getNodeDescription(node: ts.Node): string | undefined {
+      const nodeComments = ts.getLeadingCommentRanges(content, node.getFullStart());
+      if (nodeComments && nodeComments.length > 0) {
+        const commentText = extractCommentText(nodeComments[nodeComments.length - 1], content);
+        const tags = parseJSDocTags(commentText);
+        return tags.description || commentText.split('\n')[0];
+      }
+      return undefined;
+    }
 
     function visitNode(node: ts.Node) {
       // 处理 import 语句
@@ -170,8 +318,81 @@ async function parseFileAST(filePath: string): Promise<{ imports: ImportInfo[], 
       if (ts.isExportAssignment(node) && !node.isExportEquals) {
         exports.push({
           name: 'default',
-          type: 'default'
+          type: 'default',
+          description: getNodeDescription(node)
         });
+      }
+
+      // 处理函数声明
+      if (ts.isFunctionDeclaration(node) && node.name) {
+        const isExported = !!(node.modifiers?.some(mod => mod.kind === ts.SyntaxKind.ExportKeyword));
+        const isAsync = !!(node.modifiers?.some(mod => mod.kind === ts.SyntaxKind.AsyncKeyword));
+        const parameters = node.parameters.map(param => {
+          if (ts.isIdentifier(param.name)) {
+            return param.name.text + (param.type ? `: ${param.type.getText()}` : '');
+          }
+          return param.name.getText();
+        });
+
+        functions.push({
+          name: node.name.text,
+          isExported,
+          isAsync,
+          parameters,
+          returnType: node.type?.getText(),
+          description: getNodeDescription(node),
+          lineNumber: ts.getLineAndCharacterOfPosition(sourceFile, node.getStart()).line + 1
+        });
+      }
+
+      // 处理类声明
+      if (ts.isClassDeclaration(node) && node.name) {
+        const isExported = !!(node.modifiers?.some(mod => mod.kind === ts.SyntaxKind.ExportKeyword));
+        const extendsClause = node.heritageClauses?.find(clause => clause.token === ts.SyntaxKind.ExtendsKeyword);
+        const implementsClause = node.heritageClauses?.find(clause => clause.token === ts.SyntaxKind.ImplementsKeyword);
+
+        const methods = node.members
+          .filter(member => ts.isMethodDeclaration(member) && member.name)
+          .map(member => {
+            if (member.name && ts.isIdentifier(member.name)) {
+              return member.name.text;
+            }
+            return 'unknown';
+          });
+
+        classes.push({
+          name: node.name.text,
+          isExported,
+          extends: extendsClause?.types[0]?.getText(),
+          implements: implementsClause?.types.map(type => type.getText()),
+          methods,
+          description: getNodeDescription(node),
+          lineNumber: ts.getLineAndCharacterOfPosition(sourceFile, node.getStart()).line + 1
+        });
+      }
+
+      // 处理接口声明
+      if (ts.isInterfaceDeclaration(node)) {
+        interfaces.push(node.name.text);
+      }
+
+      // 处理类型别名
+      if (ts.isTypeAliasDeclaration(node)) {
+        types.push(node.name.text);
+      }
+
+      // 处理变量声明（常量）
+      if (ts.isVariableStatement(node)) {
+        const isExported = !!(node.modifiers?.some(mod => mod.kind === ts.SyntaxKind.ExportKeyword));
+        const isConst = node.declarationList.flags & ts.NodeFlags.Const;
+
+        if (isConst) {
+          node.declarationList.declarations.forEach(decl => {
+            if (ts.isIdentifier(decl.name)) {
+              constants.push(decl.name.text);
+            }
+          });
+        }
       }
 
       ts.forEachChild(node, visitNode);
@@ -179,10 +400,30 @@ async function parseFileAST(filePath: string): Promise<{ imports: ImportInfo[], 
 
     visitNode(sourceFile);
 
-    return { imports, exports };
+    return {
+      imports,
+      exports,
+      comments,
+      functions,
+      classes,
+      interfaces,
+      types,
+      constants,
+      lineCount
+    };
   } catch (error) {
     console.warn(`警告: 无法解析文件 ${filePath}:`, error);
-    return { imports: [], exports: [] };
+    return {
+      imports: [],
+      exports: [],
+      comments: {},
+      functions: [],
+      classes: [],
+      interfaces: [],
+      types: [],
+      constants: [],
+      lineCount: 0
+    };
   }
 }
 
@@ -208,8 +449,21 @@ async function scanDirectory(dirPath: string, basePath: string, level: number = 
       } else if (entry.isFile()) {
         // 只收集TypeScript文件
         if (isTypeScriptFile(entry.name)) {
-          // 解析AST获取import/export信息
-          const { imports, exports } = await parseFileAST(fullPath);
+          // 解析AST获取所有信息
+          const {
+            imports,
+            exports,
+            comments,
+            functions,
+            classes,
+            interfaces,
+            types,
+            constants,
+            lineCount
+          } = await parseFileAST(fullPath);
+
+          // 初步计算复杂度（后续会用依赖数量来完善）
+          const complexity = assessFileComplexity(functions, classes, lineCount, imports.length);
 
           files.push({
             path: fullPath,
@@ -221,7 +475,15 @@ async function scanDirectory(dirPath: string, basePath: string, level: number = 
             imports,
             exports,
             dependencies: [], // 稍后计算
-            dependents: [] // 稍后计算
+            dependents: [], // 稍后计算
+            comments,
+            functions,
+            classes,
+            interfaces,
+            types,
+            constants,
+            lineCount,
+            complexity
           });
         }
       }
@@ -628,10 +890,27 @@ async function generateProjectStructure(): Promise<void> {
     const filesWithDependencies = Object.values(dependencyGraph).filter(deps => deps.length > 0).length;
     const maxDependencies = Math.max(...Object.values(dependencyGraph).map(deps => deps.length));
 
+    // 计算代码统计
+    const totalLines = files.reduce((sum, file) => sum + file.lineCount, 0);
+    const totalFunctions = files.reduce((sum, file) => sum + file.functions.length, 0);
+    const totalClasses = files.reduce((sum, file) => sum + file.classes.length, 0);
+    const totalInterfaces = files.reduce((sum, file) => sum + file.interfaces.length, 0);
+    const totalTypes = files.reduce((sum, file) => sum + file.types.length, 0);
+    const filesWithComments = files.filter(file => file.comments.fileHeader || file.comments.description).length;
+
+    // 复杂度分布
+    const complexityStats = {
+      high: files.filter(f => f.complexity === 'high').length,
+      medium: files.filter(f => f.complexity === 'medium').length,
+      low: files.filter(f => f.complexity === 'low').length
+    };
+
     // 输出统计信息
     console.log('\n📊 扫描结果统计:');
     console.log(`   📄 TypeScript文件总数: ${structure.totalFiles}`);
     console.log(`   📁 目录总数: ${structure.directories.length}`);
+    console.log(`   📝 代码总行数: ${totalLines.toLocaleString()}`);
+    console.log(`   📊 文件复杂度: 高 ${complexityStats.high} | 中 ${complexityStats.medium} | 低 ${complexityStats.low}`);
     console.log(`   🚪 识别的入口点: ${structure.entryPoints.length}`);
     console.log(`   🏗️  核心模块: ${structure.coreModules.length}`);
     console.log(`   🔧 工具模块: ${structure.utilityModules.length}`);
@@ -639,6 +918,13 @@ async function generateProjectStructure(): Promise<void> {
     console.log(`   🔗 依赖关系总数: ${totalDependencies}`);
     console.log(`   📦 有依赖的文件: ${filesWithDependencies}/${structure.totalFiles}`);
     console.log(`   📈 最大依赖数: ${maxDependencies}`);
+    console.log(`   💬 有注释的文件: ${filesWithComments}/${structure.totalFiles} (${Math.round(filesWithComments/structure.totalFiles*100)}%)`);
+
+    console.log('\n📈 代码结构统计:');
+    console.log(`   🔧 函数总数: ${totalFunctions}`);
+    console.log(`   🏗️  类总数: ${totalClasses}`);
+    console.log(`   📋 接口总数: ${totalInterfaces}`);
+    console.log(`   🏷️  类型定义: ${totalTypes}`);
 
     if (structure.entryPoints.length > 0) {
       console.log('\n🚪 发现的入口点文件:');
